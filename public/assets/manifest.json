@@ -1,0 +1,318 @@
+{
+  "version": 1,
+  "basePath": "assets/",
+  "images": {
+    "cards": {
+      "kupe_3": "cards/kupe_3.webp",
+      "kupe_2": "cards/kupe_2.webp",
+      "kupe_a": "cards/kupe_a.webp",
+      "kupe_k": "cards/kupe_k.webp",
+      "kupe_c": "cards/kupe_c.webp",
+      "kupe_f": "cards/kupe_f.webp",
+      "kupe_7": "cards/kupe_7.webp",
+      "kupe_6": "cards/kupe_6.webp",
+      "kupe_5": "cards/kupe_5.webp",
+      "kupe_4": "cards/kupe_4.webp",
+      "bate_3": "cards/bate_3.webp",
+      "bate_2": "cards/bate_2.webp",
+      "bate_a": "cards/bate_a.webp",
+      "bate_k": "cards/bate_k.webp",
+      "bate_c": "cards/bate_c.webp",
+      "bate_f": "cards/bate_f.webp",
+      "bate_7": "cards/bate_7.webp",
+      "bate_6": "cards/bate_6.webp",
+      "bate_5": "cards/bate_5.webp",
+      "bate_4": "cards/bate_4.webp",
+      "spade_3": "cards/spade_3.webp",
+      "spade_2": "cards/spade_2.webp",
+      "spade_a": "cards/spade_a.webp",
+      "spade_k": "cards/spade_k.webp",
+      "spade_c": "cards/spade_c.webp",
+      "spade_f": "cards/spade_f.webp",
+      "spade_7": "cards/spade_7.webp",
+      "spade_6": "cards/spade_6.webp",
+      "spade_5": "cards/spade_5.webp",
+      "spade_4": "cards/spade_4.webp",
+      "dinari_3": "cards/dinari_3.webp",
+      "dinari_2": "cards/dinari_2.webp",
+      "dinari_a": "cards/dinari_a.webp",
+      "dinari_k": "cards/dinari_k.webp",
+      "dinari_c": "cards/dinari_c.webp",
+      "dinari_f": "cards/dinari_f.webp",
+      "dinari_7": "cards/dinari_7.webp",
+      "dinari_6": "cards/dinari_6.webp",
+      "dinari_5": "cards/dinari_5.webp",
+      "dinari_4": "cards/dinari_4.webp"
+    },
+    "backs": {
+      "player": "cards/back_player.webp",
+      "bot": "cards/back_bot.webp"
+    },
+    "suits": {
+      "kupe": "cards/suits/kupe.webp",
+      "bate": "cards/suits/bate.webp",
+      "spade": "cards/suits/spade.webp",
+      "dinari": "cards/suits/dinari.webp"
+    },
+    "ukrasi": {
+      "pozlaceno": "ukrasi/pozlaceno.webp",
+      "srebreno": "ukrasi/srebreno.webp",
+      "nabruseno": "ukrasi/nabruseno.webp",
+      "ljuto": "ukrasi/ljuto.webp",
+      "usoljeno": "ukrasi/usoljeno.webp",
+      "pijano": "ukrasi/pijano.webp",
+      "divlje": "ukrasi/divlje.webp",
+      "glasno": "ukrasi/glasno.webp",
+      "ponocno": "ukrasi/ponocno.webp",
+      "ribarsko": "ukrasi/ribarsko.webp"
+    },
+    "fore": {
+      "pogled": "fore/pogled.webp",
+      "zamjena": "fore/zamjena.webp",
+      "namjesteno": "fore/namjesteno.webp",
+      "krivi_racun": "fore/krivi_racun.webp",
+      "ti_otvaraj": "fore/ti_otvaraj.webp",
+      "tucem": "fore/tucem.webp",
+      "napij_ga": "fore/napij_ga.webp",
+      "vrati": "fore/vrati.webp",
+      "trica_iz_rukava": "fore/trica_iz_rukava.webp",
+      "duplo_ili_nista": "fore/duplo_ili_nista.webp"
+    },
+    "portraits": {
+      "tonci": "portraits/tonci.webp",
+      "jure": "portraits/jure.webp",
+      "luka": "portraits/luka.webp",
+      "bepo": "portraits/bepo.webp",
+      "dino": "portraits/dino.webp",
+      "stipe": "portraits/stipe.webp",
+      "ive": "portraits/ive.webp",
+      "frane": "portraits/frane.webp"
+    },
+    "env": {
+      "table": "env/table_wood.webp",
+      "konoba": "env/bg_konoba.webp",
+      "map": "env/bg_map.webp",
+      "shop": "env/bg_shop.webp"
+    },
+    "ui": {
+      "coin": "ui/coin.webp",
+      "rakija_full": "ui/rakija_full.webp",
+      "rakija_empty": "ui/rakija_empty.webp",
+      "logo": "ui/logo.webp"
+    }
+  },
+  "audio": {
+    "sfx": {
+      "card_slide": {
+        "src": "audio/sfx/card_slide.mp3",
+        "volume": 0.7
+      },
+      "card_flip": {
+        "src": "audio/sfx/card_flip.mp3",
+        "volume": 0.7
+      },
+      "card_place": {
+        "src": "audio/sfx/card_place.mp3",
+        "volume": 0.8
+      },
+      "card_slam_strong": {
+        "src": "audio/sfx/card_slam_strong.mp3",
+        "volume": 0.9
+      },
+      "shuffle": {
+        "src": "audio/sfx/shuffle.mp3",
+        "volume": 0.7
+      },
+      "deal": {
+        "src": "audio/sfx/deal.mp3",
+        "volume": 0.5
+      },
+      "trick_whoosh": {
+        "src": "audio/sfx/trick_whoosh.mp3",
+        "volume": 0.6
+      },
+      "card_pile": {
+        "src": "audio/sfx/card_pile.mp3",
+        "volume": 0.6
+      },
+      "coins": {
+        "src": "audio/sfx/coins.mp3",
+        "volume": 0.8
+      },
+      "coin_single": {
+        "src": "audio/sfx/coin_single.mp3",
+        "volume": 0.7
+      },
+      "glass_clink": {
+        "src": "audio/sfx/glass_clink.mp3",
+        "volume": 0.7
+      },
+      "glass_slam": {
+        "src": "audio/sfx/glass_slam.mp3",
+        "volume": 0.8
+      },
+      "rakija_pour": {
+        "src": "audio/sfx/rakija_pour.mp3",
+        "volume": 0.7
+      },
+      "akuza_fanfare": {
+        "src": "audio/sfx/akuza_fanfare.mp3",
+        "volume": 0.8
+      },
+      "win_stinger": {
+        "src": "audio/sfx/win_stinger.mp3",
+        "volume": 0.8
+      },
+      "lose_stinger": {
+        "src": "audio/sfx/lose_stinger.mp3",
+        "volume": 0.8
+      },
+      "ui_click": {
+        "src": "audio/sfx/ui_click.mp3",
+        "volume": 0.5
+      },
+      "ui_hover": {
+        "src": "audio/sfx/ui_hover.mp3",
+        "volume": 0.25
+      },
+      "ui_error": {
+        "src": "audio/sfx/ui_error.mp3",
+        "volume": 0.6
+      },
+      "stamp": {
+        "src": "audio/sfx/stamp.mp3",
+        "volume": 0.8
+      },
+      "fora_use": {
+        "src": "audio/sfx/fora_use.mp3",
+        "volume": 0.8
+      },
+      "table_knock": {
+        "src": "audio/sfx/table_knock.mp3",
+        "volume": 0.9
+      },
+      "chalk_tick": {
+        "src": "audio/sfx/chalk_tick.mp3",
+        "volume": 0.5
+      },
+      "shop_bell": {
+        "src": "audio/sfx/shop_bell.mp3",
+        "volume": 0.7
+      },
+      "map_step": {
+        "src": "audio/sfx/map_step.mp3",
+        "volume": 0.6
+      }
+    },
+    "ambient": {
+      "konoba": {
+        "src": "audio/sfx/ambient_konoba.mp3",
+        "volume": 0.35,
+        "loop": true
+      },
+      "cicadas": {
+        "src": "audio/sfx/ambient_cicadas.mp3",
+        "volume": 0.25,
+        "loop": true
+      }
+    },
+    "voice": {
+      "barba": {
+        "jebem_ti_mliko": "audio/voice/barba/jebem_ti_mliko.mp3",
+        "ej_ko_te_napravi": "audio/voice/barba/ej_ko_te_napravi.mp3",
+        "jarca_ti": "audio/voice/barba/jarca_ti.mp3",
+        "jebate_led": "audio/voice/barba/jebate_led.mp3",
+        "ajme_majko": "audio/voice/barba/ajme_majko.mp3",
+        "jebem_ti_pasa": "audio/voice/barba/jebem_ti_pasa.mp3",
+        "grom_te_spanija": "audio/voice/barba/grom_te_spanija.mp3",
+        "vrag_ti_sricu": "audio/voice/barba/vrag_ti_sricu.mp3",
+        "ajde_tovare": "audio/voice/barba/ajde_tovare.mp3",
+        "aha_sta_je_sad": "audio/voice/barba/aha_sta_je_sad.mp3",
+        "lipo_daj_ovamo": "audio/voice/barba/lipo_daj_ovamo.mp3",
+        "sta_si_mislija": "audio/voice/barba/sta_si_mislija.mp3",
+        "gledaj_i_uci": "audio/voice/barba/gledaj_i_uci.mp3",
+        "evo_ti_ga_na": "audio/voice/barba/evo_ti_ga_na.mp3",
+        "srice_nima": "audio/voice/barba/srice_nima.mp3",
+        "ne_mogu_virovat": "audio/voice/barba/ne_mogu_virovat.mp3",
+        "ko_je_misaja": "audio/voice/barba/ko_je_misaja.mp3",
+        "ukra_si_mi": "audio/voice/barba/ukra_si_mi.mp3",
+        "same_lisine": "audio/voice/barba/same_lisine.mp3",
+        "igraj_vise": "audio/voice/barba/igraj_vise.mp3",
+        "napolitana": "audio/voice/barba/napolitana.mp3",
+        "akuzan_tri": "audio/voice/barba/akuzan_tri.mp3",
+        "akuzan_cetiri": "audio/voice/barba/akuzan_cetiri.mp3",
+        "opet_akuza": "audio/voice/barba/opet_akuza.mp3",
+        "ultima_moja": "audio/voice/barba/ultima_moja.mp3",
+        "sidi_misaj": "audio/voice/barba/sidi_misaj.mp3",
+        "plati_rakiju": "audio/voice/barba/plati_rakiju.mp3",
+        "tucem": "audio/voice/barba/tucem.mp3",
+        "ka_riba": "audio/voice/barba/ka_riba.mp3",
+        "stari_ja": "audio/voice/barba/stari_ja.mp3"
+      },
+      "gazda": {
+        "jebem_ti_mliko": "audio/voice/gazda/jebem_ti_mliko.mp3",
+        "ej_ko_te_napravi": "audio/voice/gazda/ej_ko_te_napravi.mp3",
+        "jarca_ti": "audio/voice/gazda/jarca_ti.mp3",
+        "jebate_led": "audio/voice/gazda/jebate_led.mp3",
+        "ajme_majko": "audio/voice/gazda/ajme_majko.mp3",
+        "jebem_ti_pasa": "audio/voice/gazda/jebem_ti_pasa.mp3",
+        "grom_te_spanija": "audio/voice/gazda/grom_te_spanija.mp3",
+        "vrag_ti_sricu": "audio/voice/gazda/vrag_ti_sricu.mp3",
+        "ajde_tovare": "audio/voice/gazda/ajde_tovare.mp3",
+        "aha_sta_je_sad": "audio/voice/gazda/aha_sta_je_sad.mp3",
+        "lipo_daj_ovamo": "audio/voice/gazda/lipo_daj_ovamo.mp3",
+        "sta_si_mislija": "audio/voice/gazda/sta_si_mislija.mp3",
+        "gledaj_i_uci": "audio/voice/gazda/gledaj_i_uci.mp3",
+        "evo_ti_ga_na": "audio/voice/gazda/evo_ti_ga_na.mp3",
+        "srice_nima": "audio/voice/gazda/srice_nima.mp3",
+        "ne_mogu_virovat": "audio/voice/gazda/ne_mogu_virovat.mp3",
+        "ko_je_misaja": "audio/voice/gazda/ko_je_misaja.mp3",
+        "ukra_si_mi": "audio/voice/gazda/ukra_si_mi.mp3",
+        "same_lisine": "audio/voice/gazda/same_lisine.mp3",
+        "igraj_vise": "audio/voice/gazda/igraj_vise.mp3",
+        "napolitana": "audio/voice/gazda/napolitana.mp3",
+        "akuzan_tri": "audio/voice/gazda/akuzan_tri.mp3",
+        "akuzan_cetiri": "audio/voice/gazda/akuzan_cetiri.mp3",
+        "opet_akuza": "audio/voice/gazda/opet_akuza.mp3",
+        "ultima_moja": "audio/voice/gazda/ultima_moja.mp3",
+        "sidi_misaj": "audio/voice/gazda/sidi_misaj.mp3",
+        "plati_rakiju": "audio/voice/gazda/plati_rakiju.mp3",
+        "tucem": "audio/voice/gazda/tucem.mp3",
+        "u_mojoj_konobi": "audio/voice/gazda/u_mojoj_konobi.mp3",
+        "runda_na_mene": "audio/voice/gazda/runda_na_mene.mp3"
+      },
+      "mali": {
+        "jebem_ti_mliko": "audio/voice/mali/jebem_ti_mliko.mp3",
+        "ej_ko_te_napravi": "audio/voice/mali/ej_ko_te_napravi.mp3",
+        "jarca_ti": "audio/voice/mali/jarca_ti.mp3",
+        "jebate_led": "audio/voice/mali/jebate_led.mp3",
+        "ajme_majko": "audio/voice/mali/ajme_majko.mp3",
+        "jebem_ti_pasa": "audio/voice/mali/jebem_ti_pasa.mp3",
+        "grom_te_spanija": "audio/voice/mali/grom_te_spanija.mp3",
+        "vrag_ti_sricu": "audio/voice/mali/vrag_ti_sricu.mp3",
+        "ajde_tovare": "audio/voice/mali/ajde_tovare.mp3",
+        "aha_sta_je_sad": "audio/voice/mali/aha_sta_je_sad.mp3",
+        "lipo_daj_ovamo": "audio/voice/mali/lipo_daj_ovamo.mp3",
+        "sta_si_mislija": "audio/voice/mali/sta_si_mislija.mp3",
+        "gledaj_i_uci": "audio/voice/mali/gledaj_i_uci.mp3",
+        "evo_ti_ga_na": "audio/voice/mali/evo_ti_ga_na.mp3",
+        "srice_nima": "audio/voice/mali/srice_nima.mp3",
+        "ne_mogu_virovat": "audio/voice/mali/ne_mogu_virovat.mp3",
+        "ko_je_misaja": "audio/voice/mali/ko_je_misaja.mp3",
+        "ukra_si_mi": "audio/voice/mali/ukra_si_mi.mp3",
+        "same_lisine": "audio/voice/mali/same_lisine.mp3",
+        "igraj_vise": "audio/voice/mali/igraj_vise.mp3",
+        "napolitana": "audio/voice/mali/napolitana.mp3",
+        "akuzan_tri": "audio/voice/mali/akuzan_tri.mp3",
+        "akuzan_cetiri": "audio/voice/mali/akuzan_cetiri.mp3",
+        "opet_akuza": "audio/voice/mali/opet_akuza.mp3",
+        "ultima_moja": "audio/voice/mali/ultima_moja.mp3",
+        "sidi_misaj": "audio/voice/mali/sidi_misaj.mp3",
+        "plati_rakiju": "audio/voice/mali/plati_rakiju.mp3",
+        "tucem": "audio/voice/mali/tucem.mp3",
+        "ka_bombone": "audio/voice/mali/ka_bombone.mp3",
+        "oces_danas": "audio/voice/mali/oces_danas.mp3"
+      }
+    }
+  }
+}

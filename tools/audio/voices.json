@@ -1,0 +1,192 @@
+{
+  "candidates": {
+    "barba_v2s31_2": {
+      "persona": "barba",
+      "voice_id": "s9RbzTdcnFGohWH77qEp",
+      "name": "Treseta Barba (old fisherman) barba_v2s31_2",
+      "generated_voice_id": "s9RbzTdcnFGohWH77qEp",
+      "design_seed": 31,
+      "design_model": "eleven_ttv_v3",
+      "preview": "work/design/barba/v2s31_2.mp3",
+      "preview_eval": {
+        "stt_lang": "bs",
+        "stt_lang_p": 0.516868,
+        "similarity": 0.9585492227979274,
+        "f0_median": 103.83837695199611,
+        "aperiodicity": 0.18135647668702012
+      }
+    },
+    "barba_s11_0": {
+      "persona": "barba",
+      "voice_id": "sQIyQUCcVdJdJR8ySpuZ",
+      "name": "Treseta Barba (old fisherman) barba_s11_0",
+      "generated_voice_id": "sQIyQUCcVdJdJR8ySpuZ",
+      "design_seed": 11,
+      "design_model": "eleven_ttv_v3",
+      "preview": "work/design/barba/s11_0.mp3",
+      "preview_eval": {
+        "stt_lang": "bs",
+        "stt_lang_p": 0.676805,
+        "similarity": 0.9430051813471503,
+        "f0_median": 112.6727662349608,
+        "aperiodicity": 0.2190613419630934
+      }
+    },
+    "gazda_v3s59_0": {
+      "persona": "gazda",
+      "voice_id": "i4bsHmGNVafdbkZoBFNS",
+      "name": "Treseta Gazda (tavern owner) gazda_v3s59_0",
+      "generated_voice_id": "i4bsHmGNVafdbkZoBFNS",
+      "design_seed": 59,
+      "design_model": "eleven_ttv_v3",
+      "preview": "work/design/gazda/v3s59_0.mp3",
+      "preview_eval": {
+        "stt_lang": "bs",
+        "stt_lang_p": 0.794795,
+        "similarity": 0.9533678756476683,
+        "f0_median": 127.5170688540957,
+        "aperiodicity": 0.07377328966184749
+      }
+    },
+    "gazda_v3s71_0": {
+      "persona": "gazda",
+      "voice_id": "MfZ5DgpHWI5YfNNH0uhr",
+      "name": "Treseta Gazda (tavern owner) gazda_v3s71_0",
+      "generated_voice_id": "MfZ5DgpHWI5YfNNH0uhr",
+      "design_seed": 71,
+      "design_model": "eleven_ttv_v3",
+      "preview": "work/design/gazda/v3s71_0.mp3",
+      "preview_eval": {
+        "stt_lang": "bs",
+        "stt_lang_p": 0.698428,
+        "similarity": 0.9791666666666666,
+        "f0_median": 209.46350058165947,
+        "aperiodicity": 0.06036732311908681
+      }
+    },
+    "mali_v2s31_0": {
+      "persona": "mali",
+      "voice_id": "BW1Ue7fSthvHEBVLytJf",
+      "name": "Treseta Mali (sly young guy) mali_v2s31_0",
+      "generated_voice_id": "BW1Ue7fSthvHEBVLytJf",
+      "design_seed": 31,
+      "design_model": "eleven_ttv_v3",
+      "preview": "work/design/mali/v2s31_0.mp3",
+      "preview_eval": {
+        "stt_lang": "hr",
+        "stt_lang_p": 0.652376,
+        "similarity": 0.9386503067484663,
+        "f0_median": 150.78500135210356,
+        "aperiodicity": 0.08658118150215748
+      }
+    },
+    "mali_v2s47_1": {
+      "persona": "mali",
+      "voice_id": "L0YcGAMSO1VrH7rQwtmz",
+      "name": "Treseta Mali (sly young guy) mali_v2s47_1",
+      "generated_voice_id": "L0YcGAMSO1VrH7rQwtmz",
+      "design_seed": 47,
+      "design_model": "eleven_ttv_v3",
+      "preview": "work/design/mali/v2s47_1.mp3",
+      "preview_eval": {
+        "stt_lang": "hr",
+        "stt_lang_p": 0.71541,
+        "similarity": 0.9051987767584098,
+        "f0_median": 162.75143821119644,
+        "aperiodicity": 0.09409535677095879
+      }
+    },
+    "mali_v3s71_1": {
+      "persona": "mali",
+      "voice_id": "Ku8tspsqiowdT44wMaih",
+      "name": "Treseta Mali (sly young guy) mali_v3s71_1",
+      "generated_voice_id": "Ku8tspsqiowdT44wMaih",
+      "design_seed": 71,
+      "design_model": "eleven_ttv_v3",
+      "preview": "work/design/mali/v3s71_1.mp3",
+      "preview_eval": {
+        "stt_lang": "hr",
+        "stt_lang_p": 0.450587,
+        "similarity": 0.9361702127659575,
+        "f0_median": 200.56032382032674,
+        "aperiodicity": 0.11450371154096103
+      }
+    },
+    "mali_v3s71_2": {
+      "persona": "mali",
+      "voice_id": "HLO6k43MWe0361Ou2FFR",
+      "name": "Treseta Mali (sly young guy) mali_v3s71_2",
+      "generated_voice_id": "HLO6k43MWe0361Ou2FFR",
+      "design_seed": 71,
+      "design_model": "eleven_ttv_v3",
+      "preview": "work/design/mali/v3s71_2.mp3",
+      "preview_eval": {
+        "stt_lang": "hr",
+        "stt_lang_p": 0.533077,
+        "similarity": 0.9515151515151515,
+        "f0_median": 174.65100715220993,
+        "aperiodicity": 0.08477293214556646
+      }
+    }
+  },
+  "personas": {
+    "barba": {
+      "voice_id": "sQIyQUCcVdJdJR8ySpuZ",
+      "name": "Treseta Barba (old fisherman) barba_s11_0",
+      "source": "ElevenLabs Voice Design",
+      "design_model": "eleven_ttv_v3",
+      "design_seed": 11,
+      "brief": "An elderly Croatian man of about 72 from the Dalmatian coast, a retired fisherman. Deep, gravelly, smoky voice worn rough by decades of cigarettes and sea wind; slow, grumbling delivery with dry, sarcastic humour and a wheezy laugh. Native Croatian speaker with a strong coastal Dalmatian ikavian accent and a lazy southern sing-song intonation. Close-up, intimate recording in a quiet stone tavern.",
+      "candidate_key": "barba_s11_0",
+      "tts_model": "eleven_v4",
+      "language_code": "hr",
+      "voice_settings": {
+        "stability": 0.35,
+        "similarity_boost": 0.75,
+        "style": 0.6,
+        "use_speaker_boost": true
+      },
+      "note": "Lowest, roughest candidate (calm-line F0 ~99 Hz, highest aperiodicity = gravelly); slow delivery.",
+      "calm_f0_hz": 99
+    },
+    "gazda": {
+      "voice_id": "i4bsHmGNVafdbkZoBFNS",
+      "name": "Treseta Gazda (tavern owner) gazda_v3s59_0",
+      "source": "ElevenLabs Voice Design",
+      "design_model": "eleven_ttv_v3",
+      "design_seed": 59,
+      "brief": "A big, heavy-set Croatian man of about 55, the owner of a tavern in Split, Dalmatia. Low, deep, chesty bass voice with a big resonant chest tone, like a large barrel-chested man; theatrical, expansive and full of himself, hearty deep belly laugh, warm and generous underneath. Speaks in a low register. Native Croatian speaker with a strong coastal Dalmatian accent. Close-up recording.",
+      "candidate_key": "gazda_v3s59_0",
+      "tts_model": "eleven_v4",
+      "language_code": "hr",
+      "voice_settings": {
+        "stability": 0.35,
+        "similarity_boost": 0.75,
+        "style": 0.6,
+        "use_speaker_boost": true
+      },
+      "note": "Round-3 brief (low register); calm-line F0 ~137 Hz, chesty; shouts rise to ~220-280 Hz.",
+      "calm_f0_hz": 137
+    },
+    "mali": {
+      "voice_id": "Ku8tspsqiowdT44wMaih",
+      "name": "Treseta Mali (sly young guy) mali_v3s71_1",
+      "source": "ElevenLabs Voice Design",
+      "design_model": "eleven_ttv_v3",
+      "design_seed": 71,
+      "brief": "A cheeky, skinny 22-year-old Croatian lad from Split, Dalmatia. High-pitched, boyish, bright and thin young voice, clearly nasal; quick-talking, mocking and giggly, a cocky street-smart joker who teases constantly, fast playful delivery. Native Croatian speaker with a strong coastal Dalmatian accent and street slang. Close-up recording.",
+      "candidate_key": "mali_v3s71_1",
+      "tts_model": "eleven_v4",
+      "language_code": "hr",
+      "voice_settings": {
+        "stability": 0.35,
+        "similarity_boost": 0.75,
+        "style": 0.6,
+        "use_speaker_boost": true
+      },
+      "note": "Round-3 brief (higher, boyish, nasal); calm-line F0 ~170 Hz, fastest delivery.",
+      "calm_f0_hz": 170
+    }
+  },
+  "unused_candidates_note": "Candidates saved to the ElevenLabs account during casting but not used: barba_v2s31_2 (s9RbzTdcnFGohWH77qEp), gazda_v3s71_0 (MfZ5DgpHWI5YfNNH0uhr), mali_v2s31_0 (BW1Ue7fSthvHEBVLytJf), mali_v2s47_1 (L0YcGAMSO1VrH7rQwtmz), mali_v3s71_2 (HLO6k43MWe0361Ou2FFR). They can be deleted from the account (Voices > My voices) to free voice slots."
+}

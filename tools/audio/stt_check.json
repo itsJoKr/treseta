@@ -1,0 +1,542 @@
+{
+  "barba/jebem_ti_mliko": {
+    "expected": "Jebem ti mliko majčino!",
+    "heard": "Jebem ti mliho majčino!",
+    "similarity": 0.955,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "barba/ej_ko_te_napravi": {
+    "expected": "Ej, ko te napravi!",
+    "heard": "Ej, ko te napravi?",
+    "similarity": 1.0,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "barba/jarca_ti": {
+    "expected": "Jarca ti!",
+    "heard": "JASATI!",
+    "similarity": 0.714,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "barba/jebate_led": {
+    "expected": "Jebate led!",
+    "heard": "Jebate lid!",
+    "similarity": 0.9,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "barba/ajme_majko": {
+    "expected": "Ajme majko moja!",
+    "heard": "Ajme Maiko moja.",
+    "similarity": 0.933,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "barba/jebem_ti_pasa": {
+    "expected": "Jebem ti pasa!",
+    "heard": "Vjebem ti pasa!",
+    "similarity": 0.963,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "barba/grom_te_spanija": {
+    "expected": "Grom te Španija!",
+    "heard": "GROMTE SPANIA!",
+    "similarity": 0.857,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "barba/vrag_ti_sricu": {
+    "expected": "Vrag ti sriću odnija!",
+    "heard": "Vrakti sreću od nija.",
+    "similarity": 0.85,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "barba/ajde_tovare": {
+    "expected": "Ajde tovare jedno!",
+    "heard": "Hajde to vare jedno.",
+    "similarity": 0.944,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "barba/aha_sta_je_sad": {
+    "expected": "Aha, šta je sad!",
+    "heard": "Aha, šta je sad?",
+    "similarity": 1.0,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "barba/lipo_daj_ovamo": {
+    "expected": "Lipo, lipo... daj to ovamo!",
+    "heard": "Lipo lipo, daj to ovamo.",
+    "similarity": 1.0,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "barba/sta_si_mislija": {
+    "expected": "Ma šta si mislija, a?",
+    "heard": "Ma što si misli, a?",
+    "similarity": 0.889,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "barba/gledaj_i_uci": {
+    "expected": "Gledaj i uči, mali!",
+    "heard": "Gledaj i uči mali.",
+    "similarity": 1.0,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "barba/evo_ti_ga_na": {
+    "expected": "Evo ti ga na!",
+    "heard": "Evo ti gana!",
+    "similarity": 0.957,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "barba/srice_nima": {
+    "expected": "Jebi ga, sriće nima.",
+    "heard": "Jebi ga, sriće nima.",
+    "similarity": 1.0,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "barba/ne_mogu_virovat": {
+    "expected": "Ma ne mogu virovat!",
+    "heard": "Ma ne mogu virovat!",
+    "similarity": 1.0,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "barba/ko_je_misaja": {
+    "expected": "Ko je ovo mišaja, a?!",
+    "heard": "Koje ovo misaja, a?",
+    "similarity": 0.914,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "barba/ukra_si_mi": {
+    "expected": "Ukra' si mi to, lopove!",
+    "heard": "Ukrasi mi to lopove!",
+    "similarity": 0.974,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "barba/same_lisine": {
+    "expected": "Same lišine, same lišine...",
+    "heard": "Sam je lišine. Sam je lišine.",
+    "similarity": 0.92,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "barba/igraj_vise": {
+    "expected": "Ajde, igraj više, zaspa si!",
+    "heard": "Ajde, igraj više, zaspasi.",
+    "similarity": 0.979,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "barba/napolitana": {
+    "expected": "Napolitana! Piši tri!",
+    "heard": "Napolitana! Piši tri!",
+    "similarity": 1.0,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "barba/akuzan_tri": {
+    "expected": "Akužan tri! Piši, piši!",
+    "heard": "A kužan tri? Piši, piši!",
+    "similarity": 0.976,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "barba/akuzan_cetiri": {
+    "expected": "Akužan četiri! Gledaj i plači!",
+    "heard": "A kužan četiri, gledaj i plači!",
+    "similarity": 0.982,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "barba/opet_akuza": {
+    "expected": "Opet akuža?! Di ti to sve dođe?",
+    "heard": "Ope ta kuža! Diti to sve dođe!",
+    "similarity": 0.929,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "barba/ultima_moja": {
+    "expected": "Ultima je moja!",
+    "heard": "Ultima je moja!",
+    "similarity": 1.0,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "barba/sidi_misaj": {
+    "expected": "Ajde, sidi... mišaj karte.",
+    "heard": "Ajde, Siddi, mišaj karte.",
+    "similarity": 0.977,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "barba/plati_rakiju": {
+    "expected": "Plati rakiju i ne plači!",
+    "heard": "Plati rakiju i ne plači.",
+    "similarity": 1.0,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "barba/tucem": {
+    "expected": "Tučem!",
+    "heard": "Tocem!",
+    "similarity": 0.6,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "barba/ka_riba": {
+    "expected": "Šta čekaš, da riba zagrize?",
+    "heard": "Šta čekas? Da riba zagrize.",
+    "similarity": 0.96,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "barba/stari_ja": {
+    "expected": "Igra' san ja ovo prije nego si se ti rodija!",
+    "heard": "I grasaňa ovo prije nego si se ti rodija.",
+    "similarity": 0.927,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "gazda/jebem_ti_mliko": {
+    "expected": "Jebem ti mliko majčino!",
+    "heard": "Jebem ti mlikomajčino!",
+    "similarity": 0.977,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "gazda/ej_ko_te_napravi": {
+    "expected": "Ej, ko te napravi!",
+    "heard": "Hej, ko te napravi?",
+    "similarity": 0.97,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "gazda/jarca_ti": {
+    "expected": "Jarca ti!",
+    "heard": "Jerca ti!",
+    "similarity": 0.875,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "gazda/jebate_led": {
+    "expected": "Jebate led!",
+    "heard": "Jeba te led.",
+    "similarity": 0.952,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "gazda/ajme_majko": {
+    "expected": "Ajme majko moja!",
+    "heard": "Ajme majko moja.",
+    "similarity": 1.0,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "gazda/jebem_ti_pasa": {
+    "expected": "Jebem ti pasa!",
+    "heard": "Jebem ti pasa!",
+    "similarity": 1.0,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "gazda/grom_te_spanija": {
+    "expected": "Grom te Španija!",
+    "heard": "Gromte španija!",
+    "similarity": 0.966,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "gazda/vrag_ti_sricu": {
+    "expected": "Vrag ti sriću odnija!",
+    "heard": "Vrakti sryću od nija!",
+    "similarity": 0.85,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "gazda/ajde_tovare": {
+    "expected": "Ajde tovare jedno!",
+    "heard": "Ajde, to vare jedno.",
+    "similarity": 0.971,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "gazda/aha_sta_je_sad": {
+    "expected": "Aha, šta je sad!",
+    "heard": "Aha, šta je sad?",
+    "similarity": 1.0,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "gazda/lipo_daj_ovamo": {
+    "expected": "Lipo, lipo... daj to ovamo!",
+    "heard": "Lipo, Lipo, daj to ovamo!",
+    "similarity": 1.0,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "gazda/sta_si_mislija": {
+    "expected": "Ma šta si mislija, a?",
+    "heard": "Ma šta se misli, a?",
+    "similarity": 0.889,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "gazda/gledaj_i_uci": {
+    "expected": "Gledaj i uči, mali!",
+    "heard": "Gledaj i uči, mali.",
+    "similarity": 1.0,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "gazda/evo_ti_ga_na": {
+    "expected": "Evo ti ga na!",
+    "heard": "Evo ti gana!",
+    "similarity": 0.957,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "gazda/srice_nima": {
+    "expected": "Jebi ga, sriće nima.",
+    "heard": "Jebi ga, sriće nima.",
+    "similarity": 1.0,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "gazda/ne_mogu_virovat": {
+    "expected": "Ma ne mogu virovat!",
+    "heard": "Ma ne mogu virovat!",
+    "similarity": 1.0,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "gazda/ko_je_misaja": {
+    "expected": "Ko je ovo mišaja, a?!",
+    "heard": "Koja ovo misaja, ha?",
+    "similarity": 0.833,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "gazda/ukra_si_mi": {
+    "expected": "Ukra' si mi to, lopove!",
+    "heard": "Ukrasi mi to, lopove!",
+    "similarity": 0.974,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "gazda/same_lisine": {
+    "expected": "Same lišine, same lišine...",
+    "heard": "Sam je lišine. Sam je lišine.",
+    "similarity": 0.92,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "gazda/igraj_vise": {
+    "expected": "Ajde, igraj više, zaspa si!",
+    "heard": "Ajde, igraj više, zaspasi!",
+    "similarity": 0.979,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "gazda/napolitana": {
+    "expected": "Napolitana! Piši tri!",
+    "heard": "Napolitana! Piši tri!",
+    "similarity": 1.0,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "gazda/akuzan_tri": {
+    "expected": "Akužan tri! Piši, piši!",
+    "heard": "A kužan tri? Piši, piši!",
+    "similarity": 0.976,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "gazda/akuzan_cetiri": {
+    "expected": "Akužan četiri! Gledaj i plači!",
+    "heard": "A kužan četiri, gledaj i plači!",
+    "similarity": 0.982,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "gazda/opet_akuza": {
+    "expected": "Opet akuža?! Di ti to sve dođe?",
+    "heard": "Ope takuža, di ti to sve dođe?",
+    "similarity": 0.964,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "gazda/ultima_moja": {
+    "expected": "Ultima je moja!",
+    "heard": "Ultimo je moja!",
+    "similarity": 0.929,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "gazda/sidi_misaj": {
+    "expected": "Ajde, sidi... mišaj karte.",
+    "heard": "Ajde, sidi, misaj karte.",
+    "similarity": 0.952,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "gazda/plati_rakiju": {
+    "expected": "Plati rakiju i ne plači!",
+    "heard": "Plati rakiju i ne plači.",
+    "similarity": 1.0,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "gazda/tucem": {
+    "expected": "Tučem!",
+    "heard": "Tučem!",
+    "similarity": 1.0,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "gazda/u_mojoj_konobi": {
+    "expected": "U mojoj konobi ja dobivan!",
+    "heard": "U moju ekonomiji ja dobivan!",
+    "similarity": 0.846,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "gazda/runda_na_mene": {
+    "expected": "Dobro, dobro... ova runda je na mene.",
+    "heard": "Dobro, dobro, ovarunda je na mene.",
+    "similarity": 0.984,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "mali/jebem_ti_mliko": {
+    "expected": "Jebem ti mliko majčino!",
+    "heard": "Jebem ti mliko majčino!",
+    "similarity": 1.0,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "mali/ej_ko_te_napravi": {
+    "expected": "Ej, ko te napravi!",
+    "heard": "Ej, ko te napravi?",
+    "similarity": 1.0,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "mali/jarca_ti": {
+    "expected": "Jarca ti!",
+    "heard": "JARCATI!",
+    "similarity": 0.933,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "mali/jebate_led": {
+    "expected": "Jebate led!",
+    "heard": "Jeba te led!",
+    "similarity": 0.952,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "mali/ajme_majko": {
+    "expected": "Ajme majko moja!",
+    "heard": "Ajme majko moja.",
+    "similarity": 1.0,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "mali/jebem_ti_pasa": {
+    "expected": "Jebem ti pasa!",
+    "heard": "Jebem ti pasa!",
+    "similarity": 1.0,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "mali/grom_te_spanija": {
+    "expected": "Grom te Španija!",
+    "heard": "GROMTE ŠPANIA!",
+    "similarity": 0.929,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "mali/vrag_ti_sricu": {
+    "expected": "Vrag ti sriću odnija!",
+    "heard": "Vrakti sriću od nija!",
+    "similarity": 0.9,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "mali/ajde_tovare": {
+    "expected": "Ajde tovare jedno!",
+    "heard": "Ajde tovare jedno.",
+    "similarity": 1.0,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "mali/aha_sta_je_sad": {
+    "expected": "Aha, šta je sad!",
+    "heard": "Aha! Šta je sad?",
+    "similarity": 1.0,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "mali/lipo_daj_ovamo": {
+    "expected": "Lipo, lipo... daj to ovamo!",
+    "heard": "Lipo, lipo, daj to ovamo!",
+    "similarity": 1.0,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "mali/sta_si_mislija": {
+    "expected": "Ma šta si mislija, a?",
+    "heard": "Ma šta si misli, a?",
+    "similarity": 0.944,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "mali/gledaj_i_uci": {
+    "expected": "Gledaj i uči, mali!",
+    "heard": "Gledaj i uči, mali.",
+    "similarity": 1.0,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "mali/evo_ti_ga_na": {
+    "expected": "Evo ti ga na!",
+    "heard": "Evo ti gana!",
+    "similarity": 0.957,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "mali/srice_nima": {
+    "expected": "Jebi ga, sriće nima.",
+    "heard": "Jebiga, sriće nima.",
+    "similarity": 0.971,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "mali/ne_mogu_virovat": {
+    "expected": "Ma ne mogu virovat!",
+    "heard": "Ma ne mogu virovat!",
+    "similarity": 1.0,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "mali/ko_je_misaja": {
+    "expected": "Ko je ovo mišaja, a?!",
+    "heard": "Ko jovo misaja?",
+    "similarity": 0.812,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "mali/ukra_si_mi": {
+    "expected": "Ukra' si mi to, lopove!",
+    "heard": "Ukrasi mi to lopove!",
+    "similarity": 0.974,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "mali/same_lisine": {
+    "expected": "Same lišine, same lišine...",
+    "heard": "Sam je lišine, sam je lišine.",
+    "similarity": 0.92,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "mali/igraj_vise": {
+    "expected": "Ajde, igraj više, zaspa si!",
+    "heard": "Ajde, igraj više, zaspasi!",
+    "similarity": 0.979,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "mali/napolitana": {
+    "expected": "Napolitana! Piši tri!",
+    "heard": "Na politana! Piši tri!",
+    "similarity": 0.974,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "mali/akuzan_tri": {
+    "expected": "Akužan tri! Piši, piši!",
+    "heard": "A kužan tri? Piši, piši!",
+    "similarity": 0.976,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "mali/akuzan_cetiri": {
+    "expected": "Akužan četiri! Gledaj i plači!",
+    "heard": "Ak užan četiri! Gledaj i plači!",
+    "similarity": 0.982,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "mali/opet_akuza": {
+    "expected": "Opet akuža?! Di ti to sve dođe?",
+    "heard": "Opeta kuža! Diti to sve dođe!",
+    "similarity": 0.945,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "mali/ultima_moja": {
+    "expected": "Ultima je moja!",
+    "heard": "Ultima je moja!",
+    "similarity": 1.0,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "mali/sidi_misaj": {
+    "expected": "Ajde, sidi... mišaj karte.",
+    "heard": "Ajde, sidi, mišaj karte.",
+    "similarity": 1.0,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "mali/plati_rakiju": {
+    "expected": "Plati rakiju i ne plači!",
+    "heard": "Plati rakiju i ne plači.",
+    "similarity": 1.0,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "mali/tucem": {
+    "expected": "Tučem!",
+    "heard": "TUĆEM!",
+    "similarity": 0.8,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "mali/ka_bombone": {
+    "expected": "Ka' da ditetu bombone otimam!",
+    "heard": "Kada dite tu bombone otimam?",
+    "similarity": 0.963,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  },
+  "mali/oces_danas": {
+    "expected": "Oćeš danas ili sutra, brate?",
+    "heard": "Oćeš danas ili sutra, brate.",
+    "similarity": 1.0,
+    "stt": "whisper.cpp:ggml-small-q5_1.bin"
+  }
+}

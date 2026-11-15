@@ -1,0 +1,42 @@
+{
+  "per_persona": {
+    "barba": {
+      "f0_yin_median_all": 232.23420859168095,
+      "f0_yin_median_calm": 210.71952926747161,
+      "f0_cepstral_median_all": 176.8009768009768,
+      "f0_cepstral_median_calm": 141.820624016239,
+      "aperiodicity": 0.24414055774887972,
+      "vowels_per_s": 2.938995215311005,
+      "centroid_hz": 2393.930755802495
+    },
+    "gazda": {
+      "f0_yin_median_all": 206.36604959531962,
+      "f0_yin_median_calm": 115.36475809821658,
+      "f0_cepstral_median_all": 192.17491369390103,
+      "f0_cepstral_median_calm": 117.40673045909043,
+      "aperiodicity": 0.14156650465514492,
+      "vowels_per_s": 3.155919170459072,
+      "centroid_hz": 2881.553729966299
+    },
+    "mali": {
+      "f0_yin_median_all": 241.89448019173932,
+      "f0_yin_median_calm": 143.8722130943059,
+      "f0_cepstral_median_all": 246.1829836829837,
+      "f0_cepstral_median_calm": 153.39449541284404,
+      "aperiodicity": 0.13712835444915153,
+      "vowels_per_s": 3.4096215836455808,
+      "centroid_hz": 2694.9141978523016
+    }
+  },
+  "mfcc_distance_same_line_cross_persona": {
+    "barba-gazda": 0.8264515681638138,
+    "barba-mali": 0.6544486430976832,
+    "gazda-mali": 0.7006963478038981
+  },
+  "mfcc_distance_same_persona_cross_line": {
+    "barba": 0.4532017081713159,
+    "gazda": 0.5462949257674091,
+    "mali": 0.5387054331098035
+  },
+  "nearest_profile_identification": "42/42"
+}

@@ -1,0 +1,19 @@
+node_modules
+dist
+.DS_Store
+*.local
+.secrets
+tools/__pycache__
+tools/.venv
+
+# Raw image generations + Codex logs and PNG/audio masters stay local (large, regenerable)
+assets_src/gen/
+assets_src/masters/
+assets_src/preview/
+assets_src/contact_*.png
+tools/audio/work/
+
+# Test/deploy output
+tests/e2e/shots/
+test-results/
+.wrangler/
