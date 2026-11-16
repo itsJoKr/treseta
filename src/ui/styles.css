@@ -20,7 +20,8 @@
 
 * { box-sizing: border-box; }
 html, body { margin: 0; height: 100%; overflow: hidden; background: #120A05; }
-body { font-family: var(--body); color: var(--cream); -webkit-font-smoothing: antialiased; user-select: none; }
+body { font-family: var(--body); color: var(--cream); -webkit-font-smoothing: antialiased; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation; overscroll-behavior: none; }
+#scene { touch-action: none; }
 
 #app {
   position: fixed; inset: 0; overflow: hidden;
@@ -498,3 +499,63 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: calc(
 .oart.falsa .mini.q { background: #2A1A10; color: #FFE7A8; font-family: var(--head); font-size: calc(40 * var(--u)); display: flex; align-items: center; justify-content: center; }
 .oart.falsa .arrow { font-size: calc(30 * var(--u)); color: var(--ink); }
 .oart.falsa .band { position: absolute; left: 6%; right: 6%; top: 58%; transform: rotate(-20deg); background: rgba(192,57,43,0.75); color: var(--cream); font-family: var(--head); font-weight: 800; text-align: center; font-size: calc(22 * var(--u)); letter-spacing: 0.12em; }
+
+
+/* ============ phones (play-test round 3): landscape only ============ */
+.rotate-screen { display: none; position: fixed; inset: 0; z-index: 1000; background: radial-gradient(ellipse at 50% 40%, #4A2F1C, #1A0E07 75%); color: var(--cream); flex-direction: column; align-items: center; justify-content: center; gap: 18px; text-align: center; padding: 24px; }
+html.phone.portrait .rotate-screen { display: flex; }
+.rotate-phone { width: 64px; height: 110px; border: 5px solid var(--ochre); border-radius: 14px; position: relative; animation: rotatePhone 2.2s ease-in-out infinite; }
+.rotate-phone i { position: absolute; left: 50%; bottom: 7px; width: 14px; height: 4px; margin-left: -7px; border-radius: 2px; background: var(--ochre); }
+.rotate-title { font-family: var(--head); font-weight: 800; font-size: 28px; }
+.rotate-sub { font-size: 17px; color: var(--cream2); }
+@keyframes rotatePhone { 0%, 20% { transform: rotate(0deg); } 55%, 80% { transform: rotate(-90deg); } 100% { transform: rotate(0deg); } }
+
+/* Phone landscape layout (html.phone). --ui-scale is height-based on phones (scene.ts), so the
+   screen is ~700 units tall: groups are scaled down and moved so nothing overlaps the hand.
+   env(safe-area-inset-*) keeps edge items clear of the notch and rounded corners. */
+html.phone { --sl: env(safe-area-inset-left, 0px); --sr: env(safe-area-inset-right, 0px); }
+html.phone .modal { max-height: 94vh; overflow-y: auto; }
+
+/* home: logo left, buttons right */
+html.phone .menu-inner { display: grid; grid-template-columns: auto auto; column-gap: calc(70 * var(--u)); row-gap: calc(8 * var(--u)); align-items: center; justify-items: center; margin-top: 0; }
+html.phone .menu-inner > .logo-img, html.phone .menu-inner > .logo-text { grid-column: 1; grid-row: 1; max-width: calc(640 * var(--u)); max-height: calc(400 * var(--u)); }
+html.phone .menu-inner > .tagline { grid-column: 1; grid-row: 2; margin-bottom: 0; }
+html.phone .menu-inner > .menu-buttons { grid-column: 2; grid-row: 1 / span 2; }
+html.phone .menu-inner > .loadbar, html.phone .menu-inner > .loadtext { grid-column: 1 / -1; }
+html.phone .made-by { left: calc(28 * var(--u) + var(--sl)); }
+html.phone .lang-switch { right: calc(28 * var(--u) + var(--sr)); }
+
+/* match HUD */
+html.phone .gear { left: calc(22 * var(--u) + var(--sl)); }
+html.phone .match-tag { left: calc(104 * var(--u) + var(--sl)); }
+html.phone .scoreboard { right: calc(22 * var(--u) + var(--sr)); transform: scale(0.64); transform-origin: top right; }
+html.phone .seat.opponent { top: calc(168 * var(--u)); }
+html.phone .seat.seat-w { left: calc(18 * var(--u) + var(--sl)); }
+html.phone .seat.seat-e { right: calc(18 * var(--u) + var(--sr)); }
+html.phone .leftdock { left: calc(18 * var(--u) + var(--sl)); bottom: calc(14 * var(--u)); transform: scale(0.74); transform-origin: bottom left; }
+html.phone .fore-slots { display: grid; grid-template-columns: repeat(2, auto); }
+html.phone .fslot.empty { display: none; }
+html.phone .soldi { right: calc(26 * var(--u) + var(--sr)); }
+html.phone .signal-bar { right: calc(24 * var(--u) + var(--sr)); bottom: calc(112 * var(--u)); }
+html.phone .tracker, html.phone .hud4 .tracker { right: calc(26 * var(--u) + var(--sr)); bottom: calc(212 * var(--u)); }
+html.phone .toasts { top: 54%; }
+
+/* map */
+html.phone .map-title { left: calc(40 * var(--u) + var(--sl)); }
+html.phone .map-hud { top: auto; bottom: calc(26 * var(--u)); right: calc(40 * var(--u) + var(--sr)); }
+
+/* shop */
+html.phone .shop-title { left: calc(44 * var(--u) + var(--sl)); }
+html.phone .shop-soldi { right: calc(44 * var(--u) + var(--sr)); }
+html.phone .counter { top: 44%; transform: translate(-62%, -50%) scale(0.8); }
+html.phone .shop-side { right: calc(40 * var(--u) + var(--sr)); transform: translateY(-58%) scale(0.86); transform-origin: right center; }
+html.phone .shop-bottom { left: calc(44 * var(--u) + var(--sl)); transform: scale(0.7); transform-origin: bottom left; }
+/* match result: smaller title and portraits so the buttons stay on screen */
+html.phone .matchend { gap: calc(10 * var(--u)); }
+html.phone .matchend .title { font-size: calc(84 * var(--u)); }
+html.phone .matchend .big-portrait { width: calc(150 * var(--u)); height: calc(150 * var(--u)); }
+html.phone .matchend .final { font-size: calc(34 * var(--u)); }
+/* deck grid: all 40 cards fit without scrolling */
+html.phone .deckgrid { grid-template-columns: repeat(10, calc(70 * var(--u))); gap: calc(8 * var(--u)); }
+html.phone .deckgrid .dcard { width: calc(70 * var(--u)); height: calc(112 * var(--u)); }
+html.phone .summary { transform: scale(0.92); }

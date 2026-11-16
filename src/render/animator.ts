@@ -58,6 +58,13 @@ export class Animator {
 
   constructor(public sm: SceneManager, public fx: FX, public tex: CardTextures, public audio: AudioManager) {
     sm.camera.add(this.handGroup);
+    // phones: bring the hand closer to the camera and lift it, so whole cards and their corners show
+    const placeHand = () => {
+      const phone = document.documentElement.classList.contains('phone');
+      this.handGroup.position.set(0, phone ? 0.5 : 0, phone ? 2.0 : 0);
+    };
+    placeHand();
+    sm.resizeListeners.push(placeHand);
     this.macs = {
       player: new CardStack('player', tex, MAC_PLAYER, MAC_PLAYER_YAW, 0.02),
       bot: new CardStack('player', tex, MAC_BOT, MAC_BOT_YAW, 0.02),

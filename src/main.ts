@@ -46,6 +46,7 @@ import { Overlay } from './ui/overlay';
 import { introPanel, runMap } from './ui/runMap';
 import { flyCoins, matchEnd, runEnd } from './ui/screens';
 import { ShopScreen } from './ui/shop';
+import { applyDeviceClasses, installFullscreenOnTap, installRotateScreen, isIOS, isPhone, isStandalone, relabelRotateScreen } from './ui/mobile';
 
 type Screen = 'loading' | 'menu' | 'map' | 'pick' | 'intro' | 'match' | 'matchend' | 'shop' | 'runend';
 
@@ -96,6 +97,9 @@ class App {
     setMatchTargetOverride(FLAGS.target);
     setLang(this.settings.language);
     document.documentElement.lang = this.settings.language;
+    applyDeviceClasses();
+    installRotateScreen();
+    installFullscreenOnTap();
     this.oldSaveRemoved = removeOldSaves(st);
     this.stats = clampStats(loadStats(st));
     this.stats4 = clampStats(loadStats4(st));
@@ -115,7 +119,7 @@ class App {
     const langChanged = this.settings.language !== (document.documentElement.lang || '');
     setLang(this.settings.language);
     document.documentElement.lang = this.settings.language;
-    if (langChanged) this.hud?.relabel();
+    if (langChanged) { this.hud?.relabel(); relabelRotateScreen(); }
     this.audio.setVolumes(this.settings.volumes);
     this.applySpeed();
     saveSettings(this.storage, this.settings);
@@ -182,6 +186,12 @@ class App {
     });
     m.setProgress(1);
     void this.ov.show(m.el);
+    // iPhone Safari can't go full screen: once, explain Add to Home Screen
+    if (isPhone() && isIOS() && !isStandalone() && !this.settings.tipsSeen.includes('iosHome')) {
+      this.settings.tipsSeen.push('iosHome');
+      saveSettings(this.storage, this.settings);
+      window.setTimeout(() => this.ov.toast(t('tip.iosHome'), 'tip', 7000), 900);
+    }
   }
 
   openSettings(): void {

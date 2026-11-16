@@ -32,6 +32,8 @@ export const FLAGS = {
   newrun: q.get('newrun') === '1',
   /** with newrun: which mode ('partneri' | 'dvoboj', default dvoboj for the old tests) */
   mode: (q.get('mode') === 'partneri' ? 'partneri' : 'dvoboj') as 'partneri' | 'dvoboj',
+  /** force the phone layout on any device (tests) */
+  phone: q.get('phone') === '1',
   /** Partneri: pre-pick this partner on the pick screen (tests) */
   partner: q.get('partner') ?? undefined,
 };

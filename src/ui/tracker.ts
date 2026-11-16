@@ -7,6 +7,9 @@ import type { DeckCard } from '../game/types';
 import type { CardTextures } from '../render/cardMesh';
 import { clear, h } from './dom';
 
+/** The (T) keyboard shortcut means nothing on a phone. */
+const trackerLabel = () => t('tracker.title') + (document.documentElement.classList.contains('phone') ? '' : ' (T)');
+
 export type CellState = 'played' | 'hand' | 'revealed' | 'unknown';
 export interface TrackerCell { card: DeckCard; state: CellState; team?: 'mi' | 'vi' }
 
@@ -21,7 +24,7 @@ export class Tracker {
   constructor(private textures: CardTextures) {
     this.grid = h('div', { class: 'tracker-grid' });
     this.panel = h('div', { class: 'tracker-panel', 'data-testid': 'tracker' }, h('div', { class: 'tracker-title', text: t('tracker.title') }), this.grid);
-    this.btn = h('button', { class: 'tracker-btn interactive', 'data-testid': 'tracker-toggle', text: t('tracker.title') + ' (T)' }) as HTMLButtonElement;
+    this.btn = h('button', { class: 'tracker-btn interactive', 'data-testid': 'tracker-toggle', text: trackerLabel() }) as HTMLButtonElement;
     this.btn.addEventListener('click', () => this.toggle());
     this.el = h('div', { class: 'tracker' }, this.panel, this.btn);
     this.set(false);
@@ -41,7 +44,7 @@ export class Tracker {
 
   relabel(): void {
     (this.panel.firstChild as HTMLElement).textContent = t('tracker.title');
-    this.btn.textContent = t('tracker.title') + ' (T)';
+    this.btn.textContent = trackerLabel();
   }
 
   update(cells: TrackerCell[]): void {

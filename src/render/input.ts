@@ -27,6 +27,9 @@ export class Input {
   hovered: CardObject | null = null;
   /** face-up table card under the pointer (trick, revealed hands): shown enlarged by the HUD */
   private tableHovered: CardObject | null = null;
+  /** last pointer was a finger (phones): hover comes from taps, table zoom from press-and-hold */
+  private touch = false;
+  private touchOnHand = false;
   private lastTableXY = { x: -1, y: -1 };
   private hoverUv = new THREE.Vector2(0.5, 0.5);
   private down: { card: CardObject; x: number; y: number } | null = null;
@@ -50,7 +53,12 @@ export class Input {
     on(el, 'pointermove', (e) => this.move(e));
     on(el, 'pointerdown', (e) => this.pointerDown(e));
     on(window, 'pointerup', (e) => this.pointerUp(e));
-    on(el, 'pointerleave', () => { this.pointer.inside = false; if (!this.dragging) this.setHover(null); this.setTableHover(null); });
+    on(el, 'pointerleave', (e) => {
+      this.pointer.inside = false;
+      this.setTableHover(null);
+      // a finger lifting fires pointerleave too: keep the card it selected raised
+      if (e.pointerType !== 'touch' && !this.dragging) this.setHover(null);
+    });
     on(el, 'contextmenu', (e) => { e.preventDefault(); this.h.cancel(); });
     const upd = (dt: number) => this.update(dt);
     sm.onUpdate(upd);
@@ -111,11 +119,13 @@ export class Input {
   private move(e: PointerEvent): void {
     this.setNdc(e);
     this.h.activity();
+    this.touch = e.pointerType === 'touch';
     if (this.down && !this.dragging) {
       const d = Math.hypot(e.clientX - this.down.x, e.clientY - this.down.y);
       if (d > 8 && this.h.canAct() && this.enabled && !this.anim.targetMode) this.startDrag(this.down.card);
     }
     if (this.dragging) return;
+    if (this.touch) return; // fingers select by tapping (pointerUp), not by passing over
     const p = this.pick();
     if (p) this.hoverUv.copy(p.uv);
     this.setHover(p ? p.card : null);
@@ -145,12 +155,20 @@ export class Input {
     if (e.button !== 0) return;
     this.setNdc(e);
     this.h.activity();
+    this.touch = e.pointerType === 'touch';
     const p = this.pick();
+    this.touchOnHand = this.touch && !!p;
     if (p) this.down = { card: p.card, x: e.clientX, y: e.clientY };
   }
 
   private pointerUp(e: PointerEvent): void {
     if (e.button !== 0) return;
+    this.pointerUpInner(e);
+    // the finger is gone: no hold-to-zoom until the next touch
+    if (e.pointerType === 'touch') { this.pointer.inside = false; this.touchOnHand = false; this.setTableHover(null); }
+  }
+
+  private pointerUpInner(e: PointerEvent): void {
     const down = this.down;
     this.down = null;
     if (this.dragging) {
@@ -164,10 +182,17 @@ export class Input {
       void this.returnCard(card).then(() => { if (inZone) this.h.rejected?.(card.uid); });
       return;
     }
-    if (!down) return;
+    const finger = e.pointerType !== 'mouse';
+    if (!down) {
+      // a tap beside the hand puts a raised card back
+      if (finger && this.hovered) this.setHover(null);
+      return;
+    }
     this.setNdc(e);
     const p = this.pick();
     if (p && p.card === down.card && Math.hypot(e.clientX - down.x, e.clientY - down.y) < 8) {
+      // touch: the first tap raises the card (and shows its tooltip), a second tap plays it
+      if (finger && this.hovered !== p.card) { this.setHover(p.card); return; }
       if (this.enabled) this.h.tryCard(p.card.uid, 'click');
     }
   }
@@ -223,7 +248,9 @@ export class Input {
   private update(dt: number): void {
     // table cards move (tricks fly to the pile), so their hover is checked every frame
     if (this.h.hoverTable) {
-      const over = this.pointer.inside && this.enabled && !this.dragging && !this.hovered && !this.anim.targetMode;
+      // mouse: hovering; finger: press and hold (not when the finger is on the hand)
+      const free = this.touch ? !this.touchOnHand : !this.hovered;
+      const over = this.pointer.inside && this.enabled && !this.dragging && free && !this.anim.targetMode;
       this.setTableHover(over ? this.pickTable() : null);
     }
     // tilt of the hovered card follows the pointer

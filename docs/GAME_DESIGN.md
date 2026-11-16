@@ -2490,3 +2490,14 @@ Overrides the signal table in §18 (and any later references to Volo).
   - **Toasts.** When the partner bot leads Strišo, the player gets a hint toast ("Give points, or throw a low card of the suit you want led"). Toasts also cover the partner giving points, and any ask (the player's own asks and the opponents' asks).
 - The last-trick point keeps the name **ultima**: hr.wikipedia uses "posljednji punat (ȕltima)", won by whoever takes the last trick (*zadnja ruka*).
 - HUD: two signal buttons, both lit on every lead. Strišo uses the card-slide sound and the wave icon, and has no voice line.
+
+---
+
+## §21 Phones (play-test round 3)
+
+- **Detection** (`src/ui/mobile.ts`): a touch phone (`pointer: coarse` and the short side ≤ 540 px), or `?phone=1`. It sets `html.phone`, and `html.portrait` when taller than wide.
+- **Landscape only.** In portrait a full-screen "Okreni mobitel" screen covers the game.
+- **Full screen.** Android Chrome: the first tap requests full screen and locks landscape. iPhone Safari has neither API for pages, so the game is installable (`public/manifest.webmanifest`: `display: fullscreen`, `orientation: landscape`; apple-touch-icon and `apple-mobile-web-app-capable`), and a one-time tip on the home screen (`tip.iosHome`) explains Share → Add to Home Screen.
+- **Scale.** On phones `--ui-scale` = clamp(height / 700, 0.42, 0.7), so the layout has ~700 units of height. `html.phone` CSS (end of `styles.css`) scales and moves groups: home screen logo left and buttons right, compact scoreboard, side portraits lower, power-ups in a 2-column dock without empty slots, signal buttons above the šoldi, smaller shop offers and bottom bar, a smaller result screen and deck grid. Edge items add `env(safe-area-inset-*)`.
+- **Hand.** The hand group moves 2 units toward the camera and 0.5 up, so whole cards and their corners show.
+- **Touch.** Tap a hand card to raise it (and show its tooltip); tap it again to play; tap beside the hand to lower it; dragging still works. Press and hold a face-up table card to see it enlarged. The tracker button drops its "(T)" shortcut hint.

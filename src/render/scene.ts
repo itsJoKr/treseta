@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import gsap from 'gsap';
 import { assets } from '../assets/loader';
 import { tablePlaceholder } from './placeholders';
+import { applyDeviceClasses } from '../ui/mobile';
 
 export const CAM_POS = new THREE.Vector3(0, 10.5, 8.6);
 export const CAM_TARGET = new THREE.Vector3(0, 0, 0.9);
@@ -101,7 +102,11 @@ export class SceneManager {
     this.camBase.copy(CAM_POS).addScaledVector(dir, -back);
     this.camera.position.copy(this.camBase).add(this.shakeOffset);
     this.camera.updateProjectionMatrix();
-    const scale = Math.max(0.6, Math.min(w / 1920, h / 1080));
+    // phones (play-test round 3): the UI is laid out for ~700 units of height instead of 1080,
+    // so text and buttons stay readable and tappable on a 340–430 px tall landscape screen
+    applyDeviceClasses();
+    const phone = document.documentElement.classList.contains('phone');
+    const scale = phone ? Math.max(0.42, Math.min(0.7, h / 700)) : Math.max(0.6, Math.min(w / 1920, h / 1080));
     document.documentElement.style.setProperty('--ui-scale', String(scale));
     for (const f of this.resizeListeners) f();
   }
