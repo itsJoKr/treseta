@@ -136,6 +136,13 @@ GENS = {
         "A small stemless shot glass full of clear, faintly golden herbal rakija with a little green herb sprig inside, a light glint on the glass, frontal, centred, filling 80% of the frame height."),
     "logo": (1536, 1024, True, "card",
         "Game logo: the word \"TREŠETA\" in big hand-painted ornamental serif capitals, cream fill with a dark-brown outline and ochre-gold shading. The letter Š has a clearly visible háček (caron) above it. Behind the word are two crossed playing cards and an olive branch; below it sits a small rakija glass. Centred. This is the only image that contains text."),
+    # Revision 2 items (GAME_DESIGN.md section 19.2.3), drawn procedurally until play-test round 3
+    "fora_briskula": (1024, 1536, False, "card",
+        "Vignette: a triumphant weathered hand slamming one playing card face-up onto a thick wooden tavern table, the slammed card landing on top of three other face-up playing cards and glowing with golden light as if it outranks them all, small rakija shot glasses jumping from the impact, motion lines, dramatic warm light."),
+    "badge_prevrtljivo": (1024, 1024, True, "card",
+        "One round wax-seal medallion icon, flat frontal view, in the same style as a set of coloured wax seals with embossed symbols: a mauve-pink seal (#C46FA0) with an embossed chameleon on a short twig, its tail curled into a spiral, centred, filling 80% of the frame."),
+    "shop_falsa": (1024, 1536, False, "card",
+        "Vignette: a sly forger's hand with a very fine brush secretly repainting a humble playing card on a cluttered wooden workbench: one half of the card already shows three ornate golden cups, the other half is still a plain card with a few small pips; small ink pots, a magnifying glass and a candle beside it, conspiratorial candlelit mood."),
 }
 
 for _gid, (_spec, _col) in COURTS.items():
@@ -156,7 +163,7 @@ FULL_BLEED = ("The illustration is full-bleed: it fills the entire image edge to
 
 def format_sentence(gen_id: str) -> str:
     w, h, cut, kind, body = GENS[gen_id]
-    if gen_id.startswith("fora_"):
+    if gen_id.startswith("fora_") or gen_id.startswith("shop_"):
         return FORMAT_PORTRAIT + " " + FULL_BLEED
     if gen_id.startswith("env_"):
         return FORMAT_LANDSCAPE

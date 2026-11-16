@@ -27,6 +27,7 @@ import type { Action4, Card4, GameEvent4, Hand4State, Seat, Signal, Team } from 
 import { TEAM_OF } from '../game/types4';
 import { UKRASI } from '../game/ukrasi';
 import { wait } from '../render/animator';
+import { VOICE_EVENTS4 } from '../data/voiceEvents4';
 import type { Animator4 } from '../render/animator4';
 import type { CardObject, CardTextures } from '../render/cardMesh';
 import type { FX } from '../render/fx';
@@ -166,6 +167,10 @@ export class GameController4 {
     hud.setSoldi(run.soldi);
     hud.setLive(0, 0);
     for (const id of new Set(BOT_SEATS.map((s) => CHARACTERS[this.chars[s]].persona))) void this.d.audio.preloadVoice(id);
+    // W greets the table with the first deal: have that line decoded first (capped, so a slow
+    // network never holds up the table; the rest of the voices keep loading in the background)
+    const wp = CHARACTERS[this.chars.W].persona;
+    await Promise.race([Promise.all(VOICE_EVENTS4.match_start.lines.map((l) => this.d.audio.readyVoice(wp, l))), wait(2500)]);
     while (this.match.status !== 'over' && !this.destroyed) await this.runHand();
     return this.match;
   }
@@ -268,7 +273,7 @@ export class GameController4 {
   private refreshSignals(): void {
     const s = this.hand;
     const lead = !!this.resolveInput && this.leading();
-    const avail = { tucem: false, striso: false, volo: false } as Record<Signal, boolean>;
+    const avail = { tucem: false, striso: false } as Record<Signal, boolean>;
     if (lead) for (const u of legalPlays4(s, 'S')) for (const k of legalSignals4(s, 'S', u)) avail[k] = true;
     if (!lead) this.armed = null;
     this.d.hud.setSignals({ enabled: lead, available: avail, armed: this.armed });
@@ -287,6 +292,12 @@ export class GameController4 {
     this.lastActivity = performance.now();
     this.refreshFore();
     if (!this.tipSeen('signals') && this.leading()) this.tip('signals');
+    this.forgeryTip(this.hand.seats.S.hand);
+    const ask = this.leading() ? this.hand.asks?.find((a) => a.to === 'S' && a.seat === 'N' && !a.answered) : undefined;
+    if (ask) this.d.ov.toast(t('toast.strisoAskLead', { name: this.name('N'), suit: SUIT_NAME[ask.suit] }), 'tip', 3000);
+    // I took the trick my partner led with Tučem: lead that suit back
+    const tu = this.leading() ? this.hand.signalsLog.find((x) => x.seat === 'N' && x.kind === 'tucem' && x.trickNo === this.hand.trick.no - 1) : undefined;
+    if (!ask && tu && this.hand.seats.S.hand.some((c) => c.suit === tu.suit)) this.d.ov.toast(t('toast.tucemReturn', { name: this.name('N'), suit: SUIT_NAME[tu.suit] }), 'tip', 3000);
     if (this.d.flags.autoplay) {
       this.refreshSignals();
       return wait(200 + this.autoRng() * 200).then(() => this.autoAction());
@@ -449,9 +460,16 @@ export class GameController4 {
   }
 
   private onHover(card: CardObject | null): void {
-    if (!card || !card.data.ukras) { this.d.hud.hideTooltip(); return; }
+    if (!card || (!card.data.ukras && !card.data.forge)) { this.d.hud.hideTooltip(); return; }
     const p = this.d.anim.screenOfCard(card);
-    this.d.hud.ukrasTooltip(card.data.ukras, p.x, p.y - 150 * this.uiScale());
+    if (card.data.ukras) this.d.hud.ukrasTooltip(card.data.ukras, p.x, p.y - 150 * this.uiScale());
+    else this.d.hud.forgeTooltip(card.data, p.x, p.y - 150 * this.uiScale());
+  }
+
+  /** One-time tip the first time an opponents' forgery shows up (in my hand or on the table). */
+  private forgeryTip(cards: { forge?: { team: string } }[]): void {
+    if (this.tipSeen('forgeryVi') || !cards.some((c) => c.forge?.team === 'vi')) return;
+    this.tip('forgeryVi', 5200);
   }
 
   private uiScale(): number { return parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--ui-scale')) || 1; }
@@ -610,20 +628,30 @@ export class GameController4 {
         if (e.seat === 'S') this.d.hud.hideTooltip();
         await anim.seatToTrick(o, e.seat, e.pos - 1, strong);
         if (e.seat !== 'S') this.refreshSeen();
+        this.forgeryTip([c]);
         if (this.pendingVoice && this.pendingVoice.seat === e.seat) { this.voice.speak(this.pendingVoice.seat, this.pendingVoice.ev); this.pendingVoice = null; }
         break;
       }
       case 'signal': {
         const o = anim.cards.get(this.hand.trick.plays[0]?.uid ?? '') ?? [...anim.cards.values()].find((x) => x.uid === this.hand.trick.plays[0]?.uid);
         if (o) anim.pinSignal(o, e.kind);
-        this.d.audio.play(e.kind === 'tucem' ? 'table_knock' : e.kind === 'striso' ? 'card_slide' : 'card_place');
+        this.d.audio.play(e.kind === 'tucem' ? 'table_knock' : 'card_slide');
         if (e.kind === 'tucem') this.d.fx.shake(0.03, 160);
         const p = anim.trickScreen(e.seat);
         void hud.callout(this.d.ov.fxLayer, p.x, p.y - 70 * this.uiScale(), e.kind, e.seat === 'S' ? undefined : this.name(e.seat));
-        if (e.seat === 'N') this.d.ov.toast(t('toast.partnerSignal', { name: this.name('N'), signal: t('signal.' + e.kind) }));
+        if (e.seat === 'N') {
+          if (e.kind === 'striso') this.d.ov.toast(t('toast.strisoPartner', { name: this.name('N') }), 'tip', 3600);
+          else this.d.ov.toast(t('toast.tucemPartner', { name: this.name('N') }), 'tip', 3600);
+        }
         this.voice.signal(e.seat, e.kind);
-        if (e.kind === 'volo') this.refreshVoids();
         await wait(350);
+        break;
+      }
+      case 'strisoReply': {
+        const suit = SUIT_NAME[e.suit];
+        if (e.kind === 'points') { if (e.seat === 'N') this.d.ov.toast(t('toast.strisoPoints', { name: this.name('N') })); }
+        else if (e.seat === 'S') this.d.ov.toast(t('toast.strisoAskMine', { name: this.name('N'), suit }), 'normal', 2600);
+        else this.d.ov.toast(t('toast.strisoAsk', { name: this.name(e.seat), suit }), 'tip', 2600);
         break;
       }
       case 'leadReturned': {
@@ -815,12 +843,12 @@ export class GameController4 {
   }
 
   private tipSeen(id: string): boolean { return this.d.settings().tipsSeen.includes(id); }
-  private tip(id: string): void {
+  private tip(id: string, ms = 3200): void {
     this.d.markTip(id);
     const key = 'tip.' + id;
     const txt = t(key);
     if (txt === key) return;
-    void wait(400).then(() => this.d.ov.toast(txt, 'tip', 3200));
+    void wait(400).then(() => this.d.ov.toast(txt, 'tip', ms));
   }
 
   /** Debug snapshot. */
@@ -840,6 +868,7 @@ export class GameController4 {
       trickPlays: s?.trick.plays.map((p) => `${p.seat}:${p.uid}`),
       signal: s?.trick.signal,
       signalsLog: s?.signalsLog,
+      asks: s?.asks,
       awaitingInput: !!this.resolveInput,
       leading: s ? this.leading() : false,
       armed: this.armed,

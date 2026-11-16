@@ -21,9 +21,9 @@ export const DVOBOJ_LADDER: DvobojMatchDef[] = [
   { konoba: 'Konoba "Kod Jure"', opp: 'jure', tier: 2, fore: [], rakija: 0, marks: [], forgeries: [], base: 9 },
   { konoba: 'Konoba "Pod Lozom"', opp: 'ive', tier: 2, fore: ['pogled', 'krivi_racun'], rakija: 1, marks: [{ ukras: 'pozlaceno', rank: 'A' }], forgeries: [], base: 10 },
   { konoba: 'Konoba "Ribarska"', opp: 'dino', tier: 3, fore: ['tucem', 'duplo_ili_nista'], rakija: 2, marks: [{ ukras: 'nabruseno', rank: 'K' }, { ukras: 'usoljeno', rank: 'A' }], forgeries: [], base: 11 },
-  { konoba: 'Konoba "Kamenolom"', opp: 'luka', tier: 3, fore: ['tucem', 'krivi_racun', 'trica_iz_rukava'], rakija: 2, marks: [{ ukras: 'ljuto', rank: '3' }, { ukras: 'pozlaceno', rank: 'A' }], forgeries: ['3'], base: 12 },
+  { konoba: 'Konoba "Kamenolom"', opp: 'luka', tier: 3, fore: ['tucem', 'krivi_racun', 'trica_iz_rukava'], rakija: 2, marks: [{ ukras: 'ljuto', rank: '3' }, { ukras: 'pozlaceno', rank: 'A' }], forgeries: ['2'], base: 12 },
   { konoba: 'Konoba "Na Brdu"', opp: 'bepo', tier: 4, fore: ['tucem', 'trica_iz_rukava', 'duplo_ili_nista', 'briskula'], rakija: 3,
-    marks: [{ ukras: 'pozlaceno', rank: '3' }, { ukras: 'ljuto', rank: '3' }, { ukras: 'nabruseno', rank: '2' }, { ukras: 'glasno', rank: 'A' }], forgeries: ['3', 'A'], base: 15 },
+    marks: [{ ukras: 'pozlaceno', rank: '3' }, { ukras: 'ljuto', rank: '3' }, { ukras: 'nabruseno', rank: '2' }, { ukras: 'glasno', rank: 'A' }], forgeries: ['3'], base: 15 },
 ];
 
 const pair = (p: Omit<PairDef, 'baseReward'>): PairDef => ({ ...p, baseReward: p.base });
@@ -33,9 +33,9 @@ export const PARTNERI_LADDER: PairDef[] = [
   pair({ konoba: 'Konoba "Kod Jure"', W: 'jure', E: 'ive', partnerPersona: 'mali', tier: 2, fore: { W: [], E: [] }, rakija: { W: 0, E: 0 }, marks: [], forgeries: [], base: 9 }),
   pair({ konoba: 'Konoba "Pod Lozom"', W: 'tonci', E: 'ive', partnerPersona: 'gazda', tier: 2, fore: { W: ['pogled'], E: ['krivi_racun'] }, rakija: { W: 1, E: 1 }, marks: [{ ukras: 'pozlaceno', rank: 'A' }], forgeries: [], base: 10 }),
   pair({ konoba: 'Konoba "Ribarska"', W: 'stipe', E: 'dino', partnerPersona: 'barba', tier: 3, fore: { W: ['tucem'], E: ['duplo_ili_nista'] }, rakija: { W: 1, E: 2 }, marks: [{ ukras: 'nabruseno', rank: 'K' }, { ukras: 'usoljeno', rank: 'A' }], forgeries: [], base: 11 }),
-  pair({ konoba: 'Konoba "Kamenolom"', W: 'dino', E: 'luka', partnerPersona: 'gazda', tier: 3, fore: { W: ['duplo_ili_nista'], E: ['tucem', 'krivi_racun'] }, rakija: { W: 2, E: 2 }, marks: [{ ukras: 'ljuto', rank: '3' }, { ukras: 'pozlaceno', rank: 'A' }], forgeries: ['3'], base: 12 }),
+  pair({ konoba: 'Konoba "Kamenolom"', W: 'dino', E: 'luka', partnerPersona: 'gazda', tier: 3, fore: { W: ['duplo_ili_nista'], E: ['tucem', 'krivi_racun'] }, rakija: { W: 2, E: 2 }, marks: [{ ukras: 'ljuto', rank: '3' }, { ukras: 'pozlaceno', rank: 'A' }], forgeries: ['2'], base: 12 }),
   pair({ konoba: 'Konoba "Na Brdu"', W: 'bepo', E: 'frane', partnerPersona: 'mali', tier: 4, fore: { W: ['tucem', 'trica_iz_rukava', 'duplo_ili_nista', 'briskula'], E: ['krivi_racun', 'pogled', 'briskula'] }, rakija: { W: 3, E: 2 },
-    marks: [{ ukras: 'pozlaceno', rank: '3' }, { ukras: 'ljuto', rank: '3' }, { ukras: 'nabruseno', rank: '2' }, { ukras: 'glasno', rank: 'A' }], forgeries: ['3', 'A'], base: 15 }),
+    marks: [{ ukras: 'pozlaceno', rank: '3' }, { ukras: 'ljuto', rank: '3' }, { ukras: 'nabruseno', rank: '2' }, { ukras: 'glasno', rank: 'A' }], forgeries: ['3'], base: 15 }),
 ];
 
 /** Shop tier weights per visit (§19.2.2). */

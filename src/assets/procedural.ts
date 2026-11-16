@@ -1,9 +1,7 @@
-// Procedural art for the §19 items that have no image files (§19.2.3, §19.4.3).
-// The manifest does not list these ids; art.badge / art.fora route here.
+// Fallback drawings for the §19 items (Prevrtljivo badge, Briškula! art), used only when their
+// image files are missing (e.g. ?noassets=1). The painted versions are in the manifest.
 import { canvas, drawSuitShape, roundRect } from '../render/placeholders';
 import type { Suit } from '../game/types';
-
-export { isProceduralFora, isProceduralUkras, PROCEDURAL } from './proceduralIds';
 
 /** Prevrtljivo badge: circle r 56 #C46FA0, 4 px darker rim, white "⇄" glyph. */
 export function prevrtljivoBadge(size = 128): HTMLCanvasElement {

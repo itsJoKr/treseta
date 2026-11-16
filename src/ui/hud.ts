@@ -3,13 +3,14 @@ import gsap from 'gsap';
 import type { AudioManager } from '../audio/audio';
 import { getLang, t } from '../data/strings';
 import type { Mood } from '../data/voiceLines';
-import { fmtThirds } from '../game/cards';
+import { fmtThirds, RANK_NAME_EN, RANK_NAME_HR, SUIT_NAME } from '../game/cards';
+import { forgeView, printedOf } from '../game/forge';
 import { FORE } from '../game/fore';
 import type { ReasonKey } from '../game/fore';
 import { CHARACTERS } from '../game/characters';
 import type { CharacterId } from '../game/characters';
 import { DVOBOJ_LADDER } from '../game/ladders';
-import type { CardInst, ForaId, UkrasId } from '../game/types';
+import type { CardInst, DeckCard, ForaId, Rank, Suit, UkrasId } from '../game/types';
 import { UKRASI } from '../game/ukrasi';
 import { foraDesc, ukrasDesc } from '../data/descriptions';
 import type { CardTextures } from '../render/cardMesh';
@@ -240,6 +241,29 @@ export class Hud {
     const hr = getLang() === 'hr';
     clear(this.tooltipEl);
     this.tooltipEl.append(h('img', { src: art.badge(ukras) }), h('div', null, h('b', { text: hr ? def.nameHr : def.nameEn }), h('div', { text: ukrasDesc(ukras, this.partneri) })));
+    this.tooltipEl.classList.remove('hidden');
+    this.tooltipEl.style.left = `${x}px`;
+    this.tooltipEl.style.top = `${y}px`;
+    this.tooltipEl.style.transform = 'translate(-50%, -100%)';
+  }
+
+  /** Forged card in the hand (§19.4): whose forgery it is, its printed card and the copy it counts as. */
+  forgeTooltip(c: DeckCard, x: number, y: number): void {
+    const fv = forgeView(c);
+    if (!fv || !c.forge) { this.hideTooltip(); return; }
+    const hr = getLang() === 'hr';
+    const name = (suit: Suit, rank: Rank) => {
+      const r = /^[0-9]$/.test(rank) ? rank : hr ? RANK_NAME_HR[rank] : RANK_NAME_EN[rank];
+      return hr ? `${r} ${SUIT_NAME[suit]}` : `${r} of ${SUIT_NAME[suit]}`;
+    };
+    const pr = printedOf(c);
+    const vi = fv.team === 'vi';
+    const vars = { printed: name(pr.suit, pr.rank), copy: name(c.forge.suit, c.forge.rank) };
+    clear(this.tooltipEl);
+    this.tooltipEl.append(
+      h('div', { class: `forge-badge ${vi ? 'vi' : 'mi'}`, text: 'F' }),
+      h('div', null, h('b', { text: t(vi ? 'forge.viTitle' : 'forge.miTitle') }), h('div', { text: t(vi ? 'forge.viBody' : 'forge.miBody', vars) })),
+    );
     this.tooltipEl.classList.remove('hidden');
     this.tooltipEl.style.left = `${x}px`;
     this.tooltipEl.style.top = `${y}px`;

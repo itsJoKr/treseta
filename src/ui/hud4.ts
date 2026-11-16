@@ -1,6 +1,6 @@
 // Partneri HUD (§18.8): three seat panels (N partner top centre, W left, E right) with
 // bubbles, turn rings (A39), Viđeno strips and void chips (A40); the MI : VI chalkboard;
-// the three signal buttons; seat targeting; the A38 signal callout.
+// the two signal buttons; seat targeting; the A38 signal callout.
 import gsap from 'gsap';
 import { assets } from '../assets/loader';
 import type { AudioManager } from '../audio/audio';
@@ -181,7 +181,7 @@ export class Hud4 extends Hud {
       this.signalBar.append(b);
     }
     this.el.append(this.signalBar);
-    this.setSignals({ enabled: false, available: { tucem: false, striso: false, volo: false }, armed: null });
+    this.setSignals({ enabled: false, available: { tucem: false, striso: false }, armed: null });
   }
 
   /** Partneri: the match tag shows the konoba, the chalkboard columns are MI : VI. */
@@ -245,7 +245,7 @@ export class Hud4 extends Hud {
 
   /** A38 callout chip at a screen point: in 200 back.out(1.7), hold 1200, fade 300. */
   callout(fx: HTMLElement, x: number, y: number, kind: Signal, who?: string): Promise<void> {
-    const label = kind === 'tucem' ? 'TUČEM!' : kind === 'striso' ? 'STRIŠO' : 'VOLO';
+    const label = kind === 'tucem' ? 'TUČEM!' : 'STRIŠO';
     const el = h('div', { class: 'signal-callout', style: `left:${x}px;top:${y}px` }, h('span', { class: 'ico', html: signalSvg(kind) }), h('b', { text: label }));
     if (who) el.append(h('small', { text: who }));
     fx.append(el);

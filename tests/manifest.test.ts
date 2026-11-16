@@ -2,7 +2,6 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { buildDefaultManifest, SFX_IDS } from '../src/assets/defaultManifest';
-import { isProceduralFora, isProceduralUkras, PROCEDURAL } from '../src/assets/proceduralIds';
 import type { AssetManifest } from '../src/assets/defaultManifest';
 import { VOICE_EVENTS } from '../src/data/voiceEvents';
 import { linesForPersona, VOICE_LINES } from '../src/data/voiceLines';
@@ -21,11 +20,11 @@ describe('manifest', () => {
     expect(Object.keys(m.images.cards).length).toBe(40);
     expect(Object.keys(m.images.backs).length).toBe(2);
     expect(Object.keys(m.images.suits).length).toBe(4);
-    expect(Object.keys(m.images.ukrasi).length).toBe(10);
-    expect(Object.keys(m.images.fore).length).toBe(10);
+    expect(Object.keys(m.images.ukrasi).length).toBe(11);
+    expect(Object.keys(m.images.fore).length).toBe(11);
     expect(Object.keys(m.images.portraits).length).toBe(8);
     expect(Object.keys(m.images.env).length).toBe(4);
-    expect(Object.keys(m.images.ui).length).toBe(4);
+    expect(Object.keys(m.images.ui).length).toBe(5);
     expect(Object.keys(m.audio.sfx).length).toBe(25);
     expect(Object.keys(m.audio.ambient).length).toBe(2);
     const voice = Object.values(m.audio.voice).reduce((a, v) => a + Object.keys(v).length, 0);
@@ -39,13 +38,10 @@ describe('manifest', () => {
 
   it('every id in data files exists in the manifest', () => {
     for (const s of SUITS) for (const r of RANKS) expect(json.images.cards[`${s}_${rankFile(r)}`]).toBe(`cards/${s}_${rankFile(r)}.webp`);
-    // §19.2.3: prevrtljivo and briskula are procedural (src/assets/procedural.ts), not in the manifest
-    for (const u of UKRAS_IDS) if (!isProceduralUkras(u)) expect(json.images.ukrasi[u]).toBeDefined();
-    for (const f of FORA_IDS) if (!isProceduralFora(f)) expect(json.images.fore[f]).toBeDefined();
-    expect(json.images.ukrasi.prevrtljivo).toBeUndefined();
-    expect(json.images.fore.briskula).toBeUndefined();
-    expect(PROCEDURAL.ukrasi).toContain('prevrtljivo');
-    expect(PROCEDURAL.fore).toContain('briskula');
+    // every ukras and fora has painted art (Prevrtljivo and Briškula! since play-test round 3)
+    for (const u of UKRAS_IDS) expect(json.images.ukrasi[u]).toBe(`ukrasi/${u}.webp`);
+    for (const f of FORA_IDS) expect(json.images.fore[f]).toBe(`fore/${f}.webp`);
+    expect(json.images.ui.falsa).toBe('ui/falsa.webp');
     for (const o of LADDER) {
       expect(json.images.portraits[o]).toBeDefined();
       const persona = OPPONENTS[o].persona;

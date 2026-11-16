@@ -95,7 +95,7 @@ export function createHand4(p: CreateHand4Params): { state: Hand4State; events: 
     seed: p.seed, handNo: p.handNo, dealer: p.dealer, turn: leader, phase: 'play',
     trick: { no: 1, leader, plays: [], multiplier: 1 }, tricksDone: 0, seats,
     teams: { mi: emptyTeam(), vi: emptyTeam() }, knownTo: {}, voidKnown: { S: [], W: [], N: [], E: [] },
-    signalsLog: [], partnerHandShown: false, perks: { ...perks }, rngCounter: 0, table: [], pijanoUsed: [],
+    signalsLog: [], asks: [], partnerHandShown: false, perks: { ...perks }, rngCounter: 0, table: [], pijanoUsed: [],
   };
   const events: GameEvent4[] = [];
   events.push({ t: 'handStarted', handNo: p.handNo, dealer: p.dealer, leader });
@@ -167,18 +167,14 @@ export function legalPlays4(s: Hand4State, seat: Seat): string[] {
   return [...sc, ...turn].map((c) => c.uid);
 }
 
-/** Signals the leader may attach to leading `uid` (checked against the hand including the led card). */
+/**
+ * Signals the leader may attach to leading `uid`. Both are claims, not checked facts (§20): any lead
+ * may carry Tučem or Strišo, as at a real table. Reading the hand is the caller's job.
+ */
 export function legalSignals4(s: Hand4State, seat: Seat, uid: string): Signal[] {
   if (s.phase !== 'play' || s.turn !== seat || s.trick.plays.length !== 0) return [];
-  const hand = s.seats[seat].hand;
-  const card = hand.find((c) => c.uid === uid);
-  if (!card) return [];
-  const sc = hand.filter((c) => c.suit === card.suit);
-  const out: Signal[] = [];
-  if (sc.filter((c) => c.rank === '3' || c.rank === '2' || c.rank === 'A').length >= 2) out.push('tucem');
-  if (sc.length - 1 >= 2) out.push('striso');
-  if (sc.length === 1) out.push('volo');
-  return out;
+  if (!s.seats[seat].hand.some((c) => c.uid === uid)) return [];
+  return ['tucem', 'striso'];
 }
 
 export function scoreHand4(s: Hand4State): Record<Team, SideBreakdown> {
@@ -299,11 +295,21 @@ function doPlay(s: Hand4State, a: Extract<Action4, { type: 'play' }>, events: Ga
       s.trick.signal = { seat, kind: signal, suit: card.suit };
       s.signalsLog.push({ trickNo: s.trick.no, seat, kind: signal, suit: card.suit });
       events.push({ t: 'signal', seat, kind: signal, suit: card.suit });
-      if (signal === 'volo' && !s.voidKnown[seat].includes(card.suit)) s.voidKnown[seat].push(card.suit);
     }
+    // this lead answers any Strišo ask made to this seat
+    for (const a of s.asks ?? []) if (a.to === seat) a.answered = true;
   } else {
     const suit = ledSuit(s)!;
     if (card.suit !== suit && !turned && !s.voidKnown[seat].includes(suit)) s.voidKnown[seat].push(suit);
+    const sg = s.trick.signal;
+    if (sg?.kind === 'striso' && PARTNER_OF[sg.seat] === seat) {
+      // §20: points on the partner's (claimed) winner, or a lišina of another suit = "lead me this suit"
+      if (BASE_THIRDS[card.rank] > 0) events.push({ t: 'strisoReply', seat, to: sg.seat, kind: 'points', suit: card.suit });
+      else if (card.suit !== suit) {
+        (s.asks ??= []).push({ trickNo: s.trick.no, seat, to: sg.seat, suit: card.suit, answered: false });
+        events.push({ t: 'strisoReply', seat, to: sg.seat, kind: 'ask', suit: card.suit });
+      }
+    }
   }
   if (s.trick.plays.length === 4) { resolve(s, events); return; }
   s.turn = nextSeat(seat);
@@ -380,8 +386,6 @@ function doFora(s: Hand4State, a: Extract<Action4, { type: 'fora' }>, events: Ga
       s.seats[lead.seat].hand.push(card);
       know(s, card.uid, team);
       s.trick.excludedLead = card.uid;
-      // the returned card is in hand again: a Volo void for that suit no longer holds
-      if (s.trick.signal?.kind === 'volo') s.voidKnown[lead.seat] = s.voidKnown[lead.seat].filter((x) => x !== card.suit);
       s.trick.signalCarry = s.trick.signal?.kind;
       s.trick.signal = undefined;
       s.trick.forcedTeam = s.trick.tucemFora ? otherTeam(TEAM_OF[lead.seat]) : undefined;

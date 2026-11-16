@@ -128,6 +128,11 @@ const S: Record<string, [string, string]> = {
   'tip.draw': ['Karta koju povučeš vidi se protivniku, a i njegova tebi.', 'Drawn cards are shown to both players.'],
   'tip.akuza': ['Akuže se prijavljuju same.', 'Declarations are scored automatically.'],
   'tip.fora': ['Fore troše rakiju; svaka jednom po ruci.', 'Tricks cost rakija; each once per hand.'],
+  'tip.forgeryVi': ['Crveni F ili žig FALSA · VI: protivnička falsa karta. Tebi je obična lišina, a njima vrijedi kao duja ili trica. Pređi mišem preko nje u ruci za detalje.', 'A red F or a FALSA · VI stamp marks an opponents’ forgery: a plain low card for you, but a 2 or a 3 for them. Hover one in your hand for details.'],
+  'forge.viTitle': ['Protivnička falsa karta', 'Opponents’ forgery'],
+  'forge.viBody': ['Tebi je to obična karta ({printed}). Kad je ima protivnik, vrijedi kao {copy} (snaga i punti).', 'For you it’s just the {printed}. When an opponent holds it, it counts as the {copy} (strength and points).'],
+  'forge.miTitle': ['Tvoja falsa karta', 'Your forgery'],
+  'forge.miBody': ['Prava karta je {printed}, ali kad je ti igraš, vrijedi kao {copy} (snaga i punti). Protivniku bi bila obična karta.', 'Really the {printed}, but when you play it, it counts as the {copy} (strength and points). For an opponent it’s a plain card.'],
   'tip.summary': ['Bele se zbrajaju; ostatak se gubi.', 'Thirds add up; the leftover fraction is lost.'],
   // ---- Partneri (§18.8) ----
   'mode.partneri': ['Partneri (2v2)', 'Partners (2v2)'],
@@ -147,13 +152,18 @@ const S: Record<string, [string, string]> = {
   'pick.perk': ['Vještina', 'Perk'],
   'signal.tucem': ['Tučem', 'Tučem'],
   'signal.striso': ['Strišo', 'Strišo'],
-  'signal.volo': ['Volo', 'Volo'],
-  'signal.tucemDesc': ['Jak sam u boji: baci najjaču i vrati mi boju', "I'm strong here: play your highest and lead it back"],
-  'signal.strisoDesc': ['Imam još te boje: ne uzimaj', "I have more of this suit: don't overtake"],
-  'signal.voloDesc': ['To mi je zadnja te boje', 'That was my last card of this suit'],
+  'signal.tucemDesc': ['Baci najjaču kartu te boje i vrati mi boju', 'Play your strongest card of this suit and lead it back to me'],
+  'signal.strisoDesc': ['Zadnja mi je te boje i sigurno nosi: daj punte ili traži boju', 'My last card of this suit and a sure winner: give points or ask for a suit'],
   'signal.leadOnly': ['Znak se daje samo kad otvaraš', 'You can only signal when you lead'],
   'toast.signalIllegal': ['Taj znak ne ide s tom kartom', "That signal doesn't fit that card"],
   'toast.partnerSignal': ['{name}: {signal}!', '{name}: {signal}!'],
+  'toast.tucemPartner': ['{name}: Tučem! Baci najjaču kartu te boje i vrati mi boju', '{name}: Tučem! Play your strongest card of this suit, then lead it back'],
+  'toast.tucemReturn': ['{name}: vrati mi {suit}!', '{name}: lead {suit} back to me!'],
+  'toast.strisoPartner': ['{name}: Strišo! Daj punte, ili baci lišinu boje koju želiš', '{name}: Strišo! Give points, or throw a low card of the suit you want led'],
+  'toast.strisoPoints': ['{name} ti daje punte', '{name} gives you points'],
+  'toast.strisoAsk': ['{name} traži {suit}', '{name} asks for {suit}'],
+  'toast.strisoAskMine': ['Tražiš {suit}: {name} otvara {suit}', 'You asked for {suit}: {name} will lead it'],
+  'toast.strisoAskLead': ['{name} traži {suit}: otvori {suit}', '{name} wants {suit}: lead {suit}'],
   'toast.pickSeat': ['Odaberi protivnika (klikni sliku)', 'Pick an opponent (click a portrait)'],
   'toast.seatDrunk': ['{name} je pijan: igra nasumce', '{name} is drunk: plays at random'],
   'toast.seatPeeked': ['{name} ti je proviri u karte', '{name} peeked at your cards'],
@@ -194,8 +204,8 @@ const S: Record<string, [string, string]> = {
 };
 
 export const HOWTO4: Record<Lang, string> = {
-  hr: 'Igraš u paru s partnerom preko puta. Sve 40 karte se podijele, po 10 svakome, bez maca. Igra se u smjeru kazaljke na satu. Akuže se prijavljuju prije prve karte i idu paru. Partija do {target}. Kad otvaraš, možeš dati znak: Tučem (imam jake karte, baci najjaču i vrati mi boju), Strišo (imam još te boje, ne uzimaj), Volo (to mi je zadnja te boje).',
-  en: "You play with a partner sitting opposite. All 40 cards are dealt, 10 each, with no stock. Play goes clockwise. Declarations are made before your first card and score for your team. A match goes to {target}. When you lead you may signal: Tučem (I'm strong here: play your highest and lead this suit back), Strišo (I have more of this suit: don't overtake), Volo (that was my last card of this suit).",
+  hr: 'Igraš u paru s partnerom preko puta. Sve 40 karte se podijele, po 10 svakome, bez maca. Igra se u smjeru kazaljke na satu. Akuže se prijavljuju prije prve karte i idu paru. Partija do {target}. Kad otvaraš, možeš dati znak: Tučem (baci najjaču kartu te boje i vrati mi boju; može i s malom kartom, npr. kad imaš asa i dvicu, a tražiš partnerovu trojku), Strišo (zadnja mi je te boje i nosi: partner ti daje punte, a ako nema, baci lišinu boje koju želi da otvoriš). Oba znaka možeš dati kad god otvaraš, a brojiti karte je tvoj posao.',
+  en: "You play with a partner sitting opposite. All 40 cards are dealt, 10 each, with no stock. Play goes clockwise. Declarations are made before your first card and score for your team. A match goes to {target}. When you lead you may signal: Tučem (play your strongest card of this suit and lead it back to me; you can lead a low card with it, e.g. holding the A and 2 to find your partner's 3), Strišo (my last card of this suit and a winner: your partner gives you points, or with none throws a low card of the suit they want you to lead). Both signals work on any lead; counting the cards is up to you.",
 };
 
 export const HOWTO: Record<Lang, string[]> = {

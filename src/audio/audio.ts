@@ -88,11 +88,31 @@ export class AudioManager {
     if (this.ctx) await Promise.all(Object.values(v).map((rel) => this.buffer(rel)));
   }
 
-  private async fetchRaw(rel: string): Promise<void> {
-    if (this.raw.has(rel) || this.buffers.has(rel)) return;
-    const b = await this.assets.fetchAudio(rel);
-    if (b) this.raw.set(rel, b);
-    else this.buffers.set(rel, null);
+  /**
+   * Fetch and decode one voice line now, so it plays on cue (the match-start line fires with the
+   * first deal, before the background preload of the persona has finished).
+   */
+  async readyVoice(persona: PersonaId, lineId: string): Promise<void> {
+    if (!this.enabled) return;
+    const rel = this.assets.manifest.audio.voice[persona]?.[lineId];
+    if (!rel) return;
+    await this.fetchRaw(rel);
+    if (this.ctx) await this.buffer(rel);
+  }
+
+  private fetching = new Map<string, Promise<void>>();
+
+  private fetchRaw(rel: string): Promise<void> {
+    if (this.raw.has(rel) || this.buffers.has(rel)) return Promise.resolve();
+    const inflight = this.fetching.get(rel);
+    if (inflight) return inflight;
+    const p = this.assets.fetchAudio(rel).then((b) => {
+      if (b) this.raw.set(rel, b);
+      else this.buffers.set(rel, null);
+      this.fetching.delete(rel);
+    });
+    this.fetching.set(rel, p);
+    return p;
   }
 
   private buffer(rel: string): Promise<AudioBuffer | null> {

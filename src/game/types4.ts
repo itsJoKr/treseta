@@ -13,8 +13,11 @@ export function otherTeam(t: Team): Team { return t === 'mi' ? 'vi' : 'mi'; }
 export function seatsOf(t: Team): Seat[] { return t === 'mi' ? ['S', 'N'] : ['W', 'E']; }
 export function opponentsOf(s: Seat): Seat[] { return seatsOf(otherTeam(TEAM_OF[s])); }
 
-export type Signal = 'tucem' | 'striso' | 'volo';
-export const SIGNALS: Signal[] = ['tucem', 'striso', 'volo'];
+// Croatian trešeta uses two signs (hr.wikipedia): Tučem and Strišo. Strišo (§20) = "my last card of
+// this suit, and it wins by count": the partner answers by loading points or by throwing a lišina
+// of the suit they want led next (an ask).
+export type Signal = 'tucem' | 'striso';
+export const SIGNALS: Signal[] = ['tucem', 'striso'];
 
 /** owner is always 'player' (uid 'p:'); the holder is whichever hand holds it. */
 export interface Card4 extends CardInst { ukrasTeam?: Team }
@@ -75,6 +78,8 @@ export interface Hand4State {
   /** public void knowledge */
   voidKnown: Record<Seat, Suit[]>;
   signalsLog: { trickNo: number; seat: Seat; kind: Signal; suit: Suit }[];
+  /** Strišo asks (§20): `seat` threw a lišina of `suit` on `to`'s Strišo; open until `to` next leads. Optional for old saves. */
+  asks?: StrisoAsk[];
   partnerHandShown: boolean;
   perks: Perks4;
   ultima?: { team: Team; points: number };
@@ -82,6 +87,8 @@ export interface Hand4State {
   table: Card4[];
   pijanoUsed: string[];
 }
+
+export interface StrisoAsk { trickNo: number; seat: Seat; to: Seat; suit: Suit; answered: boolean }
 
 export type Action4 =
   | { type: 'play'; seat: Seat; uid: string; signal?: Signal }
@@ -96,6 +103,8 @@ export type GameEvent4 =
   | { t: 'turn'; seat: Seat; pos: 1 | 2 | 3 | 4; legal: string[]; signals: Record<string, Signal[]> }
   | { t: 'signal'; seat: Seat; kind: Signal; suit: Suit }
   | { t: 'cardPlayed'; seat: Seat; uid: string; pos: 1 | 2 | 3 | 4; drunk: boolean }
+  /** the partner's answer to a Strišo: points loaded, or a lišina of `suit` = "lead this suit" */
+  | { t: 'strisoReply'; seat: Seat; to: Seat; kind: 'points' | 'ask'; suit: Suit }
   | { t: 'leadReturned'; seat: Seat; uid: string }
   | { t: 'revealed'; seat: Seat; uids: string[]; to: Team; via: RevealVia }
   | { t: 'swapped'; a: string; b: string }

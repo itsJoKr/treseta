@@ -239,7 +239,7 @@ export class VoiceTable4 {
   }
 
   signal(seat: Seat, kind: string): void {
-    if (kind !== 'tucem') return; // Strišo and Volo have no voice line (§18.2)
+    if (kind !== 'tucem') return; // Strišo has no voice line (§18.2)
     if (seat === 'N') this.speak('N', 'partner_signal');
     else if (seat === 'W' || seat === 'E') this.speak(seat, 'opp_signal');
   }

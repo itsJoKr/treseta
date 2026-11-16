@@ -87,6 +87,8 @@ export class ShopScreen {
     shop.offers.forEach((o, i) => {
       const artEl = o.kind === 'fora'
         ? h('div', { class: 'oart fora', style: `background-image:url(${art.fora(o.id)})` })
+        : o.kind === 'falsa' && art.falsa()
+          ? h('div', { class: 'oart fora', style: `background-image:url(${art.falsa()})` })
         : o.kind === 'falsa'
           ? h('div', { class: 'oart falsa' }, h('div', { class: 'mini', style: `background-image:url(${this.tex.faceUrl({ suit: 'bate', rank: '4' })})` }), h('span', { class: 'arrow', text: '→' }), h('div', { class: 'mini q', text: '?' }), h('div', { class: 'band', text: 'FALSA' }))
           : h('div', { class: 'oart', style: `background-image:url(${o.kind === 'ukras' ? art.badge(o.id) : art.rakijaFull()})` });

@@ -25,7 +25,6 @@ function tweenP(target: gsap.TweenTarget, vars: gsap.TweenVars): Promise<void> {
 export const SIGNAL_PATHS: Record<Signal, { d: string; stroke?: boolean }> = {
   tucem: { d: 'M12 1.8 14.6 8.4 21.6 7.4 17 12.4 21.2 17.9 14.4 16.2 12 22.6 9.6 16.2 2.8 17.9 7 12.4 2.4 7.4 9.4 8.4Z' },
   striso: { d: 'M3 9.5c3-3.2 6-3.2 9 0s6 3.2 9 0M3 15.5c3-3.2 6-3.2 9 0s6 3.2 9 0', stroke: true },
-  volo: { d: 'M12 2.5 20 11.5H15V21.5H9V11.5H4Z' },
 };
 
 const iconTex = new Map<Signal, THREE.Texture>();

@@ -41,6 +41,8 @@ export interface BotView4 {
   plays: PlayView[];
   signal?: { seat: Seat; kind: Signal; suit: Suit };
   signalsLog: { trickNo: number; seat: Seat; kind: Signal; suit: Suit }[];
+  /** open Strišo asks (public: the lišina was thrown face up), newest last */
+  asks: { trickNo: number; seat: Seat; to: Seat; suit: Suit }[];
   forcedTeam?: Team;
   multiplier: 1 | 2;
   handSizes: Record<Seat, number>;
@@ -91,6 +93,7 @@ export function buildView4(s: Hand4State, mem: BotMemory4, deck: Card4[]): BotVi
     me, team, partner: PARTNER_OF[me], trickNo: s.trick.no, pos: (s.trick.plays.length + 1) as 1 | 2 | 3 | 4,
     leader: s.trick.leader, hand: mine.hand.map((c) => ({ ...c })), myTricaTarget: mine.tricaTarget, legal, signalsFor,
     plays, signal: s.trick.signal ? { ...s.trick.signal } : undefined, signalsLog: s.signalsLog.map((x) => ({ ...x })),
+    asks: (s.asks ?? []).filter((a) => !a.answered).map(({ trickNo, seat, to, suit }) => ({ trickNo, seat, to, suit })),
     forcedTeam: s.trick.forcedTeam, multiplier: s.trick.multiplier, handSizes, known, unseen,
     voids: { S: s.voidKnown.S.slice(), W: s.voidKnown.W.slice(), N: s.voidKnown.N.slice(), E: s.voidKnown.E.slice() },
     teamThirds: { mi: s.teams.mi.thirds, vi: s.teams.vi.thirds },

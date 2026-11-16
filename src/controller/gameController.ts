@@ -29,6 +29,7 @@ import type { Action, CardInst, DeckCard, ForaId, GameEvent, HandState, Side, Si
 import { other } from '../game/types';
 import { UKRASI } from '../game/ukrasi';
 import { wait } from '../render/animator';
+import { VOICE_EVENTS } from '../data/voiceEvents';
 import type { Animator4 } from '../render/animator4';
 import type { CardObject, CardTextures } from '../render/cardMesh';
 import type { FX } from '../render/fx';
@@ -162,6 +163,8 @@ export class GameController {
     hud.setLive(0, 0);
     hud.setSeen([]);
     void this.d.audio.preloadVoice(this.opp.persona);
+    // the match-start line fires with the first deal: have it decoded first (capped at 2.5 s)
+    await Promise.race([Promise.all(VOICE_EVENTS.match_start.lines.map((l) => this.d.audio.readyVoice(this.opp.persona, l))), wait(2500)]);
     while (this.match.status !== 'over' && !this.destroyed) {
       await this.runHand();
     }
@@ -264,6 +267,7 @@ export class GameController {
     if (!this.tipSeen('follow')) this.tip('follow');
     const anyFora = s.sides.player.fore.some((f) => canUseFora(s, 'player', f).ok);
     if (anyFora && !this.tipSeen('fora')) this.tip('fora');
+    this.forgeryTip(s.sides.player.hand);
     if (this.d.flags.autoplay) {
       return wait(200 + this.autoRng() * 200).then(() => this.autoAction());
     }
@@ -383,9 +387,16 @@ export class GameController {
   }
 
   private onHover(card: CardObject | null): void {
-    if (!card || !card.data.ukras) { this.d.hud.hideTooltip(); return; }
+    if (!card || (!card.data.ukras && !card.data.forge)) { this.d.hud.hideTooltip(); return; }
     const p = this.d.anim.screenOfCard(card);
-    this.d.hud.ukrasTooltip(card.data.ukras, p.x, p.y - 150 * this.uiScale());
+    if (card.data.ukras) this.d.hud.ukrasTooltip(card.data.ukras, p.x, p.y - 150 * this.uiScale());
+    else this.d.hud.forgeTooltip(card.data, p.x, p.y - 150 * this.uiScale());
+  }
+
+  /** One-time tip the first time an opponents' forgery shows up (in my hand or on the table). */
+  private forgeryTip(cards: { forge?: { team: string } }[]): void {
+    if (this.tipSeen('forgeryVi') || !cards.some((c) => c.forge?.team === 'vi')) return;
+    this.tip('forgeryVi', 5200);
   }
 
   private uiScale(): number { return parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--ui-scale')) || 1; }
@@ -583,6 +594,7 @@ export class GameController {
           await anim.botToTrick(o, e.role === 'lead', strong);
           if (this.pendingBotVoice) { this.director.onEvent(this.pendingBotVoice); this.pendingBotVoice = null; }
         }
+        this.forgeryTip([c]);
         break;
       }
       case 'leadReturned': {
@@ -836,9 +848,9 @@ export class GameController {
   }
 
   private tipSeen(id: string): boolean { return this.d.settings().tipsSeen.includes(id); }
-  private tip(id: string): void {
+  private tip(id: string, ms = 3200): void {
     this.d.markTip(id);
-    void wait(400).then(() => this.d.ov.toast(t('tip.' + id), 'tip', 3200));
+    void wait(400).then(() => this.d.ov.toast(t('tip.' + id), 'tip', ms));
   }
 
   private updateChips(): void {

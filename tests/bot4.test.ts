@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { chooseCard4, chooseFora4 } from '../src/game/bot4';
+import { chooseCard4, chooseFora4, chooseSignal4 } from '../src/game/bot4';
 import { buildView4, deckList4, newMemory4, observe4 } from '../src/game/botMemory4';
 import type { BotMemory4 } from '../src/game/botMemory4';
 import { standardDeck } from '../src/game/cards';
@@ -77,7 +77,7 @@ function simulate(tier: number, k: number): Hand4State {
 function view(st: Hand4State, seat: Seat, k: Partial<Knobs4> = {}) {
   return { v: buildView4(st, observe4(newMemory4(seat), [], 1, rngFor('m')), list), knobs: { ...knobsFor('bepo'), mistakeRate: 0, pimcMaxCards: 0, ...k } };
 }
-const play = (s: Hand4State, seat: Seat, spec: string, signal?: 'tucem' | 'striso' | 'volo') => applyAction4(s, { type: 'play', seat, uid: u4(spec), signal }).state;
+const play = (s: Hand4State, seat: Seat, spec: string, signal?: 'tucem' | 'striso') => applyAction4(s, { type: 'play', seat, uid: u4(spec), signal }).state;
 
 describe('bot4', () => {
   for (const tier of [1, 2, 3, 4]) {
@@ -131,20 +131,15 @@ describe('bot4', () => {
     expect(chooseCard4(r3.v, r3.knobs, rngFor('c')).uid).toBe(u4('kupe_6'));
   });
 
-  it('obeys Tučem (highest) and Strišo (lowest)', () => {
+  it('obeys Tučem (plays highest)', () => {
     let s = makeState4({ hands: { S: ['kupe_3', 'kupe_2', 'kupe_5'], W: ['kupe_4', 'bate_5'], N: ['kupe_A', 'kupe_K', 'kupe_6'], E: ['kupe_7', 'spade_7'] } });
     s = play(s, 'S', 'kupe_5', 'tucem');
     s = play(s, 'W', 'kupe_4');
     const { v, knobs } = view(s, 'N');
     expect(chooseCard4(v, knobs, rngFor('t')).uid).toBe(u4('kupe_A'));
-    let s2 = makeState4({ hands: { S: ['kupe_3', 'kupe_C', 'kupe_5', 'bate_4'], W: ['bate_5', 'spade_4'], N: ['kupe_A', 'kupe_K', 'kupe_6'], E: ['kupe_7', 'spade_7'] } });
-    s2 = play(s2, 'S', 'kupe_5', 'striso');
-    s2 = play(s2, 'W', 'bate_5');
-    const r2 = view(s2, 'N');
-    expect(chooseCard4(r2.v, r2.knobs, rngFor('s')).uid).toBe(u4('kupe_6'));
   });
 
-  it('returns the suit after the partner’s Tučem; leads a master into a Volo partner’s void', () => {
+  it('returns the suit after the partner’s Tučem; leads a master into a Strišo partner’s void', () => {
     const s = makeState4({ hands: { S: ['bate_4'], W: ['bate_5'], N: ['kupe_K', 'kupe_6', 'spade_3', 'bate_7'], E: ['bate_6'] }, leader: 'N', trickNo: 3 });
     s.signalsLog.push({ trickNo: 1, seat: 'S', kind: 'tucem', suit: 'kupe' });
     const { v, knobs } = view(s, 'N');
@@ -154,6 +149,78 @@ describe('bot4', () => {
     s2.voidKnown.S = ['spade'];
     const r2 = view(s2, 'N');
     expect(chooseCard4(r2.v, r2.knobs, rngFor('v')).uid).toBe(u4('spade_3'));
+  });
+
+  it('answers the partner’s Strišo: follow with points, load a non-master A, else ask with a lišina of the best suit', () => {
+    const base = (n: string[]) => {
+      let s = makeState4({ hands: { S: ['bate_K', 'kupe_4', 'dinari_4'], W: ['bate_4', 'kupe_5', 'kupe_2'], N: n, E: ['bate_6', 'kupe_6', 'dinari_5'] } });
+      s = play(s, 'S', 'bate_K', 'striso');
+      return play(s, 'W', 'bate_4');
+    };
+    const pick = (s: Hand4State) => { const { v, knobs } = view(s, 'N', { readSignals: 1 }); return chooseCard4(v, knobs, rngFor('s')).uid; };
+    // must follow: the most valuable bate
+    expect(pick(base(['bate_5', 'bate_F', 'spade_3']))).toBe(u4('bate_F'));
+    // void, holds a non-master kupe A (the 2 is still out): loads it
+    expect(pick(base(['kupe_A', 'spade_3', 'spade_4']))).toBe(u4('kupe_A'));
+    // void, nothing to give: throws the spade lišina, asking for spades (where it holds the 3)
+    expect(pick(base(['spade_3', 'spade_4', 'dinari_6']))).toBe(u4('spade_4'));
+  });
+
+  it('leads the asked suit low after its own Strišo', () => {
+    const s = makeState4({ hands: { S: ['spade_3', 'kupe_4'], W: ['bate_5', 'kupe_5'], N: ['spade_5', 'spade_K', 'kupe_6'], E: ['bate_6', 'kupe_7'] }, leader: 'N', trickNo: 4 });
+    s.asks = [{ trickNo: 3, seat: 'S', to: 'N', suit: 'spade', answered: false }];
+    const { v, knobs } = view(s, 'N', { readSignals: 1 });
+    expect(chooseCard4(v, knobs, rngFor('a')).uid).toBe(u4('spade_5'));
+  });
+
+  it('calls Strišo on its last card of a suit only when its own count says it wins', () => {
+    const hands = { S: ['kupe_4', 'bate_5', 'spade_6'], W: ['dinari_4', 'kupe_3', 'bate_6'], N: ['dinari_7', 'kupe_5', 'bate_7', 'spade_4'], E: ['dinari_5', 'kupe_6', 'bate_4'] };
+    const s = makeState4({ hands, leader: 'N', trickNo: 2 });
+    // N remembers every stronger dinari being played: the 7 wins by count
+    const higher = ['dinari_3', 'dinari_2', 'dinari_A', 'dinari_K', 'dinari_C', 'dinari_F'];
+    const seen = (uids: string[]) => uids.map((x, i) => ({ t: 'cardPlayed' as const, seat: (['S', 'W', 'E'] as Seat[])[i % 3], uid: u4(x), pos: 1 as const, drunk: false }));
+    const knobs = { ...knobsFor('bepo'), mistakeRate: 0, pimcMaxCards: 0, signalUse: 1 };
+    const v = buildView4(s, observe4(newMemory4('N'), seen(higher), 1, rngFor('m')), list);
+    expect(chooseCard4(v, knobs, rngFor('l'))).toEqual({ uid: u4('dinari_7'), signal: 'striso' });
+    // it forgot the dinari K: it can't be sure, so no Strišo on that card
+    const v2 = buildView4(s, observe4(newMemory4('N'), seen(higher.filter((x) => x !== 'dinari_K')), 1, rngFor('m')), list);
+    const ch = chooseCard4(v2, knobs, rngFor('l'));
+    expect(ch.uid === u4('dinari_7') && ch.signal === 'striso').toBe(false);
+    expect(chooseSignal4(v2, u4('dinari_7'), knobs, rngFor('g'))).toBeUndefined();
+  });
+
+  it('Tučem to find the partner’s 3: with the A and 2 it leads a low card of the suit', () => {
+    const hands = { S: ['kupe_4', 'spade_3', 'bate_5'], W: ['kupe_5', 'bate_6', 'spade_6'], N: ['spade_A', 'spade_2', 'spade_5', 'kupe_K', 'bate_7'], E: ['kupe_6', 'bate_4', 'dinari_4'] };
+    const s = makeState4({ hands, leader: 'N', trickNo: 2 });
+    const { v, knobs } = view(s, 'N', { signalUse: 1 });
+    expect(chooseCard4(v, knobs, rngFor('t'))).toEqual({ uid: u4('spade_5'), signal: 'tucem' });
+    // the 3 is known to be with an opponent: no point looking for it
+    const s2 = makeState4({ hands: { ...hands, S: ['kupe_4', 'bate_5'], W: ['kupe_5', 'bate_6', 'spade_3'] }, leader: 'N', trickNo: 2 });
+    s2.knownTo[u4('spade_3')] = ['mi', 'vi'];
+    const r2 = view(s2, 'N', { signalUse: 1 });
+    const ch = chooseCard4(r2.v, r2.knobs, rngFor('t'));
+    expect(ch.uid === u4('spade_5') && ch.signal === 'tucem').toBe(false);
+  });
+
+  it('answers a low Tučem lead with its strongest card (the 3), and loads no points onto a losing trick when void', () => {
+    const lead = (n: string[]) => {
+      let s = makeState4({ hands: { S: ['spade_5', 'spade_2', 'spade_A'], W: ['spade_K', 'kupe_5', 'bate_6'], N: n, E: ['spade_6', 'kupe_6', 'bate_4'] } });
+      s = play(s, 'S', 'spade_5', 'tucem');
+      return play(s, 'W', 'spade_K');
+    };
+    const pick = (s: Hand4State) => { const { v, knobs } = view(s, 'N', { readSignals: 1 }); return chooseCard4(v, knobs, rngFor('f')).uid; };
+    expect(pick(lead(['spade_3', 'spade_4', 'kupe_7']))).toBe(u4('spade_3'));
+    // void in spade, W's K is winning: throw a lišina, not the kupe A
+    expect(pick(lead(['kupe_A', 'kupe_7', 'bate_7']))).not.toBe(u4('kupe_A'));
+  });
+
+  it('gives Tučem with two of the 3, 2 and A: on a winning lead, or a low card seeking the 3', () => {
+    const s = makeState4({ hands: { S: ['kupe_4'], W: ['kupe_5'], N: ['kupe_3', 'kupe_A', 'kupe_6', 'bate_7', 'bate_K'], E: ['kupe_7'] }, leader: 'N', trickNo: 2 });
+    const { v, knobs } = view(s, 'N', { signalUse: 1 });
+    expect(chooseSignal4(v, u4('kupe_3'), knobs, rngFor('g'))).toBe('tucem');
+    // with the 3 and A a low kupe can lose to the 2: no Tučem
+    expect(chooseSignal4(v, u4('kupe_6'), knobs, rngFor('g'))).toBeUndefined();
+    expect(chooseSignal4(v, u4('bate_7'), knobs, rngFor('g'))).toBeUndefined();
   });
 
   it('Vi fore policy: Pogled on the first turn targets the Mi seat with more unknown cards', () => {

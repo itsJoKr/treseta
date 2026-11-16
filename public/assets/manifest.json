@@ -64,7 +64,8 @@
       "divlje": "ukrasi/divlje.webp",
       "glasno": "ukrasi/glasno.webp",
       "ponocno": "ukrasi/ponocno.webp",
-      "ribarsko": "ukrasi/ribarsko.webp"
+      "ribarsko": "ukrasi/ribarsko.webp",
+      "prevrtljivo": "ukrasi/prevrtljivo.webp"
     },
     "fore": {
       "pogled": "fore/pogled.webp",
@@ -76,7 +77,8 @@
       "napij_ga": "fore/napij_ga.webp",
       "vrati": "fore/vrati.webp",
       "trica_iz_rukava": "fore/trica_iz_rukava.webp",
-      "duplo_ili_nista": "fore/duplo_ili_nista.webp"
+      "duplo_ili_nista": "fore/duplo_ili_nista.webp",
+      "briskula": "fore/briskula.webp"
     },
     "portraits": {
       "tonci": "portraits/tonci.webp",
@@ -98,7 +100,8 @@
       "coin": "ui/coin.webp",
       "rakija_full": "ui/rakija_full.webp",
       "rakija_empty": "ui/rakija_empty.webp",
-      "logo": "ui/logo.webp"
+      "logo": "ui/logo.webp",
+      "falsa": "ui/falsa.webp"
     }
   },
   "audio": {

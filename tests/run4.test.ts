@@ -28,7 +28,7 @@ describe('run4 (§18.4 with §19.1 numbers)', () => {
     r = onMatchWon4(r, { mi: 12, vi: 9 }, 3, 1);
     expect(r.soldi).toBe(6 + 8 + 3 + 3);
     expect(r.status).toBe('shop');
-    expect(r.shop!.offers.length).toBe(3);
+    expect(r.shop!.offers.length).toBe(4);
     expect(r.shop!.offers.every((o) => o.rarity === 'common')).toBe(true);
     expect(['E', 'S', 'W', 'N', 'E', 'S']).toEqual([0, 1, 2, 3, 4, 5].map(firstDealer4));
   });
@@ -93,7 +93,7 @@ describe('run4 (§18.4 with §19.1 numbers)', () => {
     expect(a.map((c) => cardKey(c))).toEqual(matchMarks(r).map((c) => cardKey(c)));
     expect(a.length).toBe(4);
     expect(a.map((c) => cardKey(c))).not.toContain('kupe_3');
-    expect(matchForgeries(r).length).toBe(2);
+    expect(matchForgeries(r).length).toBe(1);
     const d = matchDeck(r);
     expect(d.find((c) => cardKey(c) === 'kupe_3')).toMatchObject({ ukras: 'srebreno', ukrasTeam: 'mi' });
     expect(r.deck.filter((c) => c.ukras).length).toBe(1);

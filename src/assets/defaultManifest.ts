@@ -2,7 +2,6 @@
 import type { CharacterId } from '../game/characters';
 import { RANKS, rankFile, SUITS } from '../game/cards';
 import { FORA_IDS } from '../game/fore';
-import { isProceduralFora, isProceduralUkras } from './proceduralIds';
 import type { OpponentId, PersonaId, Suit } from '../game/types';
 import { UKRAS_IDS } from '../game/ukrasi';
 import { linesForPersona } from '../data/voiceLines';
@@ -32,7 +31,7 @@ export interface AssetManifest {
     fore: Record<string, string>;
     portraits: Record<CharacterId, string>;
     env: { table: string; konoba: string; map: string; shop: string };
-    ui: { coin: string; rakija_full: string; rakija_empty: string; logo: string };
+    ui: { coin: string; rakija_full: string; rakija_empty: string; logo: string; falsa: string };
   };
   audio: {
     sfx: Record<string, { src: string; volume: number }>;
@@ -45,9 +44,9 @@ export function buildDefaultManifest(): AssetManifest {
   const cards: Record<string, string> = {};
   for (const s of SUITS) for (const r of RANKS) cards[`${s}_${rankFile(r)}`] = `cards/${s}_${rankFile(r)}.webp`;
   const ukrasi: Record<string, string> = {};
-  for (const u of UKRAS_IDS) if (!isProceduralUkras(u)) ukrasi[u] = `ukrasi/${u}.webp`;
+  for (const u of UKRAS_IDS) ukrasi[u] = `ukrasi/${u}.webp`;
   const fore: Record<string, string> = {};
-  for (const f of FORA_IDS) if (!isProceduralFora(f)) fore[f] = `fore/${f}.webp`;
+  for (const f of FORA_IDS) fore[f] = `fore/${f}.webp`;
   const sfx: Record<string, { src: string; volume: number }> = {};
   for (const id of SFX_IDS) sfx[id] = { src: `audio/sfx/${id}.mp3`, volume: SFX_VOLUMES[id] };
   const voice = {} as Record<PersonaId, Record<string, string>>;
@@ -69,7 +68,7 @@ export function buildDefaultManifest(): AssetManifest {
         dino: 'portraits/dino.webp', stipe: 'portraits/stipe.webp', ive: 'portraits/ive.webp', frane: 'portraits/frane.webp',
       },
       env: { table: 'env/table_wood.webp', konoba: 'env/bg_konoba.webp', map: 'env/bg_map.webp', shop: 'env/bg_shop.webp' },
-      ui: { coin: 'ui/coin.webp', rakija_full: 'ui/rakija_full.webp', rakija_empty: 'ui/rakija_empty.webp', logo: 'ui/logo.webp' },
+      ui: { coin: 'ui/coin.webp', rakija_full: 'ui/rakija_full.webp', rakija_empty: 'ui/rakija_empty.webp', logo: 'ui/logo.webp', falsa: 'ui/falsa.webp' },
     },
     audio: {
       sfx,

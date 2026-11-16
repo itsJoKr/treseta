@@ -573,6 +573,9 @@ BADGES = {
 }
 
 
+EXTRA_BADGES = ["prevrtljivo"]
+
+
 def components(alpha, thr=32, step=2):  # noqa: C901
     """Connected components of alpha>thr on a grid subsampled by `step`.
     Returns a list of (area_fullres, x0, y0, x1, y1)."""
@@ -697,8 +700,9 @@ def step_badges():
             continue
         for name, b in zip(names, blobs):
             save_png(badge_from_box(img, b, blobs, thr), OUT / "ukrasi" / f"{name}.png")
-    # single-badge overrun generations (badge_<name>), if any exist, override
-    for names in BADGES.values():
+    # single-badge overrun generations (badge_<name>), if any exist, override; Revision 2's
+    # prevrtljivo has no sheet and comes only from its single generation
+    for names in list(BADGES.values()) + [EXTRA_BADGES]:
         for name in names:
             gid = f"badge_{name}"
             if have(gid):
@@ -711,7 +715,7 @@ def step_badges():
 # --------------------------------------------------------------------------- fore, portraits, env
 
 FORE = ["pogled", "zamjena", "namjesteno", "krivi_racun", "ti_otvaraj", "tucem", "napij_ga",
-        "vrati", "trica_iz_rukava", "duplo_ili_nista"]
+        "vrati", "trica_iz_rukava", "duplo_ili_nista", "briskula"]
 FORE_INSET = 0.04
 PORTRAITS = ["tonci", "jure", "luka", "bepo",     # section 13.2 rows 31-34
              "dino", "stipe", "ive", "frane"]   # section 18.4.5 (Partneri)
@@ -785,6 +789,11 @@ def step_ui():
         empty = Image.fromarray(hsv.astype(np.uint8), "HSV").convert("RGB").convert("RGBA")
         empty.putalpha(full.getchannel("A").point(lambda v: int(v * 0.45)))
         save_png(empty, OUT / "ui" / "rakija_empty.png")
+    if have("shop_falsa"):
+        # the Falsa karta shop offer: card-shaped art like the fore
+        im = raw("shop_falsa").convert("RGB")
+        m = round(min(im.size) * FORE_INSET)
+        save_png(crop_to_card(im.crop((m, m, im.width - m, im.height - m))), OUT / "ui" / "falsa.png")
     if have("logo"):
         lg = trim(cutout("logo"), 24)
         lg = fit_box(lg, 1200 * 0.96, 800 * 0.96)

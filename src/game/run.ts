@@ -193,13 +193,16 @@ function tierOrder(t: number): number[] {
 
 export function casicaPrice(run: { casicaBought: number }): number { return CASICA_PRICES[Math.min(run.casicaBought, CASICA_PRICES.length - 1)]; }
 
+/** Offers per shop visit (play-test round 3: 4, up from 3, so there is more to choose between). */
+export const SHOP_OFFERS = 4;
+
 /** Offers for visit v (1..5), seeded rngFor(seed,'shop',mode,v,rerolls). */
 export function generateOffers(run: Pick<ShopRun, 'mode' | 'seed' | 'fore' | 'casicaBought' | 'deck'>, visit: number, rerolls: number): Offer[] {
   const rng = rngFor(run.seed, 'shop', run.mode, visit, rerolls);
   const weights = TIER_WEIGHTS[Math.max(1, Math.min(5, visit))];
   const offers: Offer[] = [];
   const canFalsa = forgeCount(run.deck) < MAX_FORGES && run.deck.some((c) => LISINE.includes(printedOf(c).rank) && !c.ukras && !c.forge);
-  for (let slot = 0; slot < 3; slot++) {
+  for (let slot = 0; slot < SHOP_OFFERS; slot++) {
     const rolled = weighted<number>(rng, [[0, weights[0]], [1, weights[1]], [2, weights[2]]]);
     for (const ti of tierOrder(rolled)) {
       const tier = TIERS[ti];

@@ -342,7 +342,7 @@ Shown after winning matches 1, 2 and 3. HTML overlay on `env/bg_shop.jpg` (§12.
 
 | Element | Rule |
 |---|---|
-| **3 random offers** | Generated on entry (§7.2). Each is sold once; a sold slot shows "Prodano". |
+| **4 random offers** (3 before play-test round 3) | Generated on entry (§7.2). Each is sold once; a sold slot shows "Prodano". |
 | **Promišaj** (reroll) | Replaces **all 3** offers. Costs 2 šoldi, then 3, then 4 … (+1 per reroll within the same visit). |
 | **Izbaci kartu** (remove a card), fixed service | 5 šoldi. Pick any card in your deck; it is removed for the rest of the run. Max 2 per visit. Disabled when the deck has 30 cards. |
 | **Dalje** (continue) | Leave the shop and go to the map. |
@@ -2202,8 +2202,8 @@ Opponent **knobs come from the match tier**, not the character: Dvoboj tier T us
 | 2 | "Kod Jure" | Gazda Jure | 2 | – (0) | – | – | 9 |
 | 3 | "Pod Lozom" | Ive Poštar | 2 | `pogled`, `krivi_racun` (1) | Pozlaćeno on a random A | – | 10 |
 | 4 | "Ribarska" | Dino "Galeb" | 3 | `tucem`, `duplo_ili_nista` (2) | Nabrušeno on a random K, Usoljeno on a random A | – | 11 |
-| 5 | "Kamenolom" | Barba Luka | 3 | `tucem`, `krivi_racun`, `trica_iz_rukava` (2) | Ljuto on a random 3, Pozlaćeno on a random A | 1: a lišina → copy of a random 3 | 12 |
-| 6 | "Na Brdu" (boss) | Did Bepo | 4 | `tucem`, `trica_iz_rukava`, `duplo_ili_nista`, `briskula` (3) | Pozlaćeno on a random 3, Ljuto on a random 3, Nabrušeno on a random 2, Glasno on a random A | 2: a lišina → copy of a random 3; a lišina → copy of a random A | 15 (stats) |
+| 5 | "Kamenolom" | Barba Luka | 3 | `tucem`, `krivi_racun`, `trica_iz_rukava` (2) | Ljuto on a random 3, Pozlaćeno on a random A | 1: a lišina → copy of a random 2 | 12 |
+| 6 | "Na Brdu" (boss) | Did Bepo | 4 | `tucem`, `trica_iz_rukava`, `duplo_ili_nista`, `briskula` (3) | Pozlaćeno on a random 3, Ljuto on a random 3, Nabrušeno on a random 2, Glasno on a random A | 1: a lišina → copy of a random 3 | 15 (stats) |
 
 **Partneri ladder** (start unlocked: Luka, Ive, Dino; beating a pair unlocks both members; the partner persona is the one neither opponent uses)
 
@@ -2213,8 +2213,8 @@ Opponent **knobs come from the match tier**, not the character: Dvoboj tier T us
 | 2 | "Kod Jure" | Jure | Ive | mali (Dino, Tonči) | 2 | – / – (0/0) | – | – | 9 |
 | 3 | "Pod Lozom" | Tonči | Ive | gazda (Stipe, Jure) | 2 | `pogled` / `krivi_racun` (1/1) | Pozlaćeno on a random A | – | 10 |
 | 4 | "Ribarska" | Stipe | Dino | barba (Luka, Ive) | 3 | `tucem` / `duplo_ili_nista` (1/2) | Nabrušeno on a random K, Usoljeno on a random A | – | 11 |
-| 5 | "Kamenolom" | Dino | Luka | gazda (Stipe, Jure) | 3 | `duplo_ili_nista` / `tucem`, `krivi_racun` (2/2) | Ljuto on a random 3, Pozlaćeno on a random A | 1 (→ random 3) | 12 |
-| 6 | "Na Brdu" (boss) | Bepo | Frane | mali (Tonči, Dino) | 4 | `tucem`, `trica_iz_rukava`, `duplo_ili_nista`, `briskula` / `krivi_racun`, `pogled`, `briskula` (3/2) | Pozlaćeno on a random 3, Ljuto on a random 3, Nabrušeno on a random 2, Glasno on a random A | 2 (→ random 3, → random A) | 15 (stats) |
+| 5 | "Kamenolom" | Dino | Luka | gazda (Stipe, Jure) | 3 | `duplo_ili_nista` / `tucem`, `krivi_racun` (2/2) | Ljuto on a random 3, Pozlaćeno on a random A | 1 (→ random 2) | 12 |
+| 6 | "Na Brdu" (boss) | Bepo | Frane | mali (Tonči, Dino) | 4 | `tucem`, `trica_iz_rukava`, `duplo_ili_nista`, `briskula` / `krivi_racun`, `pogled`, `briskula` (3/2) | Pozlaćeno on a random 3, Ljuto on a random 3, Nabrušeno on a random 2, Glasno on a random A | 1 (→ random 3) | 15 (stats) |
 
 - Every row has exactly 2 valid unlocked partners, and the 3 bot personas at each table are all different (asserted by the test in §19.9).
 - The §18.4.1 partner perks are unchanged. The Jure perk discount applies to the shop after that match.
@@ -2252,13 +2252,13 @@ For each of the 3 slots:
 
 | Service | Rule |
 |---|---|
-| **Promišaj** (reroll) | **1** šoldo, then +1 per reroll in the same visit; replaces all 3 offers |
+| **Promišaj** (reroll) | **1** šoldo, then +1 per reroll in the same visit; replaces all 4 offers |
 | **Prebaci ukras** (both modes) | **2** šoldi, max 2 per visit: move one of your ukrasi onto a card with no ukras and no forgery (§18.3.3 flow) |
 | Jure discount (Partneri) | −1 on every price, min 1 (§18.4.1) |
 
 #### 19.2.3 New rule-bending items
 
-New ids: `UkrasId += 'prevrtljivo'`, `ForaId += 'briskula'`, `Offer.kind += 'falsa'`. **No new image files are generated** for them. They use procedural art (§19.4.3); the manifest is not changed for these ids, and `src/assets/procedural.ts` lists them.
+New ids: `UkrasId += 'prevrtljivo'`, `ForaId += 'briskula'`, `Offer.kind += 'falsa'`. They were first drawn procedurally (§19.4.3). **Play-test round 3** gave them painted art from the same pipeline as §13 (`tools/art/prompts.py`): `fore/briskula` (gen `fora_briskula`), `ukrasi/prevrtljivo` (gen `badge_prevrtljivo`, a single wax seal) and `ui/falsa` (gen `shop_falsa`, the Falsa karta shop offer). All three are in the manifest; the procedural drawings in `src/assets/procedural.ts` remain only as fallbacks for missing files.
 
 | Item | Exact effect | Notes |
 |---|---|---|
@@ -2349,8 +2349,8 @@ Consequences:
 | Your forgery, held or played by the other side | The **printed** face + a small ochre "F" tag (28 px circle, top-left under the index block) so you can track it |
 | Vi forgery, played by Vi | Copy face + the same FALSA stamp, with the band in `#7A1F14` and "VI" appended |
 | Vi forgery, in your hand | Printed face + a red dashed border + a small red "F" tag |
-| `prevrtljivo` badge | Procedural: circle r 56 filled `#C46FA0`, 4 px darker rim, glyph "⇄" white, 64 px |
-| `briskula` fora art | Procedural: vertical gradient `#2F5D7C` → `#2A1A10`, with the 4 suit icons (`cards/suits/*.png`) in a diamond (each 120 px) and "BRIŠKULA!" in cream, Alegreya 48 |
+| `prevrtljivo` badge | Painted `ukrasi/prevrtljivo` (mauve wax seal with a chameleon). Fallback: circle r 56 filled `#C46FA0`, 4 px darker rim, glyph "⇄" white, 64 px |
+| `briskula` fora art | Painted `fore/briskula`. Fallback: vertical gradient `#2F5D7C` → `#2A1A10`, with the 4 suit icons (`cards/suits/*.png`) in a diamond (each 120 px) and "BRIŠKULA!" in cream, Alegreya 48 |
 | Falsa karta shop offer | A cream card with a lišina mini face → arrow → "?" (strong) mini face, plus the stamp band |
 | Deck grid and tracker | Forged cards show the copy face with the stamp; tooltip "4 bate → 3 kupe" |
 
@@ -2449,7 +2449,7 @@ On startup, delete `treseta.save.v1` and `treseta.save.partneri.v1` if present, 
 | `voice.test.ts` (update) | `bot_bad_draw` emits no card highlight or reveal; at the deciding hand only match events fire; forgery and Briškula triggers use only the 34 existing ids |
 | `save.test.ts` (update) | v2 keys per mode; v1 keys deleted on startup; resume replays the interrupted hand from the saved hand-end state |
 | `cards.test.ts` (new) | `RANK_INDEX.A === ''`; the other indices unchanged |
-| `manifest.test.ts` (update) | the counts are unchanged; `prevrtljivo` and `briskula` are listed in `procedural.ts` and are **not** required in the manifest |
+| `manifest.test.ts` (update) | 11 ukrasi, 11 fore and 5 ui images (`ui/falsa`); every ukras and fora id has its image in the manifest |
 
 ### 19.10 Revision 2 acceptance checklist
 
@@ -2461,9 +2461,34 @@ On startup, delete `treseta.save.v1` and `treseta.save.partneri.v1` if present, 
 - [ ] **Draws are hidden:** the player never sees the bot's draws and the bot never learns the player's. Viđeno shows only effect reveals; the Odigrano tracker works (key `T`).
 - [ ] Ukrasi follow the team rules in both modes. Vi marks and forgeries are shown, work only for Vi, and are cleared after the match.
 - [ ] Forged duplicates resolve with **"equal strength → the earlier play wins"**, are stamped "FALSA" (procedural, no new images), and never create akuže from duplicate identities. The deck stays at exactly 40 cards.
-- [ ] Prevrtljivo and Briškula! behave per §19.2.3, with procedural badge and art.
+- [ ] Prevrtljivo and Briškula! behave per §19.2.3, with painted badge and art (procedural fallback).
 - [ ] Late bots get wilder per the §19.1.3 tables. The boss pair (Bepo + Frane) / boss Bepo uses Briškula, forgeries and 4 marks.
 - [ ] Partneri keeps the partner pick and **3 distinct bot voices per table** on the 6-match ladder.
 - [ ] Aces have no corner index (`RANK_INDEX.A = ''`; the placeholder and the how-to strip are updated).
 - [ ] v2 saves per mode; v1 saves removed with a one-time toast; resume works at hand boundaries.
 - [ ] All §19.9 tests pass, and the §17 and §18.12 items still pass where §19 doesn't override them.
+
+---
+
+## §20 Revision 3: signals as played in Croatia
+
+Overrides the signal table in §18 (and any later references to Volo).
+
+- Croatian trešeta uses **two** partner signs (hr.wikipedia "Trešeta", *Pravila igre*): **Tučem** and **Strišo**. Volo comes from Italian tressette and is **removed**.
+- **Tučem** means **"throw your strongest card of this suit, and lead the suit back to me"**.
+  - **Legal on any lead**, like Strišo: a claim, not a checked fact. It can go on a low card: holding the A and 2, you lead a lišina with Tučem to find the partner's 3; the partner takes it with the 3 and returns the suit to your 2 and A.
+  - **The partner's answer.** Following suit, play the strongest card of the suit. Void, load points only if the leader's card already holds the trick (`partnerWinsSafe`), else a plain discard. Then, on the next lead, return the suit (lead step 1: a master of it, else the lowest card).
+  - **Bot leaders** give Tučem only with two of the 3, 2 and A of the suit (`Eval4.tucemWorthy`), and either the led card wins by itself (`isMaster`: the partner's strongest card is then points for us) or it is a low card **seeking the 3** (`Eval4.seeks3`: the bot holds the 2 and A but not the 3, the 3 is not known with an opponent or known played, and the partner is not void there). Lead step 3c leads the lowest such card with Tučem, with probability `signalUse`, before trick 9. Lead steps that pick a card for its signal (3b, 3c) attach it directly (`Eval4.leadSignal`).
+  - **Toasts.** When the partner bot leads Tučem, the player gets a hint ("Play your strongest card of this suit, then lead it back"). When the player then leads the next trick holding that suit, a reminder says "lead {suit} back to me".
+- **Strišo** means **"this is my last card of this suit, and it wins"**. This is how the game's Dalmatian players use it. (hr.wikipedia gives other meanings for strišo: "which suit should I return?", "I'll come to your suit", "don't take my card". The game uses the players' local meaning.)
+  - **Legal on any lead.** Strišo is a claim, not a checked fact, as at a real table: the engine never checks that the card is the leader's last of the suit or that it wins. Counting is the caller's job, and a wrong count costs the team (the partner loads points onto a trick that may be lost). The typical case: everyone is out of dinari, and you still hold one.
+  - It sets **no void**: the claim may be false, and the engine must not confirm it.
+  - **The partner's answer.** The partner takes the claim on trust: the trick is ours, so they either give points or ask for a suit:
+    - If the partner follows suit, they play their most valuable card of the suit.
+    - If the partner is void and holds a point card they can spare (a non-master A first, then other non-master point cards), they **load it** (`strisoReply` kind `points`).
+    - With nothing to give, the partner throws a **lišina (4–7) of the suit they want led next**. This is an **ask** (`strisoReply` kind `ask`, stored in `Hand4State.asks`). A lišina thrown while following suit asks for nothing.
+  - **Answering an ask.** The ask stays open until the Strišo leader next leads. A bot leader then leads its lowest card of the asked suit, unless the asker is known to be void there; that is lead step 0, ahead of the Tučem return. For the player, a toast repeats the ask on their lead.
+  - **Bot leaders** call Strišo only when their **own count** says the card wins (`Eval4.strisoWorthy`): it is their last card of the suit, and no card they can't account for outranks it (`isMaster` over `unseen` and known cards, so a forgetful bot holds back when a stronger card might still be out). At lead step 3b such a card is led with probability `signalUse`, highest value first, never on trick 10; `chooseSignal4` applies the same check. A bot follower replies through `strisoReply`, gated by `readSignals`. The bot asks for its best suit: one where it holds a master, else its highest top card, and that keeps a card after the throw.
+  - **Toasts.** When the partner bot leads Strišo, the player gets a hint toast ("Give points, or throw a low card of the suit you want led"). Toasts also cover the partner giving points, and any ask (the player's own asks and the opponents' asks).
+- The last-trick point keeps the name **ultima**: hr.wikipedia uses "posljednji punat (ȕltima)", won by whoever takes the last trick (*zadnja ruka*).
+- HUD: two signal buttons, both lit on every lead. Strišo uses the card-slide sound and the wave icon, and has no voice line.

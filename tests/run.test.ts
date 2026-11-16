@@ -62,7 +62,7 @@ describe('run (§19.1–§19.2)', () => {
       const r = { ...newRun(`sh${k}`, 0), fore: ['pogled', 'tucem'] as RunState['fore'] };
       for (let v = 1; v <= 5; v++) {
         const offers = generateOffers(r, v, 0);
-        expect(offers.length).toBe(3);
+        expect(offers.length).toBe(4);
         for (const o of offers) {
           if (v === 1) expect(tierOf(o)).toBe(0);
           if (v < 4) expect(tierOf(o)).toBeLessThan(2);

@@ -28,7 +28,7 @@ function playRandom(s0: Hand4State, rng: () => number): { state: Hand4State; eve
   return { state: s, events: all };
 }
 
-const play = (s: Hand4State, seat: Seat, spec: string, signal?: 'tucem' | 'striso' | 'volo') => applyAction4(s, { type: 'play', seat, uid: u4(spec), signal });
+const play = (s: Hand4State, seat: Seat, spec: string, signal?: 'tucem' | 'striso') => applyAction4(s, { type: 'play', seat, uid: u4(spec), signal });
 
 describe('rules4', () => {
   it('all 40 dealt, 10 per seat, no duplicates; dealer E -> S leads', () => {
@@ -145,21 +145,56 @@ describe('rules4', () => {
     throw new Error('no akuža found');
   });
 
-  it('legalSignals4: Tučem >= 2 of top-3, Strišo >= 2 others, Volo last card', () => {
+  it('legalSignals4: Tučem and Strišo on any lead, only for the leader', () => {
     const s = makeState4({ hands: { S: ['kupe_3', 'kupe_A', 'kupe_5', 'bate_7'], W: ['bate_4'], N: ['bate_5'], E: ['bate_6'] } });
     expect(legalSignals4(s, 'S', u4('kupe_5'))).toEqual(['tucem', 'striso']);
-    expect(legalSignals4(s, 'S', u4('bate_7'))).toEqual(['volo']);
+    expect(legalSignals4(s, 'S', u4('bate_7'))).toEqual(['tucem', 'striso']);
+    // a low card with no top cards behind it can still carry Tučem
     const s2 = makeState4({ hands: { S: ['kupe_3', 'kupe_4', 'bate_7'], W: ['bate_4'], N: ['bate_5'], E: ['bate_6'] } });
-    expect(legalSignals4(s2, 'S', u4('kupe_4'))).toEqual([]);
-    expect(() => play(s2, 'S', 'kupe_4', 'tucem')).toThrow();
+    expect(legalSignals4(s2, 'S', u4('bate_7'))).toEqual(['tucem', 'striso']);
+    expect(play(s2, 'S', 'bate_7', 'tucem').events).toContainEqual({ t: 'signal', seat: 'S', kind: 'tucem', suit: 'bate' });
     expect(legalSignals4(s2, 'W', u4('bate_4'))).toEqual([]);
+    expect(legalSignals4(s2, 'S', u4('bate_4'))).toEqual([]);
   });
 
-  it('a Volo sets the public void', () => {
+  it('Strišo is a claim: callable on a card that can lose or is not the last of its suit', () => {
+    // W holds the bate K, and S still has another bate: the call goes through all the same
+    const s = makeState4({ hands: { S: ['bate_7', 'bate_4', 'kupe_3'], W: ['bate_K', 'kupe_4'], N: ['bate_5', 'kupe_5'], E: ['bate_6', 'kupe_6'] } });
+    const r = play(s, 'S', 'bate_7', 'striso');
+    expect(r.events).toContainEqual({ t: 'signal', seat: 'S', kind: 'striso', suit: 'bate' });
+    expect(r.state.trick.signal).toEqual({ seat: 'S', kind: 'striso', suit: 'bate' });
+  });
+
+  it('Strišo reply: a partner lišina of another suit is an ask, open until the leader leads again', () => {
+    const s = makeState4({ hands: { S: ['bate_7', 'kupe_4'], W: ['bate_4', 'kupe_5'], N: ['spade_4', 'spade_3'], E: ['bate_6', 'kupe_6'] } });
+    let r = play(s, 'S', 'bate_7', 'striso');
+    r = play(r.state, 'W', 'bate_4');
+    r = play(r.state, 'N', 'spade_4');
+    expect(r.events).toContainEqual({ t: 'strisoReply', seat: 'N', to: 'S', kind: 'ask', suit: 'spade' });
+    expect(r.state.asks).toEqual([{ trickNo: 1, seat: 'N', to: 'S', suit: 'spade', answered: false }]);
+    r = play(r.state, 'E', 'bate_6');
+    expect(r.state.turn).toBe('S');
+    r = play(r.state, 'S', 'kupe_4');
+    expect(r.state.asks![0].answered).toBe(true);
+  });
+
+  it('Strišo reply: a point card is "points", a forced follow with a lišina says nothing', () => {
+    const s = makeState4({ hands: { S: ['bate_7', 'kupe_4'], W: ['bate_4', 'kupe_5'], N: ['kupe_A', 'spade_3'], E: ['bate_6', 'kupe_6'] } });
+    let r = play(play(s, 'S', 'bate_7', 'striso').state, 'W', 'bate_4');
+    r = play(r.state, 'N', 'kupe_A');
+    expect(r.events).toContainEqual({ t: 'strisoReply', seat: 'N', to: 'S', kind: 'points', suit: 'kupe' });
+    expect(r.state.asks).toEqual([]);
+    const s2 = makeState4({ hands: { S: ['bate_7', 'kupe_4'], W: ['bate_4', 'kupe_5'], N: ['bate_5', 'spade_3'], E: ['bate_6', 'kupe_6'] } });
+    r = play(play(s2, 'S', 'bate_7', 'striso').state, 'W', 'bate_4');
+    r = play(r.state, 'N', 'bate_5');
+    expect(r.events.some((e) => e.t === 'strisoReply')).toBe(false);
+  });
+
+  it('a Strišo sets no void: it is only a claim', () => {
     const s = makeState4({ hands: { S: ['kupe_3', 'bate_7'], W: ['bate_4', 'kupe_4'], N: ['bate_5', 'kupe_5'], E: ['bate_6', 'kupe_6'] } });
-    const r = play(s, 'S', 'bate_7', 'volo');
-    expect(r.state.voidKnown.S).toContain('bate');
-    expect(r.events.some((e) => e.t === 'signal' && e.kind === 'volo')).toBe(true);
+    const r = play(s, 'S', 'bate_7', 'striso');
+    expect(r.state.voidKnown.S).not.toContain('bate');
+    expect(r.events.some((e) => e.t === 'signal' && e.kind === 'striso')).toBe(true);
   });
 
   it('forcedTeam: Ljuto and Tučem! force both opponents, not the partner', () => {

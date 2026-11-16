@@ -168,9 +168,9 @@ function watch(page, tag) {
     let s = await state();
     assert(s.match.chars.N === 'luka', 'partner Luka');
     await shot('m01_my_lead');
-    // pick a signal that fits some card; prefer Tučem, then Volo, then Strišo
+    // pick a signal that fits some card; prefer Tučem, then Strišo
     const ls = s.match.legalSignals;
-    const order = ['tucem', 'volo', 'striso'];
+    const order = ['tucem', 'striso'];
     const kind = order.find((k) => Object.values(ls).some((a) => a.includes(k)));
     assert(kind, 'some signal is legal on the lead: ' + JSON.stringify(ls));
     const fits = Object.keys(ls).filter((u) => ls[u].includes(kind));

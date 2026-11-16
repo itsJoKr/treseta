@@ -26,6 +26,8 @@ function minBy<T>(arr: T[], key: (x: T) => number[]): T {
 function pickR<T>(rng: Rng, a: T[]): T { return a[Math.floor(rng() * a.length) % a.length]; }
 
 export class Eval4 {
+  /** a lead step that picked its card for a signal (3b Strišo, 3c Tučem) names it here */
+  leadSignal?: { uid: string; kind: Signal };
   constructor(public v: BotView4, public knobs: Knobs4) {}
   get me(): Seat { return this.v.me; }
   str(c: Card4, seat: Seat): number { return strength4(c, seat, seat === this.v.me ? this.v.myTricaTarget : undefined); }
@@ -79,6 +81,36 @@ export class Eval4 {
     }
     return true;
   }
+  /**
+   * Strišo by my own count (§20): my last card of the suit, and no card I can't account for outranks it.
+   * Uses only what I remember, so a forgetful bot holds back when a stronger card might still be out.
+   */
+  /** my top cards (3, 2, A) of a suit */
+  tops(suit: Suit): Card4[] { return this.v.hand.filter((x) => x.suit === suit && (x.rank === '3' || x.rank === '2' || x.rank === 'A')); }
+  /**
+   * Seeking the partner's 3 (§20): I hold the 2 and A of the suit but not the 3, and the 3 may be with my
+   * partner (not known with an opponent, not known played), who is not void there.
+   */
+  seeks3(suit: Suit): boolean {
+    const tops = this.tops(suit);
+    if (!tops.some((c) => c.rank === '2') || !tops.some((c) => c.rank === 'A') || tops.some((c) => c.rank === '3')) return false;
+    const partner = this.v.partner;
+    if (this.v.voids[partner].includes(suit)) return false;
+    const is3 = (c: Card4) => c.suit === suit && c.rank === '3';
+    if ((['S', 'W', 'N', 'E'] as Seat[]).some((o) => this.isOpp(o) && this.v.known[o].some(is3))) return false;
+    return this.v.known[partner].some(is3) || this.v.unseen.some(is3);
+  }
+  /**
+   * Tučem by my own hand (§20): two of the 3, 2 and A of the suit (the led card counts), and either the led
+   * card wins by itself (the partner's strongest card is points for us) or it is a low card seeking the 3.
+   */
+  tucemWorthy(c: Card4): boolean {
+    if (this.v.trickNo >= 10 || this.tops(c.suit).length < 2) return false;
+    return this.isMaster(c) || (c.rank !== '2' && c.rank !== 'A' && this.seeks3(c.suit));
+  }
+  strisoWorthy(c: Card4): boolean {
+    return this.v.trickNo < 10 && this.v.hand.filter((x) => x.suit === c.suit).length === 1 && this.isMaster(c);
+  }
   legalCards(): Card4[] { return this.v.hand.filter((c) => this.v.legal.includes(c.uid)); }
   oppPts(suit: Suit): number {
     let sum = 0;
@@ -104,6 +136,30 @@ function caricoDiscard(e: Eval4, cards: Card4[]): Card4 {
   return lis.length ? minBy(lis, (c) => [e.str(c, e.me)]) : dump(e, cards);
 }
 
+/**
+ * Answer to the partner's Strišo (§20): they claim the trick is ours by count (taken on trust). Follow with my most valuable card;
+ * if void, load points; with nothing to give, throw a lišina of the suit I want led next (the ask).
+ */
+function strisoReply(e: Eval4, legal: Card4[], SC: Card4[]): Card4 {
+  if (SC.length) return minBy(SC, (c) => [-val4(c), e.str(c, e.me)]);
+  if (legal.some((c) => val4(c) >= 1 && !e.isMaster(c))) return caricoDiscard(e, legal);
+  return askCard(e, legal) ?? plainDiscard(e, legal);
+}
+
+/** The lišina that asks for my best suit: one where I hold a master (else the highest top card) and keep a card after the throw. */
+function askCard(e: Eval4, legal: Card4[]): Card4 | undefined {
+  let best: Card4 | undefined;
+  let bestKey = -Infinity;
+  for (const s of SUITS) {
+    const mine = e.v.hand.filter((c) => c.suit === s);
+    const lis = legal.filter((c) => c.suit === s && val4(c) === 0);
+    if (!lis.length || mine.length < 2) continue;
+    const key = (mine.some((c) => e.isMaster(c)) ? 100 : 0) + Math.max(...mine.map((c) => e.str(c, e.me))) + mine.length;
+    if (key > bestKey) { bestKey = key; best = minBy(lis, (c) => [e.str(c, e.me)]); }
+  }
+  return best;
+}
+
 function plainDiscard(e: Eval4, cards: Card4[]): Card4 {
   let pool = cards;
   const nonA = cards.filter((c) => c.rank !== 'A');
@@ -123,19 +179,12 @@ export function chooseFollow4(e: Eval4, rng: Rng): Card4 {
   // partner's signal (overrides)
   if (v.signal && v.signal.seat === partner && rng() < e.knobs.readSignals) {
     if (v.signal.kind === 'tucem') {
+      // §20: throw my strongest card of the suit (it may be the 3 they are looking for)
       if (SC.length) return minBy(SC, (c) => [-e.str(c, e.me)]);
-      return caricoDiscard(e, legal);
+      // void: load points only if their card already holds the trick
+      return partnerWinsSafe ? caricoDiscard(e, legal) : plainDiscard(e, legal);
     }
-    if (v.signal.kind === 'striso') {
-      if (SC.length) {
-        if (e.isOpp(W.seat)) {
-          const safeW = SC.filter((c) => e.str(c, e.me) > W.str && e.safe(c));
-          if (safeW.length) return minBy(safeW, (c) => [e.str(c, e.me)]);
-        }
-        return minBy(SC, (c) => [e.str(c, e.me)]);
-      }
-      return minBy(legal, (c) => [val4(c), e.str(c, e.me)]);
-    }
+    if (v.signal.kind === 'striso') return strisoReply(e, legal, SC);
   }
   const trick10 = v.trickNo === 10;
   if (SC.length) {
@@ -178,6 +227,13 @@ export function chooseLead4(e: Eval4, rng: Rng): Card4 {
   const legal = e.legalCards();
   const partner = v.partner;
   const bySuit = (s: Suit) => legal.filter((c) => c.suit === s);
+  // 0. the partner asked for a suit on my Strišo: lead it low, they hold the strength there
+  for (let i = v.asks.length - 1; i >= 0; i--) {
+    const a = v.asks[i];
+    if (a.seat !== partner || a.to !== v.me || v.voids[partner].includes(a.suit)) continue;
+    const cs = bySuit(a.suit);
+    if (cs.length && rng() < e.knobs.readSignals) return minBy(cs, (c) => [val4(c), e.str(c, e.me)]);
+  }
   // 1. return the partner's Tučem suit
   for (let i = v.signalsLog.length - 1; i >= 0; i--) {
     const sg = v.signalsLog[i];
@@ -202,8 +258,29 @@ export function chooseLead4(e: Eval4, rng: Rng): Card4 {
       if (legal.includes(o)) return o;
     }
   }
-  const masters = legal.filter((c) => e.isMaster(c));
+  // 3b. Strišo: my last card of a suit that wins by my count, so the partner can load points or ask
+  const st = legal.filter((c) => (v.signalsFor[c.uid] ?? []).includes('striso') && e.strisoWorthy(c));
+  if (st.length && rng() < e.knobs.signalUse) {
+    const c = minBy(st, (x) => [-val4(x), e.str(x, e.me)]);
+    e.leadSignal = { uid: c.uid, kind: 'striso' };
+    return c;
+  }
   const opps = (['S', 'W', 'N', 'E'] as Seat[]).filter((s) => e.isOpp(s));
+  // 3c. Tučem to find the partner's 3: I hold the A and 2, the 3 may be with my partner, so I lead a
+  //     low card of the suit with Tučem; the partner throws their strongest, takes it with the 3 and
+  //     leads the suit back to my 2 and A
+  if (v.trickNo < 9 && rng() < e.knobs.signalUse) {
+    let best: Card4 | undefined;
+    for (const s of SUITS) {
+      if (!e.seeks3(s)) continue;
+      const lows = bySuit(s).filter((c) => c.rank !== '2' && c.rank !== 'A');
+      if (!lows.length) continue;
+      const low = minBy(lows, (c) => [val4(c), e.str(c, e.me)]);
+      if (!best || val4(low) < val4(best)) best = low;
+    }
+    if (best) { e.leadSignal = { uid: best.uid, kind: 'tucem' }; return best; }
+  }
+  const masters = legal.filter((c) => e.isMaster(c));
   // 4. ace hunt
   if (e.knobs.huntAce) {
     for (const m of masters) {
@@ -234,8 +311,15 @@ export function chooseLead4(e: Eval4, rng: Rng): Card4 {
 
 export function chooseSignal4(v: BotView4, uid: string, knobs: Knobs4, rng: Rng): Signal | undefined {
   const legal = v.signalsFor[uid] ?? [];
-  for (const k of ['tucem', 'volo', 'striso'] as Signal[]) {
-    if (legal.includes(k) && rng() < knobs.signalUse) return k;
+  const card = v.hand.find((c) => c.uid === uid);
+  for (const k of ['tucem', 'striso'] as Signal[]) {
+    if (!legal.includes(k)) continue;
+    // any lead may carry either signal; a bot gives one only when its own hand and count back it
+    if (!card) continue;
+    const e = new Eval4(v, knobs);
+    if (k === 'tucem' && !e.tucemWorthy(card)) continue;
+    if (k === 'striso' && !e.strisoWorthy(card)) continue;
+    if (rng() < knobs.signalUse) return k;
   }
   return undefined;
 }
@@ -397,6 +481,7 @@ export function chooseCard4(v: BotView4, knobs: Knobs4, rng: Rng): Choice4 {
   if (!legal.length) throw new Error('bot4 has no legal play');
   const lead = v.pos === 1;
   const withSignal = (c: Card4): Choice4 => {
+    if (lead && e.leadSignal?.uid === c.uid) return { uid: c.uid, signal: e.leadSignal.kind };
     const sig = lead ? chooseSignal4(v, c.uid, knobs, rng) : undefined;
     return sig ? { uid: c.uid, signal: sig } : { uid: c.uid };
   };

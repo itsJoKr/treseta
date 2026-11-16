@@ -74,6 +74,8 @@ export const art = {
   rakijaFull(): string { return assets.imageUrl('ui', 'rakija_full') ?? canvasUrl('rak_full', () => glassCanvas(true)); },
   rakijaEmpty(): string { return assets.imageUrl('ui', 'rakija_empty') ?? canvasUrl('rak_empty', () => glassCanvas(false)); },
   logo(): string | null { return assets.imageUrl('ui', 'logo'); },
+  /** Falsa karta shop art (null: the shop draws its own composite) */
+  falsa(): string | null { return assets.imageUrl('ui', 'falsa'); },
   portrait(id: CharacterId): string {
     const c = CHARACTERS[id];
     return assets.imageUrl('portraits', id) ?? canvasUrl('portrait_' + id, () => portraitPlaceholder(c.persona, c.name));

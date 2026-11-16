@@ -43,6 +43,6 @@ export function makeState4(sp: Spec4): Hand4State {
     seed: 'test4', handNo: 1, dealer: 'E', turn: leader, phase: 'play',
     trick: { no: sp.trickNo ?? 1, leader, plays: [], multiplier: 1 }, tricksDone: (sp.trickNo ?? 1) - 1,
     seats, teams: { mi: team(), vi: team() }, knownTo: {}, voidKnown: { S: [], W: [], N: [], E: [] },
-    signalsLog: [], partnerHandShown: false, perks: sp.perks ?? { ...NO_PERKS }, rngCounter: 0, table: [], pijanoUsed: [],
+    signalsLog: [], asks: [], partnerHandShown: false, perks: sp.perks ?? { ...NO_PERKS }, rngCounter: 0, table: [], pijanoUsed: [],
   };
 }

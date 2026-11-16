@@ -2,7 +2,7 @@
 
 A single-player browser card game: Dalmatian **Trešeta** with a deck-building run, a Three.js table and bots that cuss out loud.
 
-- **Partneri (2v2):** you and a bot partner against two bots. Before each match you pick a partner from the characters you've unlocked. You can use the partner signals (Tučem, Strišo, Volo).
+- **Partneri (2v2):** you and a bot partner against two bots. Before each match you pick a partner from the characters you've unlocked. You can use the partner signals Tučem and Strišo.
 - **Dvoboj (1v1):** the two-player game with a stock (*mac*) to draw from. Draws are hidden.
 - **The run:** 6 matches to 11 points. Between matches you visit the shop (*butiga*), where you add card enhancements (*ukrasi*), trick cards (*fore*) and, later in the run, forgeries (*Falsa karta*).
 
