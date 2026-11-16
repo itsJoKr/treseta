@@ -45,39 +45,66 @@ export function briskulaArt(suitImgs?: Partial<Record<Suit, HTMLImageElement | n
 }
 
 /** "FALSA" stamp band and dashed border for forged copies (§19.4.3). */
-export function drawFalsaStamp(ctx: CanvasRenderingContext2D, vi: boolean): void {
+/** Blue ballpoint used for every forgery mark (play-test round 3). */
+export const PEN = '#1D3FD1';
+
+function penLine(ctx: CanvasRenderingContext2D, pts: [number, number][]): void {
+  ctx.beginPath();
+  ctx.moveTo(pts[0][0], pts[0][1]);
+  for (let i = 1; i < pts.length - 1; i++) {
+    const [x, y] = pts[i];
+    const [nx, ny] = pts[i + 1];
+    ctx.quadraticCurveTo(x, y, (x + nx) / 2, (y + ny) / 2);
+  }
+  const last = pts[pts.length - 1];
+  ctx.lineTo(last[0], last[1]);
+  ctx.stroke();
+}
+
+/**
+ * Forgery shown as what it counts as (§19.4.3, play-test round 3): the printed corner number is
+ * crossed out in blue pen and the copy's number is written next to it ("6" crossed out, "3"
+ * written), in both corners. A forgery keeps its suit, so only the number changes. Call it on the
+ * PRINTED face.
+ */
+export function drawPenCorrection(ctx: CanvasRenderingContext2D, copyRank: string): void {
+  const W = 480, H = 768;
+  const corner = () => {
+    ctx.save();
+    ctx.strokeStyle = PEN; ctx.lineWidth = 6; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    ctx.globalAlpha = 0.92;
+    // cross out the printed number (centred at 46,52)
+    penLine(ctx, [[22, 30], [40, 46], [58, 62], [71, 77]]);
+    penLine(ctx, [[70, 27], [54, 44], [37, 62], [23, 78]]);
+    // the copy's number, written beside it
+    ctx.translate(118, 54);
+    ctx.rotate((-9 * Math.PI) / 180);
+    ctx.fillStyle = PEN;
+    ctx.font = 'italic 800 68px Alegreya, Georgia, serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(copyRank, 0, 0);
+    // a quick underline flourish
+    penLine(ctx, [[-24, 36], [0, 40], [26, 34]]);
+    ctx.restore();
+  };
+  corner();
   ctx.save();
-  ctx.setLineDash([14, 10]);
-  ctx.strokeStyle = vi ? '#7A1F14' : '#C0392B';
-  ctx.lineWidth = 4;
-  roundRect(ctx, 14, 14, 452, 740, 18); ctx.stroke();
-  ctx.restore();
-  ctx.save();
-  ctx.translate(240, 560);
-  ctx.rotate((-20 * Math.PI) / 180);
-  ctx.globalAlpha = 0.75;
-  ctx.fillStyle = vi ? '#7A1F14' : '#C0392B';
-  ctx.fillRect(-230, -40, 460, 80);
-  ctx.globalAlpha = 1;
-  ctx.fillStyle = '#F3E6C8';
-  ctx.font = '800 54px Alegreya, serif';
-  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  ctx.fillText(vi ? 'FALSA · VI' : 'FALSA', 0, 4);
+  ctx.translate(W, H);
+  ctx.rotate(Math.PI);
+  corner();
   ctx.restore();
 }
 
-/** Small "F" tag for a forgery shown with its printed face (held by the other side). */
-export function drawForgeTag(ctx: CanvasRenderingContext2D, vi: boolean): void {
+/**
+ * Forgery held by the side it does NOT work for (a plain card for them): the printed face and a
+ * small circled "F" in the same blue pen, so it can be recognised; the tooltip explains it.
+ */
+export function drawForgeTag(ctx: CanvasRenderingContext2D): void {
   ctx.save();
-  if (vi) {
-    ctx.setLineDash([14, 10]); ctx.strokeStyle = '#C0392B'; ctx.lineWidth = 4;
-    roundRect(ctx, 14, 14, 452, 740, 18); ctx.stroke(); ctx.setLineDash([]);
-  }
-  ctx.fillStyle = vi ? '#C0392B' : '#D9A441';
-  ctx.beginPath(); ctx.arc(52, 150, 28, 0, Math.PI * 2); ctx.fill();
-  ctx.fillStyle = vi ? '#F3E6C8' : '#2A1A10';
-  ctx.font = '800 36px Alegreya, serif';
+  ctx.strokeStyle = PEN; ctx.fillStyle = PEN; ctx.lineWidth = 4; ctx.globalAlpha = 0.9;
+  ctx.beginPath(); ctx.ellipse(52, 152, 25, 23, -0.2, 0.15, Math.PI * 2 - 0.05); ctx.stroke();
+  ctx.font = 'italic 700 34px Alegreya, Georgia, serif';
   ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  ctx.fillText('F', 52, 153);
+  ctx.fillText('F', 52, 154);
   ctx.restore();
 }

@@ -8,10 +8,10 @@ export type PerkId = 'brzi_jezik' | 'sarmer' | 'na_crtu' | 'zidar' | 'postar' | 
 export interface PerkDef { id: PerkId; nameHr: string; nameEn: string; descHr: string; descEn: string }
 
 export const PERKS: Record<PerkId, PerkDef> = {
-  brzi_jezik: { id: 'brzi_jezik', nameHr: 'Brzi jezik', nameEn: 'Quick tongue', descHr: 'Svaka akuža vašeg para vrijedi +1.', descEn: 'Every declaration by your team scores +1.' },
+  brzi_jezik: { id: 'brzi_jezik', nameHr: 'Brzi jezik', nameEn: 'Quick tongue', descHr: 'Svaka akuža vašeg para vridi +1.', descEn: 'Every declaration by your team scores +1.' },
   sarmer: { id: 'sarmer', nameHr: 'Šarmer', nameEn: 'Charmer', descHr: '+1 rakija svake ruke (najviše 5).', descEn: '+1 rakija every hand (max 5).' },
-  na_crtu: { id: 'na_crtu', nameHr: 'Na crtu', nameEn: 'On the tab', descHr: 'Nakon pobjede s njim sve u butigi je 1 šoldo jeftinije.', descEn: 'After a win with him, everything in the shop costs 1 less.' },
-  zidar: { id: 'zidar', nameHr: 'Zidar', nameEn: 'Stonemason', descHr: 'Ultima vašeg para vrijedi +1.', descEn: 'Your team’s ultima is worth +1.' },
+  na_crtu: { id: 'na_crtu', nameHr: 'Na crtu', nameEn: 'On the tab', descHr: 'Posli pobide s njim sve u butigi je 1 šoldo jeftinije.', descEn: 'After a win with him, everything in the shop costs 1 less.' },
+  zidar: { id: 'zidar', nameHr: 'Zidar', nameEn: 'Stonemason', descHr: 'Ultima vašeg para vridi +1.', descEn: 'Your team’s ultima is worth +1.' },
   postar: { id: 'postar', nameHr: 'Poštar zna sve', nameEn: 'The postman knows', descHr: 'Na početku svake ruke vidiš po jednu kartu svakog protivnika.', descEn: 'Each hand you see 1 card of each opponent.' },
   pamcenje: { id: 'pamcenje', nameHr: 'Pamćenje', nameEn: 'Memory', descHr: 'Vidiš koje boje protivnicima fale.', descEn: 'You see which suits the opponents are out of.' },
 };

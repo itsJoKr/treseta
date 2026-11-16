@@ -27,6 +27,8 @@ import type { Action4, Card4, GameEvent4, Hand4State, Seat, Signal, Team } from 
 import { TEAM_OF } from '../game/types4';
 import { UKRASI } from '../game/ukrasi';
 import { wait } from '../render/animator';
+import { forgeView } from '../game/forge';
+import { forgeNames } from '../ui/hud';
 import { VOICE_EVENTS4 } from '../data/voiceEvents4';
 import type { Animator4 } from '../render/animator4';
 import type { CardObject, CardTextures } from '../render/cardMesh';
@@ -122,6 +124,7 @@ export class GameController4 {
       rejected: (uid) => { const o = d.anim.cards.get(uid); if (o) this.illegal(o, false); },
       cancel: () => this.cancelTargeting(),
       hover: (card) => this.onHover(card),
+      hoverTable: (card, x, y) => this.d.hud.cardZoom(card ? this.d.textures.faceUrl(card.data) : null, x, y),
       activity: () => { this.lastActivity = performance.now(); },
     });
     this.keyHandler = (e) => this.onKey(e);
@@ -489,13 +492,36 @@ export class GameController4 {
 
   // ------------------------------------------------------------------ presentation
 
+  /**
+   * The card as its holder sees it (§19.4.1): hands, the table and the trick piles store holder
+   * identities, so a forgery is its copy for the team that forged it and its printed card for
+   * everyone else. Falls back to the printed deck list.
+   */
   private card(uid: string): Card4 {
+    const s = this.match?.hand;
+    if (s) {
+      for (const seat of ['S', 'W', 'N', 'E'] as Seat[]) {
+        const c = s.seats[seat].hand.find((x) => x.uid === uid);
+        if (c) return c;
+      }
+      const t = s.table.find((x) => x.uid === uid);
+      if (t) return t;
+      for (const team of ['mi', 'vi'] as Team[]) {
+        const p = s.teams[team].pile.find((x) => x.uid === uid);
+        if (p) return p;
+      }
+    }
     const c = this.byUid.get(uid);
     if (!c) throw new Error('card not found ' + uid);
     return c;
   }
 
-  private obj(uid: string): CardObject { return this.d.anim.cards.get(uid) ?? this.d.anim.obtain(this.card(uid)); }
+  private obj(uid: string): CardObject {
+    const o = this.d.anim.cards.get(uid);
+    if (!o) return this.d.anim.obtain(this.card(uid));
+    o.setData(this.card(uid), this.d.textures);
+    return o;
+  }
 
   private async present(events: GameEvent4[]): Promise<void> {
     this.animating++;
@@ -624,6 +650,8 @@ export class GameController4 {
         const c = o.data;
         const strong = c.rank === '3' || c.ukras === 'pozlaceno' || c.ukras === 'nabruseno';
         if (e.drunk) this.d.ov.toast(t('toast.seatDrunk', { name: this.name(e.seat) }));
+        // a forgery played as its copy: say so, the pen marks are small at table distance
+        if (forgeView(c)?.copy) this.d.ov.toast(e.seat === 'S' ? t('toast.forgePlayedMine', forgeNames(c)) : t('toast.forgePlayed', { name: this.name(e.seat), ...forgeNames(c) }), e.seat === 'S' ? 'normal' : 'warn', 2600);
         this.phaseTag = 'play-' + e.seat;
         if (e.seat === 'S') this.d.hud.hideTooltip();
         await anim.seatToTrick(o, e.seat, e.pos - 1, strong);
@@ -866,6 +894,8 @@ export class GameController4 {
       leader: s?.trick.leader,
       trickNo: s?.trick.no,
       trickPlays: s?.trick.plays.map((p) => `${p.seat}:${p.uid}`),
+      /** forged cards on the table, in the identity they were played with (tests) */
+      tableForged: s?.table.filter((c) => c.forge).map((c) => ({ uid: c.uid, suit: c.suit, rank: c.rank, team: c.forge!.team })),
       signal: s?.trick.signal,
       signalsLog: s?.signalsLog,
       asks: s?.asks,

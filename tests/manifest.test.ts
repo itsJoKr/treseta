@@ -24,7 +24,7 @@ describe('manifest', () => {
     expect(Object.keys(m.images.fore).length).toBe(11);
     expect(Object.keys(m.images.portraits).length).toBe(8);
     expect(Object.keys(m.images.env).length).toBe(4);
-    expect(Object.keys(m.images.ui).length).toBe(5);
+    expect(Object.keys(m.images.ui).length).toBe(6);
     expect(Object.keys(m.audio.sfx).length).toBe(25);
     expect(Object.keys(m.audio.ambient).length).toBe(2);
     const voice = Object.values(m.audio.voice).reduce((a, v) => a + Object.keys(v).length, 0);
@@ -42,6 +42,7 @@ describe('manifest', () => {
     for (const u of UKRAS_IDS) expect(json.images.ukrasi[u]).toBe(`ukrasi/${u}.webp`);
     for (const f of FORA_IDS) expect(json.images.fore[f]).toBe(`fore/${f}.webp`);
     expect(json.images.ui.falsa).toBe('ui/falsa.webp');
+    expect(json.images.ui.joe).toBe('ui/joe.webp');
     for (const o of LADDER) {
       expect(json.images.portraits[o]).toBeDefined();
       const persona = OPPONENTS[o].persona;

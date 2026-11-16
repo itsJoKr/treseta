@@ -13,16 +13,16 @@ export type ReasonKey4 =
 export const SEAT_TARGET: ForaId[] = ['pogled', 'napij_ga'];
 
 export const FORA_DESC4: Record<ForaId, { en: string; hr: string }> = {
-  pogled: { en: 'Pick an opponent: see up to 3 of his cards your team doesn’t know.', hr: 'Odaberi protivnika: vidiš do 3 njegove karte koje vaš par ne zna.' },
-  zamjena: { en: 'A hand card swaps with a random card from your partner.', hr: 'Karta iz ruke mijenja se s nasumičnom kartom partnera.' },
-  namjesteno: { en: 'See your partner’s whole hand for the rest of this hand.', hr: 'Vidiš cijelu partnerovu ruku do kraja ruke.' },
-  krivi_racun: { en: 'At hand end your team’s thirds round up.', hr: 'Na kraju ruke bele vašeg para idu gore.' },
-  ti_otvaraj: { en: 'As leader: the next seat leads instead; you play last.', hr: 'Kad otvaraš: otvara idući igrač, ti igraš zadnji.' },
-  tucem: { en: 'As leader: both opponents must play their highest of the suit.', hr: 'Kad otvaraš: oba protivnika moraju baciti najjaču te boje.' },
-  napij_ga: { en: 'Pick an opponent: his next card is random.', hr: 'Odaberi protivnika: njegova iduća karta je nasumična.' },
+  pogled: { en: 'Pick an opponent: see up to 3 of his cards your team doesn’t know.', hr: 'Izaberi protivnika, malo se nagni i poviri do 3 njegove karte koje vaš par ne zna.' },
+  zamjena: { en: 'A hand card swaps with a random card from your partner.', hr: 'Karta iz ruke minja se s nasumičnom kartom od partnera.' },
+  namjesteno: { en: 'See your partner’s whole hand for the rest of this hand.', hr: 'Vidiš cilu partnerovu ruku do kraja ruke.' },
+  krivi_racun: { en: 'At hand end your team’s thirds round up.', hr: 'Ka u konobi: na kraju ruke bele vašeg para idu na gore.' },
+  ti_otvaraj: { en: 'As leader: the next seat leads instead; you play last.', hr: 'Kad otvaraš: otvara idući za stolom, a ti igraš zadnji.' },
+  tucem: { en: 'As leader: both opponents must play their highest of the suit.', hr: 'Kad otvaraš: oba protivnika moraju bacit najjaču te boje.' },
+  napij_ga: { en: 'Pick an opponent: his next card is random.', hr: 'Izaberi protivnika: napije se pa mu iduća karta ide nasumce.' },
   vrati: { en: 'Playing 2nd after an opponent’s lead: he takes it back and leads another.', hr: 'Kad igraš drugi iza protivnika: vraća kartu i baca drugu.' },
-  trica_iz_rukava: { en: 'Chosen hand card is as strong as a 3 for the rest of the hand.', hr: 'Odabrana karta do kraja ruke jaka je kao trica.' },
-  duplo_ili_nista: { en: 'Card thirds in this trick are doubled for the team that wins it.', hr: 'Bele u ovom štihu duplo vrijede za par koji ga odnese.' },
+  trica_iz_rukava: { en: 'Chosen hand card is as strong as a 3 for the rest of the hand.', hr: 'Izabrana karta do kraja ruke jaka je ka trica.' },
+  duplo_ili_nista: { en: 'Card thirds in this trick are doubled for the team that wins it.', hr: 'Bele u ovom štihu vride duplo za par koji ga odnese.' },
   briskula: { en: "Only when you can't follow suit: your card's suit is trump for this trick.", hr: 'Samo kad nemaš traženu boju: boja tvoje karte je adut u ovom štihu.' },
 };
 

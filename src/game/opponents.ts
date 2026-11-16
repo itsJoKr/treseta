@@ -40,7 +40,7 @@ export const OPPONENTS: Record<OpponentId, OpponentDef> = {
   tonci: {
     id: 'tonci', name: 'Mali Tonči', konoba: 'Konoba "Škoj"',
     bioEn: 'Spends summers "working" at the beach bar. Plays fast, talks faster.',
-    bioHr: 'Ljeti "radi" na beach baru. Igra brzo, priča još brže.',
+    bioHr: 'Priko lita "radi" na beach baru. Igra brzo, a priča još brže.',
     persona: 'mali', playbackRate: 1.0, difficulty: 1, baseReward: 10,
     deck: () => standardDeck(), rakija: 0, fore: [],
     knobs: { memory: 0.5, mistakeRate: 0.2, saveMasters: false, huntAce: false, pimcMaxCards: 0, pimcSamples: 0, thinkMs: [600, 1100] },
@@ -69,7 +69,7 @@ export const OPPONENTS: Record<OpponentId, OpponentDef> = {
   bepo: {
     id: 'bepo', name: 'Did Bepo', konoba: 'Konoba "Na Brdu"',
     bioEn: 'The island champion. Nobody remembers the last time he lost.',
-    bioHr: 'Šampion otoka. Niko se ne sića kad je zadnji put izgubija.',
+    bioHr: 'Šampion škoja. Niko se ne sića kad je zadnji put izgubija.',
     persona: 'barba', playbackRate: 0.93, difficulty: 4, baseReward: 20,
     deck: () => withUkrasi(standardDeck().filter((c) => c.rank !== '4'), [
       ['kupe', '3', 'pozlaceno'], ['dinari', '3', 'pozlaceno'], ['bate', '2', 'nabruseno'], ['spade', '3', 'ljuto'], ['spade', 'A', 'glasno'],

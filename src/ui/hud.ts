@@ -21,6 +21,17 @@ export interface ForaSlotState { id: ForaId | null; state: 'ready' | 'unusable' 
 
 const GEAR_SVG = '<svg viewBox="0 0 24 24"><path d="M19.4 13a7.6 7.6 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.5 7.5 0 0 0-1.7-1L15 3.3h-4l-.3 2.6a7.5 7.5 0 0 0-1.7 1l-2.5-1-2 3.5L6.6 11a7.6 7.6 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1a7.5 7.5 0 0 0 1.7 1l.3 2.6h4l.3-2.6a7.5 7.5 0 0 0 1.7-1l2.5 1 2-3.5zM13 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z" transform="translate(-1 0)"/></svg>';
 
+/** "6 Špade" / "6 of Špade" for a forgery's printed card and the copy it counts as (§19.4). */
+export function forgeNames(c: DeckCard): { printed: string; copy: string } {
+  const hr = getLang() === 'hr';
+  const name = (suit: Suit, rank: Rank) => {
+    const r = /^[0-9]$/.test(rank) ? rank : hr ? RANK_NAME_HR[rank] : RANK_NAME_EN[rank];
+    return hr ? `${r} ${SUIT_NAME[suit]}` : `${r} of ${SUIT_NAME[suit]}`;
+  };
+  const pr = printedOf(c);
+  return { printed: name(pr.suit, pr.rank), copy: c.forge ? name(c.forge.suit, c.forge.rank) : name(pr.suit, pr.rank) };
+}
+
 export class Hud {
   el: HTMLElement;
   private portrait: HTMLElement;
@@ -43,6 +54,8 @@ export class Hud {
   private chipP: HTMLElement;
   private chipB: HTMLElement;
   private tooltipEl: HTMLElement;
+  private zoomImg = h('img', { alt: '' });
+  private zoomEl = h('div', { class: 'card-zoom hidden' }, this.zoomImg);
   private matchTag: HTMLElement;
   private labels: { el: HTMLElement; key: string }[] = [];
   private ladderIndex = 0;
@@ -97,7 +110,7 @@ export class Hud {
     this.chipB = h('div', { class: 'chip' });
     this.tooltipEl = h('div', { class: 'tooltip hidden' });
     this.tracker = new Tracker(textures);
-    this.el = h('div', { class: 'hud' }, pw, sb, gear, this.matchTag, dock, this.soldiEl, this.chipP, this.chipB, this.tracker.el, this.tooltipEl);
+    this.el = h('div', { class: 'hud' }, pw, sb, gear, this.matchTag, dock, this.soldiEl, this.chipP, this.chipB, this.tracker.el, this.tooltipEl, this.zoomEl);
   }
 
   private lab(el: HTMLElement, key: string): HTMLElement {
@@ -251,14 +264,8 @@ export class Hud {
   forgeTooltip(c: DeckCard, x: number, y: number): void {
     const fv = forgeView(c);
     if (!fv || !c.forge) { this.hideTooltip(); return; }
-    const hr = getLang() === 'hr';
-    const name = (suit: Suit, rank: Rank) => {
-      const r = /^[0-9]$/.test(rank) ? rank : hr ? RANK_NAME_HR[rank] : RANK_NAME_EN[rank];
-      return hr ? `${r} ${SUIT_NAME[suit]}` : `${r} of ${SUIT_NAME[suit]}`;
-    };
-    const pr = printedOf(c);
     const vi = fv.team === 'vi';
-    const vars = { printed: name(pr.suit, pr.rank), copy: name(c.forge.suit, c.forge.rank) };
+    const vars = forgeNames(c);
     clear(this.tooltipEl);
     this.tooltipEl.append(
       h('div', { class: `forge-badge ${vi ? 'vi' : 'mi'}`, text: 'F' }),
@@ -271,6 +278,19 @@ export class Hud {
   }
 
   hideTooltip(): void { this.tooltipEl.classList.add('hidden'); }
+
+  /** Enlarged copy of a table card next to the pointer (url null: hide). */
+  cardZoom(url: string | null, x: number, y: number): void {
+    const el = this.zoomEl;
+    if (!url) { el.classList.add('hidden'); return; }
+    if (this.zoomImg.getAttribute('src') !== url) this.zoomImg.setAttribute('src', url);
+    el.classList.remove('hidden');
+    const w = el.offsetWidth, hh = el.offsetHeight, gap = 28;
+    const left = x + gap + w <= window.innerWidth - 8 ? x + gap : Math.max(8, x - gap - w);
+    const top = Math.max(8, Math.min(window.innerHeight - hh - 8, y - hh / 2));
+    el.style.left = `${left}px`;
+    el.style.top = `${top}px`;
+  }
 
   setSoldi(n: number): void { this.soldiNum.textContent = String(n); }
   soldiRect(): DOMRect { return this.soldiEl.getBoundingClientRect(); }

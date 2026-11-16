@@ -15,6 +15,8 @@ export interface InputHandlers {
   rejected?(uid: string): void;
   cancel(): void;
   hover(card: CardObject | null): void;
+  /** a face-up card on the table under the pointer (to show it enlarged), or null */
+  hoverTable?(card: CardObject | null, x: number, y: number): void;
   activity(): void;
 }
 
@@ -23,6 +25,9 @@ export class Input {
   private ndc = new THREE.Vector2();
   private pointer = { x: 0, y: 0, inside: false };
   hovered: CardObject | null = null;
+  /** face-up table card under the pointer (trick, revealed hands): shown enlarged by the HUD */
+  private tableHovered: CardObject | null = null;
+  private lastTableXY = { x: -1, y: -1 };
   private hoverUv = new THREE.Vector2(0.5, 0.5);
   private down: { card: CardObject; x: number; y: number } | null = null;
   dragging: CardObject | null = null;
@@ -45,7 +50,7 @@ export class Input {
     on(el, 'pointermove', (e) => this.move(e));
     on(el, 'pointerdown', (e) => this.pointerDown(e));
     on(window, 'pointerup', (e) => this.pointerUp(e));
-    on(el, 'pointerleave', () => { this.pointer.inside = false; if (!this.dragging) this.setHover(null); });
+    on(el, 'pointerleave', () => { this.pointer.inside = false; if (!this.dragging) this.setHover(null); this.setTableHover(null); });
     on(el, 'contextmenu', (e) => { e.preventDefault(); this.h.cancel(); });
     const upd = (dt: number) => this.update(dt);
     sm.onUpdate(upd);
@@ -193,7 +198,34 @@ export class Input {
     card.root.scale.setScalar(1);
   }
 
+  /** Topmost card under the pointer outside the hand; only a card showing its face counts. */
+  private pickTable(): CardObject | null {
+    this.ray.setFromCamera(this.ndc, this.sm.camera);
+    const meshes: THREE.Object3D[] = [];
+    for (const o of this.anim.cards.values()) {
+      if (o.inHand || !o.root.parent || !o.root.visible) continue;
+      meshes.push(o.front, o.back);
+    }
+    const hit = this.ray.intersectObjects(meshes, false)[0];
+    if (!hit) return null;
+    const card = hit.object.userData.card as CardObject | undefined;
+    return card && hit.object === card.front ? card : null;
+  }
+
+  private setTableHover(card: CardObject | null): void {
+    const moved = this.pointer.x !== this.lastTableXY.x || this.pointer.y !== this.lastTableXY.y;
+    if (card === this.tableHovered && !(card && moved)) return;
+    this.tableHovered = card;
+    this.lastTableXY = { x: this.pointer.x, y: this.pointer.y };
+    this.h.hoverTable?.(card, this.pointer.x, this.pointer.y);
+  }
+
   private update(dt: number): void {
+    // table cards move (tricks fly to the pile), so their hover is checked every frame
+    if (this.h.hoverTable) {
+      const over = this.pointer.inside && this.enabled && !this.dragging && !this.hovered && !this.anim.targetMode;
+      this.setTableHover(over ? this.pickTable() : null);
+    }
     // tilt of the hovered card follows the pointer
     const hv = this.hovered;
     if (hv && hv.inHand && !this.dragging) {

@@ -1,8 +1,8 @@
 // Card mesh factory, texture compositing and cache (§10.4).
 import * as THREE from 'three';
 import { assets } from '../assets/loader';
-import { drawFalsaStamp, drawForgeTag } from '../assets/procedural';
-import { forgeView } from '../game/forge';
+import { drawForgeTag, drawPenCorrection } from '../assets/procedural';
+import { forgeView, printedOf, slotOf } from '../game/forge';
 import { cardFileKey, SUIT_COLOR } from '../game/cards';
 import type { CardInst, DeckCard, Side, UkrasId } from '../game/types';
 import { UKRASI } from '../game/ukrasi';
@@ -50,13 +50,18 @@ export class CardTextures {
     if (hit) return hit;
     const cv = canvas(CARD_W, CARD_H);
     const ctx = cv.getContext('2d')!;
-    const img = assets.imageSync('cards', cardFileKey(c));
+    // a forgery always shows its printed card; the blue pen says what it counts as (§19.4.3)
+    const fv = forgeView(c);
+    const base = fv ? printedOf(c) : c;
+    const img = assets.imageSync('cards', cardFileKey(base));
     if (img) ctx.drawImage(img, 0, 0, CARD_W, CARD_H);
-    else ctx.drawImage(cardFacePlaceholder(c.suit, c.rank, assets.imageSync('suits', c.suit)), 0, 0);
+    else ctx.drawImage(cardFacePlaceholder(base.suit, base.rank, assets.imageSync('suits', base.suit)), 0, 0);
     if (c.ukras) drawUkrasOnFace(ctx, c.ukras);
     if (c.ukras && c.ukrasTeam === 'vi') drawViMark(ctx);
-    const fv = forgeView(c);
-    if (fv) { if (fv.copy) drawFalsaStamp(ctx, fv.team === 'vi'); else drawForgeTag(ctx, fv.team === 'vi'); }
+    if (fv && c.forge) {
+      if (fv.copy) drawPenCorrection(ctx, c.forge.rank);
+      else drawForgeTag(ctx);
+    }
     this.faceCanvases.set(key, cv);
     return cv;
   }
@@ -126,7 +131,7 @@ export function badgeSource(id: UkrasId): HTMLImageElement | HTMLCanvasElement {
 export function faceKey(c: DeckCard): string {
   const team = c.ukras && c.ukrasTeam === 'vi' ? '|vi' : '';
   const fv = forgeView(c);
-  const f = fv ? `|f:${fv.team}:${fv.copy ? 'c' : 'p'}` : '';
+  const f = fv ? `|f:${fv.team}:${fv.copy ? 'c' : 'p'}:${slotOf(c)}` : '';
   return `${c.suit}_${c.rank}|${c.ukras ?? ''}${team}${f}`;
 }
 
@@ -206,6 +211,14 @@ export class CardObject {
   }
 
   get uid(): string { return this.data.uid; }
+
+  /** Switch to another identity of the same card (a forgery seen by its holder, §19.4.1). */
+  setData(data: CardInst, textures: CardTextures): void {
+    if (faceKey(data) === faceKey(this.data)) { this.data = data; return; }
+    this.data = data;
+    this.frontMat.map = textures.face(data);
+    this.frontMat.needsUpdate = true;
+  }
 
   setFaceUp(up: boolean): void {
     this.faceUp = up;

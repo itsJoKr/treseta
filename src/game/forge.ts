@@ -2,7 +2,7 @@
 // plays it: the forge copy if the holder's team is the forgery's beneficiary, else the
 // printed (slot) identity. Hands store cards in their holder's identity; `slot` keeps the
 // printed key and `forge` the copy, so the renderer can show stamps and tags.
-import { cardKey, RANKS, SUITS } from './cards';
+import { cardKey, RANKS } from './cards';
 import { rngFor } from './rng';
 import type { DeckCard, Rank, Suit, TeamId, UkrasId } from './types';
 
@@ -39,16 +39,16 @@ export function canForge(deck: DeckCard[], key: string): boolean {
   return LISINE.includes(printedOf(c).rank) && !c.ukras && !c.forge && forgeCount(deck) < MAX_FORGES;
 }
 
-export function forgeTargets(): { suit: Suit; rank: Rank }[] {
-  const out: { suit: Suit; rank: Rank }[] = [];
-  for (const rank of FORGE_TARGET_RANKS) for (const suit of SUITS) out.push({ suit, rank });
-  return out;
+/** A forgery only changes the number (play-test round 3): the 3, 2 and A of the card's own suit. */
+export function forgeTargets(suit: Suit): { suit: Suit; rank: Rank }[] {
+  return FORGE_TARGET_RANKS.map((rank) => ({ suit, rank }));
 }
 
-/** Falsa karta: permanently forge a lišina of the deck into a copy of a strong identity. */
+/** Falsa karta: permanently forge a lišina of the deck into the 3, 2 or A of its own suit. */
 export function forgeInDeck(deck: DeckCard[], key: string, target: { suit: Suit; rank: Rank }, team: TeamId = 'mi'): DeckCard[] {
   if (!canForge(deck, key)) throw new Error('cannot forge ' + key);
   if (!FORGE_TARGET_RANKS.includes(target.rank)) throw new Error('target must be a 3, 2 or A');
+  if (target.suit !== key.split('_')[0]) throw new Error('a forgery keeps its suit');
   return deck.map((c) => (slotOf(c) === key ? { ...c, slot: key, forge: { suit: target.suit, rank: target.rank, team } } : c));
 }
 
@@ -76,8 +76,13 @@ export function applyMatchMods(deck: DeckCard[], mods: MatchMods, seed: string, 
     const pool = out.filter((c) => free(c) && LISINE.includes(printedOf(c).rank));
     if (!pool.length) continue;
     const c = pick(pool);
-    c.forge = { suit: pick(SUITS), rank: r, team: 'vi' };
+    c.forge = { suit: printedOf(c).suit, rank: r, team: 'vi' };
   }
   void RANKS;
   return out;
+}
+
+/** Older saves could forge into another suit: keep the forged rank, in the card's own suit. */
+export function sameSuitForges<T extends DeckCard>(deck: T[]): T[] {
+  return deck.map((c) => (c.forge && c.forge.suit !== printedOf(c).suit ? { ...c, forge: { ...c.forge, suit: printedOf(c).suit } } : c));
 }

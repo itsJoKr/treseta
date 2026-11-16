@@ -76,6 +76,8 @@ export const art = {
   logo(): string | null { return assets.imageUrl('ui', 'logo'); },
   /** Falsa karta shop art (null: the shop draws its own composite) */
   falsa(): string | null { return assets.imageUrl('ui', 'falsa'); },
+  /** the joe-it-solutions.com logo mark for the menu credit (null: a CSS circle with "joe") */
+  joe(): string | null { return assets.imageUrl('ui', 'joe'); },
   portrait(id: CharacterId): string {
     const c = CHARACTERS[id];
     return assets.imageUrl('portraits', id) ?? canvasUrl('portrait_' + id, () => portraitPlaceholder(c.persona, c.name));

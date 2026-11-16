@@ -178,6 +178,7 @@ class App {
         onContinue: () => void this.continueRun4(),
         onNew: () => void this.newRun4(false),
       },
+      onLanguage: (l) => { this.settings.language = l; this.saveSettings(); this.showMenu(); },
     });
     m.setProgress(1);
     void this.ov.show(m.el);

@@ -31,7 +31,7 @@ export interface AssetManifest {
     fore: Record<string, string>;
     portraits: Record<CharacterId, string>;
     env: { table: string; konoba: string; map: string; shop: string };
-    ui: { coin: string; rakija_full: string; rakija_empty: string; logo: string; falsa: string };
+    ui: { coin: string; rakija_full: string; rakija_empty: string; logo: string; falsa: string; joe: string };
   };
   audio: {
     sfx: Record<string, { src: string; volume: number }>;
@@ -68,7 +68,7 @@ export function buildDefaultManifest(): AssetManifest {
         dino: 'portraits/dino.webp', stipe: 'portraits/stipe.webp', ive: 'portraits/ive.webp', frane: 'portraits/frane.webp',
       },
       env: { table: 'env/table_wood.webp', konoba: 'env/bg_konoba.webp', map: 'env/bg_map.webp', shop: 'env/bg_shop.webp' },
-      ui: { coin: 'ui/coin.webp', rakija_full: 'ui/rakija_full.webp', rakija_empty: 'ui/rakija_empty.webp', logo: 'ui/logo.webp', falsa: 'ui/falsa.webp' },
+      ui: { coin: 'ui/coin.webp', rakija_full: 'ui/rakija_full.webp', rakija_empty: 'ui/rakija_empty.webp', logo: 'ui/logo.webp', falsa: 'ui/falsa.webp', joe: 'ui/joe.webp' },
     },
     audio: {
       sfx,

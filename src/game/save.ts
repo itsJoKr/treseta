@@ -1,6 +1,7 @@
 // Serialise / deserialise (§16.6). Storage is injected so tests can use a map.
 import type { RunState } from './run';
 import type { RunState4 } from './run4';
+import { sameSuitForges } from './forge';
 
 export interface StorageLike {
   getItem(key: string): string | null;
@@ -54,7 +55,7 @@ export function loadRun(storage: StorageLike): LoadResult {
       storage.removeItem(SAVE_KEY);
       return { ok: false, reason: 'version' };
     }
-    return { ok: true, run: f.run };
+    return { ok: true, run: { ...f.run, deck: sameSuitForges(f.run.deck) } };
   } catch {
     storage.removeItem(SAVE_KEY);
     return { ok: false, reason: 'corrupt' };
@@ -66,7 +67,8 @@ export function clearRun(storage: StorageLike): void { storage.removeItem(SAVE_K
 export function defaultSettings(navLang: string): Settings {
   const hr = navLang.toLowerCase().startsWith('hr');
   return {
-    language: hr ? 'hr' : 'en',
+    // Croatian is the game's language for everyone; other browsers still get the English glosses
+    language: 'hr',
     subtitles: !hr,
     fast: false,
     volumes: { master: 0.8, voice: 1.0, sfx: 0.8, ambient: 0.5 },
@@ -127,7 +129,7 @@ export function loadRun4(storage: StorageLike): LoadResult4 {
       storage.removeItem(SAVE4_KEY);
       return { ok: false, reason: 'version' };
     }
-    return { ok: true, run: f.run };
+    return { ok: true, run: { ...f.run, deck: sameSuitForges(f.run.deck) } };
   } catch {
     storage.removeItem(SAVE4_KEY);
     return { ok: false, reason: 'corrupt' };

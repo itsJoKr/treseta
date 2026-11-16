@@ -5,7 +5,7 @@ import { getLang, t } from '../data/strings';
 import { cardKey, compareCards } from '../game/cards';
 import { FORE } from '../game/fore';
 import { FORE_SLOTS, rerollPrice } from '../game/run';
-import { canForge, forgeTargets, slotOf } from '../game/forge';
+import { canForge, forgeTargets, printedOf, slotOf } from '../game/forge';
 import { SUIT_NAME } from '../game/cards';
 import type { Rank, Suit } from '../game/types';
 import type { Offer, RunState } from '../game/run';
@@ -273,12 +273,12 @@ export class ShopScreen {
     panel.append(h('div', { class: 'row' }, h('button', { class: 'btn ghost', text: mode === 'browse' ? t('done') : t('cancel'), onclick: () => m.close() })));
   }
 
-  /** Falsa karta, step 2: choose the copy identity (any 3, 2 or A). */
+  /** Falsa karta, step 2: choose what it becomes (the 3, 2 or A of its own suit). */
   private falsaTarget(offerIndex: number, c: DeckCard, cell: HTMLElement, closeGrid: () => void): void {
-    const row = h('div', { class: 'deckgrid', 'data-testid': 'falsa-targets', style: 'grid-template-columns:repeat(4, auto)' });
+    const row = h('div', { class: 'deckgrid', 'data-testid': 'falsa-targets', style: 'grid-template-columns:repeat(3, auto)' });
     const panel = h('div', { class: 'panel modal', style: 'max-width:none' }, h('h2', { text: t('shop.pickFalsaTarget', { card: slotOf(c).replace('_', ' ') }), style: 'font-size:calc(34*var(--u))' }), row);
     const m = this.ov.modal(panel);
-    for (const tg of forgeTargets()) {
+    for (const tg of forgeTargets(printedOf(c).suit)) {
       const el = h('div', { class: 'dcard pickable', 'data-target': `${tg.suit}_${tg.rank}`, style: `background-image:url(${this.tex.faceUrl(tg)})` });
       el.addEventListener('click', async () => {
         if (this.busy) return;

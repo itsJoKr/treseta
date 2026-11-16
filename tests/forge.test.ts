@@ -12,9 +12,9 @@ import { makeState4, u4 } from './helpers4';
 
 describe('forgeries and identity (§19.4)', () => {
   it('ident() per holder: a Mi forgery is its copy for Mi, its printed card for Vi', () => {
-    const deck = forgeInDeck(standardDeck(), 'bate_4', { suit: 'kupe', rank: '3' }, 'mi');
+    const deck = forgeInDeck(standardDeck(), 'bate_4', { suit: 'bate', rank: '3' }, 'mi');
     const f = deck.find((c) => c.slot === 'bate_4')!;
-    expect(identFor(f, 'mi')).toMatchObject({ suit: 'kupe', rank: '3', slot: 'bate_4' });
+    expect(identFor(f, 'mi')).toMatchObject({ suit: 'bate', rank: '3', slot: 'bate_4' });
     expect(identFor(f, 'vi')).toMatchObject({ suit: 'bate', rank: '4', slot: 'bate_4' });
     // dealt in Partneri: S/N hold the copy, W/E the printed card
     for (let k = 0; k < 40; k++) {
@@ -22,7 +22,7 @@ describe('forgeries and identity (§19.4)', () => {
       for (const seat of ['S', 'W', 'N', 'E'] as const) {
         const c = state.seats[seat].hand.find((x) => x.uid === 'p:bate_4');
         if (!c) continue;
-        if (seat === 'S' || seat === 'N') expect([c.suit, c.rank]).toEqual(['kupe', '3']);
+        if (seat === 'S' || seat === 'N') expect([c.suit, c.rank]).toEqual(['bate', '3']);
         else expect([c.suit, c.rank]).toEqual(['bate', '4']);
       }
     }
@@ -70,13 +70,16 @@ describe('forgeries and identity (§19.4)', () => {
     expect(canForge(d, 'kupe_A')).toBe(false);
     d = d.map((c) => (c.suit === 'kupe' && c.rank === '7' ? { ...c, ukras: 'pijano' as const } : c));
     expect(canForge(d, 'kupe_7')).toBe(false);
-    for (const k of ['kupe_6', 'kupe_5', 'kupe_4', 'bate_7']) d = forgeInDeck(d, k, { suit: 'spade', rank: '2' });
+    // a forgery keeps its suit: only the number changes
+    expect(() => forgeInDeck(d, 'kupe_6', { suit: 'spade', rank: '2' })).toThrow();
+    for (const k of ['kupe_6', 'kupe_5', 'kupe_4', 'bate_7']) d = forgeInDeck(d, k, { suit: k.split('_')[0] as 'kupe', rank: '2' });
     expect(d.filter((c) => c.forge).length).toBe(MAX_FORGES);
     expect(canForge(d, 'bate_6')).toBe(false);
     expect(d.length).toBe(40);
     const base = standardDeck();
     const m = applyMatchMods(base, { marks: [], forgeries: ['3', 'A'] }, 'vf', 'dvoboj', 5, 0);
     expect(m.filter((c) => c.forge?.team === 'vi').length).toBe(2);
+    for (const c of m.filter((x) => x.forge)) expect(c.forge!.suit).toBe(c.slot!.split('_')[0]);
     expect(base.some((c) => c.forge)).toBe(false);
   });
 });

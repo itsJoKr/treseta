@@ -121,15 +121,19 @@ describe('run (§19.1–§19.2)', () => {
     const keys = ['bate_4', 'bate_5', 'spade_6', 'dinari_7'];
     for (const key of keys) {
       r.shop!.offers = [{ kind: 'falsa', rarity: 'rare', price: 12, sold: false }];
-      r = buyFalsa(r, 0, key, { suit: 'kupe', rank: '3' });
+      r = buyFalsa(r, 0, key, { suit: key.split('_')[0] as 'kupe', rank: '3' });
     }
     expect(r.deck.length).toBe(40);
     expect(r.deck.filter((c) => c.forge).length).toBe(MAX_FORGES);
     r.shop!.offers = [{ kind: 'falsa', rarity: 'rare', price: 12, sold: false }];
     expect(() => buyFalsa(r, 0, 'kupe_4', { suit: 'kupe', rank: '3' })).toThrow();
+    // another suit is refused
+    const r3 = inShop(newRun('fc', 0), 5, 200);
+    r3.shop!.offers = [{ kind: 'falsa', rarity: 'rare', price: 12, sold: false }];
+    expect(() => buyFalsa(r3, 0, 'kupe_4', { suit: 'bate', rank: '3' })).toThrow();
     const f = r.deck.find((c) => c.forge && c.suit === 'bate' && c.rank === '4')!;
     expect(printedOf(f).rank).toBe('4');
-    expect(f.forge).toEqual({ suit: 'kupe', rank: '3', team: 'mi' });
+    expect(f.forge).toEqual({ suit: 'bate', rank: '3', team: 'mi' });
     // not on a strong card
     const r2 = inShop(newRun('fb', 0), 5, 200);
     r2.shop!.offers = [{ kind: 'falsa', rarity: 'rare', price: 12, sold: false }];

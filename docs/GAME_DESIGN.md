@@ -2202,8 +2202,8 @@ Opponent **knobs come from the match tier**, not the character: Dvoboj tier T us
 | 2 | "Kod Jure" | Gazda Jure | 2 | – (0) | – | – | 9 |
 | 3 | "Pod Lozom" | Ive Poštar | 2 | `pogled`, `krivi_racun` (1) | Pozlaćeno on a random A | – | 10 |
 | 4 | "Ribarska" | Dino "Galeb" | 3 | `tucem`, `duplo_ili_nista` (2) | Nabrušeno on a random K, Usoljeno on a random A | – | 11 |
-| 5 | "Kamenolom" | Barba Luka | 3 | `tucem`, `krivi_racun`, `trica_iz_rukava` (2) | Ljuto on a random 3, Pozlaćeno on a random A | 1: a lišina → copy of a random 2 | 12 |
-| 6 | "Na Brdu" (boss) | Did Bepo | 4 | `tucem`, `trica_iz_rukava`, `duplo_ili_nista`, `briskula` (3) | Pozlaćeno on a random 3, Ljuto on a random 3, Nabrušeno on a random 2, Glasno on a random A | 1: a lišina → copy of a random 3 | 15 (stats) |
+| 5 | "Kamenolom" | Barba Luka | 3 | `tucem`, `krivi_racun`, `trica_iz_rukava` (2) | Ljuto on a random 3, Pozlaćeno on a random A | 1: a lišina → the 2 of its own suit | 12 |
+| 6 | "Na Brdu" (boss) | Did Bepo | 4 | `tucem`, `trica_iz_rukava`, `duplo_ili_nista`, `briskula` (3) | Pozlaćeno on a random 3, Ljuto on a random 3, Nabrušeno on a random 2, Glasno on a random A | 1: a lišina → the 3 of its own suit | 15 (stats) |
 
 **Partneri ladder** (start unlocked: Luka, Ive, Dino; beating a pair unlocks both members; the partner persona is the one neither opponent uses)
 
@@ -2213,8 +2213,8 @@ Opponent **knobs come from the match tier**, not the character: Dvoboj tier T us
 | 2 | "Kod Jure" | Jure | Ive | mali (Dino, Tonči) | 2 | – / – (0/0) | – | – | 9 |
 | 3 | "Pod Lozom" | Tonči | Ive | gazda (Stipe, Jure) | 2 | `pogled` / `krivi_racun` (1/1) | Pozlaćeno on a random A | – | 10 |
 | 4 | "Ribarska" | Stipe | Dino | barba (Luka, Ive) | 3 | `tucem` / `duplo_ili_nista` (1/2) | Nabrušeno on a random K, Usoljeno on a random A | – | 11 |
-| 5 | "Kamenolom" | Dino | Luka | gazda (Stipe, Jure) | 3 | `duplo_ili_nista` / `tucem`, `krivi_racun` (2/2) | Ljuto on a random 3, Pozlaćeno on a random A | 1 (→ random 2) | 12 |
-| 6 | "Na Brdu" (boss) | Bepo | Frane | mali (Tonči, Dino) | 4 | `tucem`, `trica_iz_rukava`, `duplo_ili_nista`, `briskula` / `krivi_racun`, `pogled`, `briskula` (3/2) | Pozlaćeno on a random 3, Ljuto on a random 3, Nabrušeno on a random 2, Glasno on a random A | 1 (→ random 3) | 15 (stats) |
+| 5 | "Kamenolom" | Dino | Luka | gazda (Stipe, Jure) | 3 | `duplo_ili_nista` / `tucem`, `krivi_racun` (2/2) | Ljuto on a random 3, Pozlaćeno on a random A | 1 (→ the 2 of its suit) | 12 |
+| 6 | "Na Brdu" (boss) | Bepo | Frane | mali (Tonči, Dino) | 4 | `tucem`, `trica_iz_rukava`, `duplo_ili_nista`, `briskula` / `krivi_racun`, `pogled`, `briskula` (3/2) | Pozlaćeno on a random 3, Ljuto on a random 3, Nabrušeno on a random 2, Glasno on a random A | 1 (→ the 3 of its suit) | 15 (stats) |
 
 - Every row has exactly 2 valid unlocked partners, and the 3 bot personas at each table are all different (asserted by the test in §19.9).
 - The §18.4.1 partner perks are unchanged. The Jure perk discount applies to the shop after that match.
@@ -2264,7 +2264,7 @@ New ids: `UkrasId += 'prevrtljivo'`, `ForaId += 'briskula'`, `Offer.kind += 'fal
 |---|---|---|
 | **`prevrtljivo`**, "Prevrtljivo" (Turncoat), ukras, colour `#C46FA0` | When **its beneficiary side/team plays it as a non-leader**, the card **counts as the led suit**: it is always a legal follow, it satisfies the follow-suit obligation, and it competes for the trick with its own strength. As a lead card it has its printed suit. Under forcedHighest it is legal only if its strength ≥ the highest real card of the led suit in that hand. For the other side it is a plain card. | EN "Played second (or later), it counts as the suit led." HR "Kad ne otvaraš, vrijedi kao tražena boja." |
 | **`briskula`**, "Briškula!" (Trump!), fora, cost **2** rakija, `when: 'follow'` | Usable only on your turn when you **cannot follow** the led suit. The card you then play makes its suit **trump for this trick**: any trump card beats every non-trump card; among trump cards the highest effective strength wins (equal → earlier play). Other seats still must follow the led suit if able. Reason key `mustBeVoid` ("Samo kad nemaš traženu boju" / "Only when you can't follow suit"). | Named after briškula, Dalmatia's other card game. Bots: use when void with V ≥ 2 thirds or on the last trick. Dvoboj: play the lowest-val card. Partneri: the lowest-val card if no opponent plays after you, else the highest-strength card. |
-| **Falsa karta** (Forgery), shop service offer | Choose a **lišina (4–7) without ukras or forgery** in your deck, then choose a **target identity: any 3, 2 or A of any suit**. The card is permanently forged into a copy of that identity (beneficiary: the player's side/team). The deck stays 40 cards. **Max 4 forged cards per deck.** | Shown as "Falsa karta: 4 bate → 3 kupe" in the deck grid. |
+| **Falsa karta** (Forgery), shop service offer | Choose a **lišina (4–7) without ukras or forgery** in your deck, then choose a **target: the 3, 2 or A of the card's own suit** (play-test round 3: a forgery only changes the number, never the suit). The card is permanently forged into a copy of that identity (beneficiary: the player's side/team). The deck stays 40 cards. **Max 4 forged cards per deck.** | Shown as "Falsa karta: 4 bate → 3 kupe" in the deck grid. |
 
 ### 19.3 Dvoboj: one shared deck, hidden draws
 
@@ -2345,10 +2345,8 @@ Consequences:
 
 | Case | Rendering (composited on the card canvas texture, §10.4) |
 |---|---|
-| Your forgery, in your hand / played by your side | Face of the **copy** identity + a diagonal stamp band "FALSA" (Alegreya bold 54 px, `#C0392B` at 75% alpha, rotated −20°, centred at (240, 560)) + a 4 px dashed `#C0392B` inner border |
-| Your forgery, held or played by the other side | The **printed** face + a small ochre "F" tag (28 px circle, top-left under the index block) so you can track it |
-| Vi forgery, played by Vi | Copy face + the same FALSA stamp, with the band in `#7A1F14` and "VI" appended |
-| Vi forgery, in your hand | Printed face + a red dashed border + a small red "F" tag |
+| A forgery seen as its copy (yours in your hand or played by your side; Vi's played by Vi) | Play-test round 3: the **printed** face, its corner number crossed out in blue ballpoint `#1D3FD1` and the copy's number written beside it ("6" crossed out, "3" written), in both corners (`drawPenCorrection`). The suit never changes. A toast names the play: "{name} baca falsu: 6 Špade vridi ka 3 Špade!" |
+| A forgery held or played by the side it does not work for | The printed face + a small circled "F" in the same blue pen under the index (`drawForgeTag`); the hover tooltip explains it |
 | `prevrtljivo` badge | Painted `ukrasi/prevrtljivo` (mauve wax seal with a chameleon). Fallback: circle r 56 filled `#C46FA0`, 4 px darker rim, glyph "⇄" white, 64 px |
 | `briskula` fora art | Painted `fore/briskula`. Fallback: vertical gradient `#2F5D7C` → `#2A1A10`, with the 4 suit icons (`cards/suits/*.png`) in a diamond (each 120 px) and "BRIŠKULA!" in cream, Alegreya 48 |
 | Falsa karta shop offer | A cream card with a lišina mini face → arrow → "?" (strong) mini face, plus the stamp band |

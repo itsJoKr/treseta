@@ -15,7 +15,7 @@ import { canUseFora, FORE } from '../game/fore';
 import { firstDealer, matchAct, nextHand, startMatch } from '../game/match';
 import { dvobojOpponent } from '../game/dvobojLadder';
 import type { DvobojOpponent } from '../game/dvobojLadder';
-import { applyMatchMods } from '../game/forge';
+import { applyMatchMods, forgeView } from '../game/forge';
 import { DVOBOJ_LADDER } from '../game/ladders';
 import { matchTarget } from '../game/matchConfig';
 import { toHeld } from '../game/rules';
@@ -29,6 +29,7 @@ import type { Action, CardInst, DeckCard, ForaId, GameEvent, HandState, Side, Si
 import { other } from '../game/types';
 import { UKRASI } from '../game/ukrasi';
 import { wait } from '../render/animator';
+import { forgeNames } from '../ui/hud';
 import { VOICE_EVENTS } from '../data/voiceEvents';
 import type { Animator4 } from '../render/animator4';
 import type { CardObject, CardTextures } from '../render/cardMesh';
@@ -120,6 +121,7 @@ export class GameController {
       rejected: (uid) => { const o = d.anim.cards.get(uid); if (o) this.illegal(o, false); },
       cancel: () => this.cancelTargeting(),
       hover: (card) => this.onHover(card),
+      hoverTable: (card, x, y) => this.d.hud.cardZoom(card ? this.d.textures.faceUrl(card.data) : null, x, y),
       activity: () => { this.lastActivity = performance.now(); },
     });
     this.keyHandler = (e) => this.onKey(e);
@@ -436,7 +438,7 @@ export class GameController {
         const render = () => {
           row.innerHTML = '';
           order.forEach((c, i) => {
-            const el = h('div', { class: 'bigcard', draggable: 'true', title: i === 0 ? 'Top' : '', style: `background-image:url(${this.d.textures.faceUrl(c)})` });
+            const el = h('div', { class: 'bigcard', draggable: 'true', title: i === 0 ? (getLang() === 'hr' ? 'Vrh' : 'Top') : '', style: `background-image:url(${this.d.textures.faceUrl(c)})` });
             el.addEventListener('dragstart', (ev) => { (ev as DragEvent).dataTransfer?.setData('text/plain', String(i)); el.classList.add('dragging'); });
             el.addEventListener('dragover', (ev) => ev.preventDefault());
             el.addEventListener('drop', (ev) => {
@@ -585,6 +587,8 @@ export class GameController {
         const c = o.data;
         const strong = c.rank === '3' || c.ukras === 'pozlaceno' || c.ukras === 'nabruseno';
         if (e.drunk) this.d.ov.toast(e.side === 'player' ? t('toast.drunk') : t('toast.botDrunk', { name: this.opp.name }));
+        // a forgery played as its copy: say so, the pen marks are small at table distance
+        if (forgeView(c)?.copy) this.d.ov.toast(e.side === 'player' ? t('toast.forgePlayedMine', forgeNames(c)) : t('toast.forgePlayed', { name: this.opp.name, ...forgeNames(c) }), e.side === 'player' ? 'normal' : 'warn', 2600);
         this.phaseTag = 'play-' + e.side;
         if (e.side === 'player') {
           this.d.hud.hideTooltip();

@@ -73,14 +73,14 @@ export function akuzaView(hand: Card4[], seat: Seat): Card4[] {
 }
 
 export const DESC4: Partial<Record<UkrasId, { en: string; hr: string }>> = {
-  prevrtljivo: { en: 'Played by your team as 2nd–4th, it counts as the suit led.', hr: 'Kad ga tvoj par ne otvara, vrijedi kao tražena boja.' },
-  pozlaceno: { en: 'If it ends in your team’s trick pile (whoever played it): +1 punat.', hr: 'Ako završi u štihovima tvog para (bilo tko je bacija): +1 punat.' },
+  prevrtljivo: { en: 'Played by your team as 2nd–4th, it counts as the suit led.', hr: 'Kad tvoj par s njom ne otvara, vridi ka tražena boja.' },
+  pozlaceno: { en: 'If it ends in your team’s trick pile (whoever played it): +1 punat.', hr: 'Ako završi u štihovima tvog para (bilo ko da ju je bacija): +1 punat.' },
   srebreno: { en: 'If it ends in your team’s trick pile: +3 šoldi.', hr: 'Ako završi u štihovima tvog para: +3 šoldi.' },
   nabruseno: { en: 'Strength +½ rank when played by your team.', hr: 'Jača za pola stupnja kad je baci tvoj par.' },
-  ljuto: { en: 'Led by your team: both opponents must play their highest of that suit.', hr: 'Kad je tvoj par otvori: oba protivnika moraju baciti najjaču te boje.' },
+  ljuto: { en: 'Led by your team: both opponents must play their highest of that suit.', hr: 'Kad s njom otvara tvoj par: oba protivnika moraju bacit najjaču te boje.' },
   usoljeno: { en: 'Played by your team and the trick is lost: its thirds stay with you.', hr: 'Ako je baci tvoj par i izgubi štih, bodovi ostaju vama.' },
   pijano: { en: 'Played by you or your partner: +1 rakija for you.', hr: 'Kad je baciš ti ili partner: +1 rakija.' },
-  divlje: { en: 'In your team’s hands: counts as the 3, 2 or A of its suit for akuže.', hr: 'U rukama tvog para vrijedi kao trica, duja ili as svoje boje za akužu.' },
+  divlje: { en: 'In your team’s hands: counts as the 3, 2 or A of its suit for akuže.', hr: 'U rukama tvog para vridi ka trica, duja ili as svoje boje za akužu.' },
   glasno: { en: 'An akuža declared by your team with it: +2.', hr: 'Akuža tvog para s ovom kartom: +2.' },
   ponocno: { en: 'Played by your team and wins the last trick: ultima 3.', hr: 'Ako je baci tvoj par i odnese zadnji štih: ultima 3.' },
   ribarsko: { en: 'Win a trick with it: see 1 card from each opponent.', hr: 'Kad odneseš štih s njom: vidiš po jednu kartu svakog protivnika.' },

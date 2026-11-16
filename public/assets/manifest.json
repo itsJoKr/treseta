@@ -101,7 +101,8 @@
       "rakija_full": "ui/rakija_full.webp",
       "rakija_empty": "ui/rakija_empty.webp",
       "logo": "ui/logo.webp",
-      "falsa": "ui/falsa.webp"
+      "falsa": "ui/falsa.webp",
+      "joe": "ui/joe.webp"
     }
   },
   "audio": {

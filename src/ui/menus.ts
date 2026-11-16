@@ -16,6 +16,8 @@ export interface MenuOpts {
   /** §18.9: Partneri is the primary mode; each mode has its own Continue. */
   partneri?: { hasSave: boolean; konoba: number; onContinue: () => void; onNew: () => void };
   dvobojKonoba?: number;
+  /** language switch in the bottom-right corner (saved like the Settings one) */
+  onLanguage?: (l: 'hr' | 'en') => void;
 }
 
 export function mainMenu(o: MenuOpts): { el: HTMLElement; setProgress: (p: number) => void } {
@@ -27,8 +29,8 @@ export function mainMenu(o: MenuOpts): { el: HTMLElement; setProgress: (p: numbe
   const buttons = h('div', { class: 'menu-buttons' });
   if (o.partneri) {
     const p = o.partneri;
-    if (p.hasSave) buttons.append(h('button', { class: 'btn', 'data-testid': 'continue-partneri', text: t('menu.continueMode', { mode: 'Partneri', k: p.konoba }), onclick: p.onContinue }));
-    if (o.hasSave) buttons.append(h('button', { class: 'btn', 'data-testid': 'continue', text: t('menu.continueMode', { mode: 'Dvoboj', k: o.dvobojKonoba ?? 1 }), onclick: o.onContinue }));
+    if (p.hasSave) buttons.append(h('button', { class: 'btn', 'data-testid': 'continue-partneri', text: t('menu.continueMode', { mode: t('mode.partneriName'), k: p.konoba }), onclick: p.onContinue }));
+    if (o.hasSave) buttons.append(h('button', { class: 'btn', 'data-testid': 'continue', text: t('menu.continueMode', { mode: t('mode.dvobojName'), k: o.dvobojKonoba ?? 1 }), onclick: o.onContinue }));
     buttons.append(
       h('button', { class: 'btn mode-primary', 'data-testid': 'new-run-partneri', onclick: p.onNew }, t('mode.partneri'), h('small', { text: t('mode.partneriSub') })),
       h('button', { class: 'btn ghost mode-secondary', 'data-testid': 'new-run', onclick: o.onNew }, t('mode.dvoboj'), h('small', { text: t('mode.dvobojSub') })),
@@ -46,7 +48,17 @@ export function mainMenu(o: MenuOpts): { el: HTMLElement; setProgress: (p: numbe
   const loader = h('div', { class: 'loadbar hidden' }, bar);
   const inner = h('div', { class: 'menu-inner' }, logo, h('div', { class: 'tagline', text: t('menu.tagline') }), buttons, loader, loadtext);
   const footer = h('div', { class: 'menu-footer', text: t('menu.stats', { runs: o.stats.runsStarted, wins: o.stats.runsWon }) });
-  const el = h('div', { class: 'screen menu', 'data-screen': 'menu' }, bg, h('div', { class: 'menu-glow' }), inner, footer);
+  const madeBy = h('a', { class: 'made-by', href: 'https://joe-it-solutions.com/', target: '_blank', rel: 'noopener', 'data-testid': 'made-by' },
+    h('span', { text: t('menu.madeBy') }), h('b', null, art.joe() ? h('img', { src: art.joe()!, alt: 'joe' }) : null, 'joe'));
+  const langs = h('div', { class: 'lang-switch', role: 'group', 'aria-label': t('settings.language') });
+  for (const [code, label] of [['hr', 'HR'], ['en', 'EN']] as const) {
+    langs.append(h('button', {
+      class: 'lang-btn' + (getLang() === code ? ' on' : ''), 'data-testid': `lang-${code}`, 'aria-pressed': String(getLang() === code),
+      title: code === 'hr' ? 'Hrvatski' : 'English', text: label,
+      onclick: () => { if (getLang() !== code) o.onLanguage?.(code); },
+    }));
+  }
+  const el = h('div', { class: 'screen menu', 'data-screen': 'menu' }, bg, h('div', { class: 'menu-glow' }), inner, footer, madeBy, langs);
   return {
     el,
     setProgress: (p: number) => {
