@@ -11,11 +11,16 @@ export class Assets {
   manifest: AssetManifest = buildDefaultManifest();
   /** Files known to exist (relative to assets/), or null if unknown. */
   private index: Set<string> | null = null;
+  /** Content hash per file from asset-index.json: appended as ?v= so a changed file gets a new URL. */
+  private versions: Record<string, string> = {};
   private images = new Map<string, HTMLImageElement | null>();
   private loading = new Map<string, Promise<HTMLImageElement | null>>();
   version = 0; // bumps when new images arrive
 
-  url(rel: string): string { return `${BASE}${this.manifest.basePath}${rel}`; }
+  url(rel: string): string {
+    const v = this.versions[rel];
+    return `${BASE}${this.manifest.basePath}${rel}${v ? `?v=${v}` : ''}`;
+  }
 
   exists(rel: string): boolean {
     if (!this.index) return true;
@@ -30,8 +35,9 @@ export class Assets {
     try {
       const r = await fetch(`${BASE}asset-index.json`, { cache: 'no-store' });
       if (r.ok) {
-        const j = (await r.json()) as { files: string[] };
+        const j = (await r.json()) as { files: string[]; v?: Record<string, string> };
         this.index = new Set(j.files);
+        this.versions = j.v ?? {};
       }
     } catch {
       this.index = null;
