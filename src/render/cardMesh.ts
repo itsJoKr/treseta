@@ -7,7 +7,7 @@ import { cardFileKey, SUIT_COLOR } from '../game/cards';
 import type { CardInst, DeckCard, Side, UkrasId } from '../game/types';
 import { UKRASI } from '../game/ukrasi';
 import {
-  CARD_H, CARD_W, canvas, cardBackPlaceholder, cardFacePlaceholder, glowTexture, roundRect, ukrasBadgePlaceholder,
+  CARD_H, CARD_W, canvas, cardBackPlaceholder, cardFacePlaceholder, FACE, glowTexture, roundRect, ukrasBadgePlaceholder,
 } from './placeholders';
 
 export const CARD_WU = 0.8;
@@ -135,28 +135,34 @@ export function faceKey(c: DeckCard): string {
   return `${c.suit}_${c.rank}|${c.ukras ?? ''}${team}${f}`;
 }
 
-/** Šarane karte (§18.4.3): an opponent mark gets a terracotta ring and a "VI" tab under the badge. */
+/** Šarane karte (§18.4.3): an opponent mark gets a terracotta ring round the badge and a "VI" tab under it. */
 export function drawViMark(ctx: CanvasRenderingContext2D): void {
+  const { x, y, size } = FACE.badge;
+  const cx = x + size / 2, cy = y + size / 2;
   ctx.save();
   ctx.strokeStyle = '#C0392B';
-  ctx.lineWidth = 6;
+  ctx.lineWidth = 5;
   ctx.beginPath();
-  ctx.arc(394, 174, 64, 0, Math.PI * 2);
+  ctx.arc(cx, cy, size / 2 + 6, 0, Math.PI * 2);
   ctx.stroke();
   ctx.fillStyle = '#C0392B';
-  roundRect(ctx, 358, 236, 72, 34, 10);
+  roundRect(ctx, cx - 28, y + size + 10, 56, 28, 8);
   ctx.fill();
-  ctx.fillStyle = '#F3E6C8';
-  ctx.font = '800 26px Alegreya, serif';
+  ctx.fillStyle = '#FFFFFF';
+  ctx.font = '800 22px Alegreya, serif';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText('VI', 394, 254);
+  ctx.fillText('VI', cx, y + size + 25);
   ctx.restore();
 }
 
+/**
+ * Ukras on a face: a coloured edge stroke and the badge on the LEFT, under the corner numeral
+ * (FACE.badge), so it stays visible in the hand fan where the next card covers the right ~45%.
+ */
 export function drawUkrasOnFace(ctx: CanvasRenderingContext2D, id: UkrasId): void {
   const def = UKRASI[id];
-  // edge glow stroke (6 px inner, 70% alpha)
+  // edge glow stroke (6 px inner, 70% alpha), in the white margin outside the printed frame line
   ctx.save();
   ctx.globalAlpha = 0.7;
   ctx.strokeStyle = def.color;
@@ -164,11 +170,12 @@ export function drawUkrasOnFace(ctx: CanvasRenderingContext2D, id: UkrasId): voi
   roundRect(ctx, 3, 3, CARD_W - 6, CARD_H - 6, 22);
   ctx.stroke();
   ctx.restore();
+  const { x, y, size } = FACE.badge;
   ctx.save();
   ctx.shadowColor = 'rgba(0,0,0,0.45)';
-  ctx.shadowBlur = 8;
-  ctx.shadowOffsetY = 3;
-  ctx.drawImage(badgeSource(id), 338, 118, 112, 112);
+  ctx.shadowBlur = 6;
+  ctx.shadowOffsetY = 2;
+  ctx.drawImage(badgeSource(id), x, y, size, size);
   ctx.restore();
 }
 

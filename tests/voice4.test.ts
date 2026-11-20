@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { detectMisplay, playerTurnCtx, trickEndCandidates4, VoiceTable4 } from '../src/audio/voiceTriggers4';
+import { detectMisplay, playerTurnCtx, playReactions4, trickEndCandidates4, VoiceTable4 } from '../src/audio/voiceTriggers4';
 import type { VSeat } from '../src/audio/voiceTriggers4';
 import { PARTNER_EVENTS, VOICE_EVENTS4 } from '../src/data/voiceEvents4';
 import { VOICE_BY_ID, VOICE_LINES } from '../src/data/voiceLines';
@@ -10,7 +10,7 @@ import { applyAction4 } from '../src/game/rules4';
 import type { Rng } from '../src/game/rng';
 import type { GameEvent4, Hand4State, Seat } from '../src/game/types4';
 import type { PersonaId } from '../src/game/types';
-import { makeState4, u4 } from './helpers4';
+import { c4, makeState4, u4 } from './helpers4';
 
 function table(opts: { rng?: Rng; dur?: number; personas?: Record<VSeat, PersonaId> } = {}) {
   let now = 100000;
@@ -42,11 +42,11 @@ const ALWAYS: Rng = () => 0;
 const play = (s: Hand4State, seat: Seat, spec: string) => applyAction4(s, { type: 'play', seat, uid: u4(spec) });
 
 describe('voice4 (§18.7)', () => {
-  it('only the 34 existing line ids appear in voiceEvents4', () => {
+  it('every line id in voiceEvents4 exists', () => {
     const ids = new Set(VOICE_LINES.map((l) => l.id));
-    expect(ids.size).toBe(34);
+    expect(ids.size).toBe(60);
     for (const cfg of Object.values(VOICE_EVENTS4)) for (const id of cfg.lines) expect(ids.has(id)).toBe(true);
-    expect(Object.keys(PARTNER_EVENTS).length).toBe(12);
+    expect(Object.keys(PARTNER_EVENTS).length).toBe(13);
   });
 
   it('routing: a point dump onto a Vi trick makes the partner (N) speak', () => {
@@ -101,18 +101,18 @@ describe('voice4 (§18.7)', () => {
     expect(said.map((x) => x.seat)).toEqual(['W', 'E']);
   });
 
-  it('per-hand caps: 9 in total and 4 per speaker; priority 3 bypasses both', () => {
+  it('per-hand caps: 12 in total and 5 per speaker (§22: was 9/4); priority 3 bypasses both', () => {
     const { t, advance } = table({ rng: ALWAYS });
     let w = 0;
     for (let i = 0; i < 10; i++) { if (t.speak('W', 'bot_win_trick')) w++; advance(20000); }
-    expect(w).toBe(4);
+    expect(w).toBe(5);
     let n = 0;
     let e = 0;
     for (let i = 0; i < 10; i++) { if (t.speak('N', 'partner_team_big')) n++; advance(20000); }
     for (let i = 0; i < 10; i++) { if (t.speak('E', 'bot_win_trick')) e++; advance(20000); }
-    expect(n).toBe(4);
-    expect(w + n + e).toBe(9); // E gets only 1 before the total cap
-    expect(e).toBe(1);
+    expect(n).toBe(5);
+    expect(w + n + e).toBe(12); // E gets only 2 before the total cap
+    expect(e).toBe(2);
     // priority 3 bypasses caps and interrupts a playing line
     expect(t.speak('W', 'match_bot_win')).toBe('plati_rakiju');
     expect(t.speak('N', 'partner_match_lose')).not.toBeNull();
@@ -197,5 +197,45 @@ describe('voice §19.6', () => {
     expect(mi[1]).toMatchObject({ event: 'player_great', p: 0.8 });
     const ids = new Set(VOICE_LINES.map((l) => l.id));
     for (const c of [...vi, ...mi]) for (const id of c.lines ?? VOICE_EVENTS4[c.event].lines) expect(ids.has(id)).toBe(true);
+  });
+});
+
+describe('mid-trick reactions in Partneri (§22.3)', () => {
+  const c = (spec: string) => c4(spec);
+  const rng = () => 0.1;
+
+  it('a bot forced to give its ace to the other side\'s 3 is mad; the player in that spot gets an opponent gloating', () => {
+    const r = playReactions4({ seat: 'E', card: c('kupe_A'), legal: [c('kupe_A')], before: [{ seat: 'S', card: c('kupe_3') }, { seat: 'W', card: c('kupe_5') }, { seat: 'N', card: c('kupe_6') }], rng });
+    expect(r[0]).toEqual({ seat: 'E', event: 'ace_snatched' });
+    const g = playReactions4({ seat: 'S', card: c('bate_A'), legal: [c('bate_A')], before: [{ seat: 'W', card: c('bate_2') }], rng });
+    expect(g[0]).toEqual({ seat: 'W', event: 'gloat' });
+  });
+
+  it('"A zna sam da ima tricu": the bot whose A or 2 was winning, when the other side plays the 3', () => {
+    const r = playReactions4({ seat: 'S', card: c('spade_3'), legal: [c('spade_3'), c('spade_4')], before: [{ seat: 'E', card: c('spade_2') }], rng });
+    expect(r[0]).toEqual({ seat: 'E', event: 'knew_trica' });
+    expect(r).toContainEqual({ seat: 'N', event: 'partner_react' });
+    const a = playReactions4({ seat: 'N', card: c('dinari_A'), legal: [c('dinari_A')], before: [{ seat: 'W', card: c('dinari_K') }], rng });
+    expect(a[0]).toEqual({ seat: 'W', event: 'knew_ace' });
+    // the partner's card was winning: a team-mate covering it is not a reaction
+    expect(playReactions4({ seat: 'N', card: c('dinari_3'), legal: [c('dinari_3')], before: [{ seat: 'S', card: c('dinari_2') }, { seat: 'W', card: c('dinari_4') }], rng })).toEqual([]);
+  });
+
+  it('a 3 taking the player\'s trick makes the partner grunt; a led 3 makes the other side grunt', () => {
+    const r = playReactions4({ seat: 'W', card: c('kupe_3'), legal: [c('kupe_3')], before: [{ seat: 'S', card: c('kupe_A') }], rng });
+    expect(r).toEqual([{ seat: 'N', event: 'react_short' }]);
+    expect(playReactions4({ seat: 'S', card: c('kupe_3'), legal: [c('kupe_3')], before: [], rng })).toEqual([{ seat: 'W', event: 'react_short' }]);
+    expect(playReactions4({ seat: 'E', card: c('kupe_3'), legal: [c('kupe_3')], before: [], rng })).toEqual([{ seat: 'N', event: 'react_short' }]);
+  });
+
+  it('VoiceTable4.first says the first candidate that passes the arbiter', () => {
+    const { t, said, advance } = table({ rng: ALWAYS });
+    t.speak('W', 'match_start');
+    advance(1000 + 1300); // past the 1200 ms reaction gap, inside the 2500 ms table gap
+    expect(t.speak('W', 'bot_win_trick')).toBeNull();
+    // W is gazda: his only "a 3 beat me" line (mali also has odjebi_tricon)
+    const got = t.first([{ seat: 'W', event: 'knew_trica' }]);
+    expect(got?.line).toBe('zna_sam_tricu');
+    expect(said.map((x) => x.id)).toEqual(['sidi_misaj', 'zna_sam_tricu']);
   });
 });

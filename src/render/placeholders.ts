@@ -1,5 +1,5 @@
 // Procedural canvas placeholders (§16.7) and helper textures.
-import { RANK_INDEX, SUIT_COLOR, SUIT_NAME } from '../game/cards';
+import { RANK_INDEX } from '../game/cards';
 import { FORE } from '../game/fore';
 import type { ForaId, PersonaId, Rank, Rarity, Suit, UkrasId } from '../game/types';
 import { UKRASI } from '../game/ukrasi';
@@ -36,193 +36,242 @@ function shade(hex: string, f: number): string {
   return `rgb(${r},${g},${b})`;
 }
 
-/** Simple suit shape centred at (cx, cy) with nominal size s. */
+/** Flat print colours of the Triestine faces (sampled from the card art). */
+export const TRI = { red: '#EA2E18', blue: '#085CDE', yellow: '#FAD00A', black: '#0C0C0C', white: '#FFFFFF' };
+
+/**
+ * Triestine face layout on the 480×768 canvas. The art build (tools/art/build.py) prints the
+ * same frame line and corner numeral; the ukras badge and the forgery pen marks are placed
+ * relative to these.
+ */
+export const FACE = {
+  /** thin black frame line, inset from the card edge */
+  frame: { inset: 20, radius: 12, width: 3 },
+  /** centre of the top-left corner numeral (two-digit numerals are centred 8 px further right) */
+  index: { x: 54, y: 58, px: 60 },
+  /** ukras badge: left side, under the corner numeral, so it shows in the hand fan */
+  badge: { x: 22, y: 92, size: 80 },
+};
+
+/** Corner numeral of a rank as printed on the Triestine faces (A → "1"; RANK_INDEX keeps A empty for §19.7). */
+export function indexNumeral(rank: Rank): string { return rank === 'A' ? '1' : RANK_INDEX[rank]; }
+
+const INDEX_FONT = '"Bodoni 72", "Bodoni MT", "Times New Roman", Times, serif';
+const LABEL_SUIT: Record<Suit, string> = { kupe: 'COPPE', bate: 'BASTONI', spade: 'SPADE', dinari: 'DANARI' };
+const LABEL_RANK: Partial<Record<Rank, string>> = { F: 'FANTE', C: 'CAVAL', K: 'RE' };
+
+/** Simple Triestine suit shape centred at (cx, cy) with nominal height s (cup, baton, sword, coin). */
 export function drawSuitShape(ctx: CanvasRenderingContext2D, suit: Suit, cx: number, cy: number, s: number): void {
-  const col = SUIT_COLOR[suit];
+  const { red, blue, yellow, black, white } = TRI;
   ctx.save();
   ctx.translate(cx, cy);
+  ctx.scale(s, s);
   ctx.lineJoin = 'round';
-  ctx.strokeStyle = '#3A2618';
-  ctx.lineWidth = Math.max(2, s * 0.045);
+  ctx.strokeStyle = black;
+  ctx.lineWidth = Math.max(1.5, s * 0.022) / s;
+  const poly = (pts: [number, number][], fill: string) => {
+    ctx.beginPath();
+    ctx.moveTo(pts[0][0], pts[0][1]);
+    for (const [x, y] of pts.slice(1)) ctx.lineTo(x, y);
+    ctx.closePath();
+    ctx.fillStyle = fill; ctx.fill(); ctx.stroke();
+  };
   if (suit === 'kupe') {
-    ctx.fillStyle = col;
+    // hexagonal goblet: black lid, ribbed yellow rim, blue leaf stem with a red knot, yellow foot
+    poly([[-0.3, -0.5], [0.3, -0.5], [0.36, -0.43], [0.3, -0.36], [-0.3, -0.36], [-0.36, -0.43]], black);
+    ctx.fillStyle = red;
+    ctx.beginPath(); ctx.ellipse(0, -0.43, 0.13, 0.035, 0, 0, Math.PI * 2); ctx.fill();
+    poly([[-0.33, -0.36], [0.33, -0.36], [0.33, -0.24], [-0.33, -0.24]], yellow);
     ctx.beginPath();
-    ctx.moveTo(-0.42 * s, -0.42 * s);
-    ctx.lineTo(0.42 * s, -0.42 * s);
-    ctx.quadraticCurveTo(0.4 * s, 0.05 * s, 0.08 * s, 0.12 * s);
-    ctx.lineTo(0.06 * s, 0.32 * s);
-    ctx.lineTo(0.28 * s, 0.42 * s);
-    ctx.lineTo(-0.28 * s, 0.42 * s);
-    ctx.lineTo(-0.06 * s, 0.32 * s);
-    ctx.lineTo(-0.08 * s, 0.12 * s);
-    ctx.quadraticCurveTo(-0.4 * s, 0.05 * s, -0.42 * s, -0.42 * s);
+    for (let k = -4; k <= 4; k++) { ctx.moveTo(k * 0.07, -0.35); ctx.lineTo(k * 0.07, -0.25); }
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(-0.26, -0.24);
+    ctx.quadraticCurveTo(-0.02, -0.14, -0.07, 0);
+    ctx.quadraticCurveTo(-0.02, 0.14, -0.26, 0.24);
+    ctx.lineTo(0.26, 0.24);
+    ctx.quadraticCurveTo(0.02, 0.14, 0.07, 0);
+    ctx.quadraticCurveTo(0.02, -0.14, 0.26, -0.24);
     ctx.closePath();
-    ctx.fill(); ctx.stroke();
-    ctx.fillStyle = '#D9A441';
-    ctx.fillRect(-0.4 * s, -0.36 * s, 0.8 * s, 0.08 * s);
+    ctx.fillStyle = blue; ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.ellipse(0, 0, 0.17, 0.045, 0, 0, Math.PI * 2);
+    ctx.fillStyle = red; ctx.fill(); ctx.stroke();
+    poly([[-0.33, 0.24], [0.33, 0.24], [0.33, 0.37], [-0.33, 0.37]], yellow);
+    poly([[-0.36, 0.37], [0.36, 0.37], [0.3, 0.5], [-0.3, 0.5]], black);
+    ctx.fillStyle = red;
+    ctx.beginPath(); ctx.ellipse(0, 0.435, 0.13, 0.035, 0, 0, Math.PI * 2); ctx.fill();
   } else if (suit === 'bate') {
-    ctx.fillStyle = '#8A5A33';
-    roundRect(ctx, -0.11 * s, -0.46 * s, 0.22 * s, 0.92 * s, 0.11 * s);
-    ctx.fill(); ctx.stroke();
-    ctx.fillStyle = col;
-    for (const [x, y] of [[-0.16, -0.18], [0.17, 0.02], [-0.15, 0.2]]) {
-      ctx.beginPath();
-      ctx.ellipse(x * s, y * s, 0.09 * s, 0.05 * s, x > 0 ? -0.6 : 0.6, 0, Math.PI * 2);
-      ctx.fill(); ctx.stroke();
-    }
+    // baton: blue dome cap, yellow capital, long red shaft with diamonds, yellow bulb knob
+    ctx.beginPath(); ctx.arc(0, -0.5, 0.035, 0, Math.PI * 2); ctx.fillStyle = yellow; ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.ellipse(0, -0.39, 0.085, 0.08, 0, Math.PI, 0); ctx.closePath();
+    ctx.fillStyle = blue; ctx.fill(); ctx.stroke();
+    poly([[-0.12, -0.39], [0.12, -0.39], [0.1, -0.32], [-0.1, -0.32]], yellow);
+    poly([[-0.07, -0.32], [0.07, -0.32], [0.07, 0.3], [-0.07, 0.3]], red);
+    for (const y of [-0.16, 0, 0.16]) poly([[0, y - 0.04], [0.03, y], [0, y + 0.04], [-0.03, y]], black);
+    poly([[-0.08, 0.3], [0.08, 0.3], [0.08, 0.34], [-0.08, 0.34]], blue);
+    ctx.beginPath(); ctx.ellipse(0, 0.41, 0.11, 0.075, 0, 0, Math.PI * 2); ctx.fillStyle = yellow; ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.arc(0, 0.5, 0.035, 0, Math.PI * 2); ctx.fillStyle = blue; ctx.fill(); ctx.stroke();
   } else if (suit === 'spade') {
-    ctx.fillStyle = col;
+    // straight sword, point up: white blade, scrolled yellow guard, yellow grip, red pommel
+    poly([[0, -0.5], [0.06, -0.4], [0.06, 0.2], [-0.06, 0.2], [-0.06, -0.4]], white);
+    ctx.beginPath(); ctx.moveTo(0, -0.42); ctx.lineTo(0, 0.18); ctx.stroke();
+    poly([[-0.2, 0.2], [0.2, 0.2], [0.2, 0.26], [-0.2, 0.26]], yellow);
+    for (const x of [-0.22, 0.22]) {
+      ctx.beginPath(); ctx.arc(x, 0.27, 0.04, 0, Math.PI * 2); ctx.fillStyle = yellow; ctx.fill(); ctx.stroke();
+    }
+    poly([[-0.04, 0.26], [0.04, 0.26], [0.04, 0.41], [-0.04, 0.41]], yellow);
     ctx.beginPath();
-    ctx.moveTo(0, -0.5 * s);
-    ctx.lineTo(0.08 * s, -0.38 * s);
-    ctx.lineTo(0.07 * s, 0.22 * s);
-    ctx.lineTo(-0.07 * s, 0.22 * s);
-    ctx.lineTo(-0.08 * s, -0.38 * s);
-    ctx.closePath();
-    ctx.fill(); ctx.stroke();
-    ctx.fillStyle = '#D9A441';
-    roundRect(ctx, -0.26 * s, 0.2 * s, 0.52 * s, 0.07 * s, 0.03 * s);
-    ctx.fill(); ctx.stroke();
-    ctx.fillStyle = '#6B4A2E';
-    ctx.fillRect(-0.04 * s, 0.27 * s, 0.08 * s, 0.14 * s);
-    ctx.strokeRect(-0.04 * s, 0.27 * s, 0.08 * s, 0.14 * s);
-    ctx.fillStyle = '#D9A441';
-    ctx.beginPath(); ctx.arc(0, 0.45 * s, 0.055 * s, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    for (let k = 0; k < 4; k++) { ctx.moveTo(-0.04, 0.28 + k * 0.035); ctx.lineTo(0.04, 0.3 + k * 0.035); }
+    ctx.stroke();
+    ctx.beginPath(); ctx.arc(0, 0.46, 0.05, 0, Math.PI * 2); ctx.fillStyle = red; ctx.fill(); ctx.stroke();
   } else {
-    ctx.fillStyle = col;
-    ctx.beginPath(); ctx.arc(0, 0, 0.42 * s, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-    ctx.strokeStyle = '#8A5A1E';
-    ctx.lineWidth = Math.max(2, s * 0.035);
-    ctx.beginPath(); ctx.arc(0, 0, 0.32 * s, 0, Math.PI * 2); ctx.stroke();
-    ctx.fillStyle = '#B5452B';
-    ctx.beginPath(); ctx.arc(0, 0, 0.08 * s, 0, Math.PI * 2); ctx.fill();
+    // coin rosette: white ring, blue (left) and yellow (right) petals, red centre
+    ctx.beginPath(); ctx.arc(0, 0, 0.47, 0, Math.PI * 2); ctx.fillStyle = white; ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.arc(0, 0, 0.38, Math.PI / 2, Math.PI * 1.5); ctx.closePath(); ctx.fillStyle = blue; ctx.fill();
+    ctx.beginPath(); ctx.arc(0, 0, 0.38, -Math.PI / 2, Math.PI / 2); ctx.closePath(); ctx.fillStyle = yellow; ctx.fill();
+    ctx.beginPath(); ctx.arc(0, 0, 0.38, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath();
+    for (let k = 0; k < 12; k++) {
+      const a = (k / 12) * Math.PI * 2;
+      ctx.moveTo(Math.cos(a) * 0.12, Math.sin(a) * 0.12);
+      ctx.lineTo(Math.cos(a) * 0.38, Math.sin(a) * 0.38);
+    }
+    ctx.stroke();
+    ctx.beginPath(); ctx.arc(0, 0, 0.12, 0, Math.PI * 2); ctx.fillStyle = red; ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.arc(0, 0, 0.03, 0, Math.PI * 2); ctx.fillStyle = black; ctx.fill();
   }
   ctx.restore();
 }
 
-function paper(ctx: CanvasRenderingContext2D, w: number, h: number, seed: number): void {
-  let x = seed * 9301 + 49297;
-  const rnd = () => { x = (x * 9301 + 49297) % 233280; return x / 233280; };
-  ctx.save();
-  for (let i = 0; i < 900; i++) {
-    ctx.fillStyle = `rgba(90,60,30,${0.02 + rnd() * 0.04})`;
-    ctx.fillRect(rnd() * w, rnd() * h, 1 + rnd() * 2, 1 + rnd() * 2);
-  }
-  ctx.restore();
+/** Pip centres of the fallback cups and coins (columns, as on the printed cards). */
+const PIP_LAYOUT: Record<string, [number, number][]> = {
+  '2': [[240, 230], [240, 538]],
+  '3': [[240, 200], [240, 384], [240, 568]],
+  '4': [[160, 230], [320, 230], [160, 538], [320, 538]],
+  '5': [[160, 210], [320, 210], [240, 384], [160, 558], [320, 558]],
+  '6': [[160, 190], [320, 190], [160, 384], [320, 384], [160, 578], [320, 578]],
+  '7': [[160, 180], [320, 180], [240, 300], [160, 440], [320, 440], [160, 600], [320, 600]],
+};
+
+/** Corner numeral with its ink box centred on (cx, cy). */
+function drawNumeral(ctx: CanvasRenderingContext2D, txt: string, cx: number, cy: number, px: number): void {
+  ctx.font = `bold ${px}px ${INDEX_FONT}`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'alphabetic';
+  const m = ctx.measureText(txt);
+  const asc = m.actualBoundingBoxAscent || px * 0.68;
+  const desc = m.actualBoundingBoxDescent || 0;
+  ctx.fillText(txt, cx, cy + (asc - desc) / 2);
 }
 
+/** Fallback face (?noassets=1): white card, black frame line, corner numerals and simple drawn pips. */
 export function cardFacePlaceholder(suit: Suit, rank: Rank, suitIcon?: HTMLImageElement | null): HTMLCanvasElement {
   const c = canvas(CARD_W, CARD_H);
   const ctx = c.getContext('2d')!;
-  const col = SUIT_COLOR[suit];
+  const { inset, radius, width } = FACE.frame;
   roundRect(ctx, 0, 0, CARD_W, CARD_H, 24);
-  ctx.save();
-  ctx.clip();
-  const g = ctx.createRadialGradient(240, 340, 60, 240, 384, 520);
-  g.addColorStop(0, '#FBF1DA');
-  g.addColorStop(1, '#E9D7B0');
-  ctx.fillStyle = g;
-  ctx.fillRect(0, 0, CARD_W, CARD_H);
-  paper(ctx, CARD_W, CARD_H, suit.length * 13 + rank.charCodeAt(0));
-  ctx.restore();
-  // borders
-  ctx.lineWidth = 10;
-  ctx.strokeStyle = col;
-  roundRect(ctx, 5, 5, CARD_W - 10, CARD_H - 10, 20);
-  ctx.stroke();
+  ctx.fillStyle = TRI.white;
+  ctx.fill();
   ctx.lineWidth = 2;
-  ctx.strokeStyle = 'rgba(58,38,24,0.55)';
-  roundRect(ctx, 20, 20, CARD_W - 40, CARD_H - 40, 14);
+  ctx.strokeStyle = 'rgba(0,0,0,0.25)';
+  roundRect(ctx, 1, 1, CARD_W - 2, CARD_H - 2, 23);
   ctx.stroke();
-  // corner indices
-  const idx = RANK_INDEX[rank];
+  const pip = (x: number, y: number, size: number, rot = 0) => {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(rot);
+    if (suitIcon) ctx.drawImage(suitIcon, -size / 2, -size / 2, size, size);
+    else drawSuitShape(ctx, suit, 0, 0, size);
+    ctx.restore();
+  };
+  const idx = indexNumeral(rank);
+  const label = LABEL_RANK[rank];
+  if (label) {
+    // double-ended court: the suit symbol in each half, the name on a white banner across the middle
+    ctx.fillStyle = suit === 'kupe' || suit === 'spade' ? 'rgba(211,38,44,0.12)' : 'rgba(31,85,166,0.12)';
+    ctx.fillRect(inset, inset, CARD_W - 2 * inset, CARD_H - 2 * inset);
+    pip(220, 215, 230);
+    pip(260, 553, 230, Math.PI);
+    ctx.fillStyle = TRI.white;
+    ctx.fillRect(inset, 362, CARD_W - 2 * inset, 44);
+    ctx.lineWidth = 2; ctx.strokeStyle = TRI.black;
+    ctx.strokeRect(inset, 362, CARD_W - 2 * inset, 44);
+    ctx.fillStyle = TRI.black;
+    ctx.font = '600 28px "Times New Roman", Times, serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(`${label} DI ${LABEL_SUIT[suit]}`, 240, 386);
+  } else if (rank === 'A') {
+    // the ace: one big symbol in an oval of red, blue and yellow beads
+    for (let k = 0; k < 24; k++) {
+      const a = (k / 24) * Math.PI * 2;
+      ctx.fillStyle = [TRI.red, TRI.blue, TRI.yellow][k % 3];
+      ctx.beginPath(); ctx.arc(240 + Math.cos(a) * 180, 400 + Math.sin(a) * 250, 9, 0, Math.PI * 2); ctx.fill();
+    }
+    pip(240, 400, 330);
+  } else if (suit === 'bate' || suit === 'spade') {
+    // clubs and swords cross in an X (pairs of parallel ones on 4–7), plus a vertical one on odd numbers
+    const n = Number(rank);
+    const per = Math.floor(n / 2);
+    const size = [0, 330, 310, 290][per];
+    const gap = [0, 0, 70, 56][per];
+    for (let i = 0; i < per; i++) {
+      const o = (i - (per - 1) / 2) * gap;
+      pip(240 + o, 384, size, -0.42);
+      pip(240 - o, 384, size, 0.42);
+    }
+    if (n % 2) pip(240, 384, size + 20);
+  } else {
+    const pts = PIP_LAYOUT[rank] ?? [];
+    const size = rank === '2' || rank === '3' ? 170 : 130;
+    pts.forEach(([x, y]) => pip(x, y, size));
+  }
+  // frame line and corner numerals (drawn last, over the art; the numeral sits on a white patch)
+  ctx.lineWidth = width;
+  ctx.strokeStyle = TRI.black;
+  roundRect(ctx, inset, inset, CARD_W - 2 * inset, CARD_H - 2 * inset, radius);
+  ctx.stroke();
   const corner = (rot: boolean) => {
     ctx.save();
     if (rot) { ctx.translate(CARD_W, CARD_H); ctx.rotate(Math.PI); }
-    ctx.fillStyle = '#3A2618';
-    ctx.font = 'bold 52px Georgia, "Times New Roman", serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    // §19.7: aces have no corner numeral (keep the small corner suit icon)
-    if (idx) ctx.fillText(idx, 58, 62);
-    if (suitIcon) ctx.drawImage(suitIcon, 38, idx ? 96 : 40, 40, 40);
-    else drawSuitShape(ctx, suit, 58, idx ? 116 : 60, 40);
+    ctx.fillStyle = TRI.white;
+    ctx.fillRect(inset + 4, inset + 4, idx.length > 1 ? 76 : 60, 64);
+    ctx.fillStyle = TRI.black;
+    drawNumeral(ctx, idx, FACE.index.x + (idx.length > 1 ? 8 : 0), FACE.index.y, FACE.index.px);
     ctx.restore();
   };
   corner(false);
   corner(true);
-  // centre
-  if (!idx) {
-    // the ace: one large ornamented suit in a laurel ring
-    ctx.save();
-    ctx.strokeStyle = col; ctx.lineWidth = 6;
-    ctx.beginPath(); ctx.arc(240, 384, 190, 0, Math.PI * 2); ctx.stroke();
-    ctx.lineWidth = 2; ctx.strokeStyle = 'rgba(58,38,24,0.5)';
-    ctx.beginPath(); ctx.arc(240, 384, 172, 0, Math.PI * 2); ctx.stroke();
-    for (let k = 0; k < 16; k++) {
-      const a = (k / 16) * Math.PI * 2;
-      ctx.fillStyle = k % 2 ? col : '#6B7A3A';
-      ctx.beginPath(); ctx.ellipse(240 + Math.cos(a) * 205, 384 + Math.sin(a) * 205, 16, 7, a + Math.PI / 2, 0, Math.PI * 2); ctx.fill();
-    }
-    ctx.restore();
-    if (suitIcon) ctx.drawImage(suitIcon, 110, 254, 260, 260);
-    else drawSuitShape(ctx, suit, 240, 384, 260);
-    ctx.fillStyle = col;
-    ctx.font = 'bold 40px Georgia, serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(SUIT_NAME[suit].toUpperCase(), 240, 660);
-    return c;
-  }
-  if (suitIcon) ctx.drawImage(suitIcon, 150, 170, 180, 180);
-  else drawSuitShape(ctx, suit, 240, 262, 190);
-  ctx.fillStyle = '#3A2618';
-  ctx.font = 'bold 150px Georgia, "Times New Roman", serif';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(idx, 240, 470);
-  ctx.fillStyle = col;
-  ctx.font = 'bold 40px Georgia, serif';
-  ctx.fillText(SUIT_NAME[suit].toUpperCase(), 240, 580);
   return c;
 }
 
+/** Fallback back: a fine diamond lattice (red for the player, blue-teal for the bot) inside a white border. */
 export function cardBackPlaceholder(owner: 'player' | 'bot'): HTMLCanvasElement {
   const c = canvas(CARD_W, CARD_H);
   const ctx = c.getContext('2d')!;
-  const a = owner === 'player' ? '#B5452B' : '#2F7C6B';
+  const a = owner === 'player' ? '#C4232B' : '#1C6F8A';
   roundRect(ctx, 0, 0, CARD_W, CARD_H, 24);
+  ctx.fillStyle = TRI.white;
+  ctx.fill();
   ctx.save();
+  roundRect(ctx, 22, 22, CARD_W - 44, CARD_H - 44, 10);
   ctx.clip();
-  ctx.fillStyle = '#F3E6C8';
-  ctx.fillRect(0, 0, CARD_W, CARD_H);
-  ctx.save();
-  ctx.translate(CARD_W / 2, CARD_H / 2);
-  ctx.rotate(Math.PI / 4);
   ctx.fillStyle = a;
-  for (let x = -900; x < 900; x += 48) ctx.fillRect(x, -900, 24, 1800);
-  ctx.restore();
-  // medallion
-  ctx.fillStyle = '#F3E6C8';
-  ctx.beginPath(); ctx.ellipse(240, 384, 120, 160, 0, 0, Math.PI * 2); ctx.fill();
-  ctx.strokeStyle = a; ctx.lineWidth = 8;
-  ctx.beginPath(); ctx.ellipse(240, 384, 106, 146, 0, 0, Math.PI * 2); ctx.stroke();
-  ctx.strokeStyle = '#D9A441'; ctx.lineWidth = 4;
-  ctx.beginPath(); ctx.ellipse(240, 384, 120, 160, 0, 0, Math.PI * 2); ctx.stroke();
-  // little shot glass
-  ctx.fillStyle = 'rgba(217,164,65,0.85)';
-  ctx.strokeStyle = '#3A2618'; ctx.lineWidth = 5;
-  ctx.beginPath(); ctx.moveTo(200, 330); ctx.lineTo(280, 330); ctx.lineTo(268, 440); ctx.lineTo(212, 440); ctx.closePath();
-  ctx.fill(); ctx.stroke();
-  ctx.fillStyle = 'rgba(255,255,255,0.5)'; ctx.fillRect(214, 340, 10, 86);
-  ctx.restore();
-  ctx.lineWidth = 20;
-  ctx.strokeStyle = '#F3E6C8';
-  roundRect(ctx, 10, 10, CARD_W - 20, CARD_H - 20, 16);
+  ctx.fillRect(0, 0, CARD_W, CARD_H);
+  ctx.strokeStyle = TRI.white;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  for (let k = -CARD_H; k < CARD_W + CARD_H; k += 24) {
+    ctx.moveTo(k, 0); ctx.lineTo(k - CARD_H * 0.6, CARD_H);
+    ctx.moveTo(k, 0); ctx.lineTo(k + CARD_H * 0.6, CARD_H);
+  }
   ctx.stroke();
-  ctx.lineWidth = 3;
-  ctx.strokeStyle = 'rgba(58,38,24,0.6)';
-  roundRect(ctx, 1.5, 1.5, CARD_W - 3, CARD_H - 3, 23);
+  ctx.restore();
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = a;
+  roundRect(ctx, 12, 12, CARD_W - 24, CARD_H - 24, 16);
+  ctx.stroke();
+  ctx.strokeStyle = 'rgba(0,0,0,0.25)';
+  roundRect(ctx, 1, 1, CARD_W - 2, CARD_H - 2, 23);
   ctx.stroke();
   return c;
 }

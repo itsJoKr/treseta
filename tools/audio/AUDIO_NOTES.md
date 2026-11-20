@@ -224,3 +224,24 @@ The account quota is **30,291 credits and 0 are now left**. The last few extra-t
 (barba `tucem`, `jarca_ti`, `jebate_led`; mali `ko_je_misaja`) were refused with
 `quota_exceeded`. Their existing files are kept and valid. Rerunning the script is free while the
 cache in `tools/audio/work/` exists, but any re-roll needs new credits.
+
+## Play-test round 4 (2026-11-20, GAME_DESIGN §22)
+
+- **New lines:** 16 lines × 3 personas = 48 files (rows 35–50 of §9.3), 2 takes each, plus up to 4 when both takes looked garbled.
+  - The short interjections (`argh`, `pff`, `ehe`) always score low on transcript similarity, because Whisper writes grunts as "*Gruh*" or "*pfff*". For these the score only ranks takes.
+  - `pusi_mrtav` uses the user's exact wording. It was re-rolled (`--reroll`) after the first version had a shorter text.
+- **Re-takes** (`--takes 4`, best by transcript) for the lines flagged above:
+  - barba: tucem, jarca_ti, jebate_led (now transcribes as "led", not "lid"), vrag_ti_sricu, ko_je_misaja
+  - mali: tucem, ko_je_misaja, vrag_ti_sricu
+  - gazda: u_mojoj_konobi, vrag_ti_sricu, ko_je_misaja
+- **Usage:** 1,459 TTS credits in 131 requests. `report.json` is cumulative: 3,814 TTS credits in 324 requests since the start.
+- **The API key cannot read the account balance:** `/v1/user/subscription` needs `user_read`. Check it on the website.
+- **`verify`:** all 138 voice files are present. A few short, peaky clips end up 0.6–1.4 dB under −16 LUFS, because the −1 dBTP ceiling limits their gain. This is expected and inaudible in play.
+
+### Round 4, take 2 (user feedback)
+
+- **Grunts.** "Aaargh" and "Pfff" came out twice. The new text ("[groans] Argh.", "[exhales] Pff.") still gives a groan plus the word. `strongest_burst()` now keeps only the loudest burst, and takes are ranked on that sound's length (about 0.5 s is best). The results are 0.6–0.8 s.
+- **Speed.** `voice_settings.speed` has no effect on eleven_v4 (tested: 1.0 and 1.15 both gave 3.6 s). Round-4 lines are sped up after recording instead, with ffmpeg `atempo=1.12`, which keeps the pitch. The tempo is applied in `process_voice`, so `--reprocess` changes it without API calls.
+- **Interjections** are at −19 LUFS (subtler). `verify` allows them ±1.5 dB.
+- **Variants and picks.** Re-recorded `ko_je_misaja` (new wording) and added 4 variants plus the user's 6 picks.
+- **Usage, take 2:** 630 TTS credits. Round 4 in total: 2,089 credits.

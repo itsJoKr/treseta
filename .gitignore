@@ -17,3 +17,6 @@ tools/audio/work/
 tests/e2e/shots/
 test-results/
 .wrangler/
+
+# Reference scans of a commercial Triestine deck: study only, never ship or commit
+assets_src/reference_triestine/

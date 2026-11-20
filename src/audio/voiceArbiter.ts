@@ -14,7 +14,8 @@ export interface ArbiterCfg {
   noAudioHoldMs: number;
 }
 
-export const ARBITER4: ArbiterCfg = { gapMs: 2500, capTotal: 9, capPerSpeaker: 4, recentWindow: 3, noAudioHoldMs: 2200 };
+// §22: caps raised from 9/4 so the mid-trick reactions give every speaker a chance
+export const ARBITER4: ArbiterCfg = { gapMs: 2500, capTotal: 12, capPerSpeaker: 5, recentWindow: 3, noAudioHoldMs: 2200 };
 
 export interface ArbiterLogEntry { speaker: string; line: VoiceLineId; at: number; priority: number; endsAt: number }
 
@@ -38,11 +39,11 @@ export class VoiceArbiter {
     return this.current && this.isPlaying() ? { speaker: this.current.speaker, line: this.current.line } : undefined;
   }
 
-  /** Gap / mouth / caps check. Priority 3 bypasses all of them. */
-  allows(speaker: string, priority: number, ignoreGap = false): boolean {
+  /** Gap / mouth / caps check. Priority 3 bypasses all of them. `gapMs` overrides the table gap (mid-trick reactions). */
+  allows(speaker: string, priority: number, ignoreGap = false, gapMs?: number): boolean {
     if (priority >= 3) return true;
     const now = this.now();
-    if (!ignoreGap && now - this.lastLineEndAt < this.cfg.gapMs) return false;
+    if (!ignoreGap && now - this.lastLineEndAt < (gapMs ?? this.cfg.gapMs)) return false;
     if (this.isPlaying()) return false;
     if (this.linesThisHand >= this.cfg.capTotal) return false;
     if ((this.perSpeaker[speaker] ?? 0) >= this.cfg.capPerSpeaker) return false;
@@ -63,7 +64,7 @@ export class VoiceArbiter {
     this.lastLineEndAt = now + dur;
     this.linesThisHand += 1;
     this.perSpeaker[speaker] = (this.perSpeaker[speaker] ?? 0) + 1;
-    this.recent.push(line.id);
+    this.recent.push(line.group); // the no-repeat window works on groups (§22.4)
     while (this.recent.length > this.cfg.recentWindow) this.recent.shift();
     this.log.push({ speaker, line: line.id, at: now, priority, endsAt: now + dur });
     return h;

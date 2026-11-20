@@ -52,6 +52,82 @@ LOOP_XFADE = 1.5
 WORKERS = 3                     # account allows 3 concurrent requests
 
 VOICE_LUFS, VOICE_TP = -16.0, -1.0
+# §22 (play-test round 4)
+# - Lines recorded from round 4 on (rows 35+ and their variants, plus the re-worded ko_je_misaja)
+#   are sped up after recording: eleven_v4 ignores voice_settings.speed, and ffmpeg atempo
+#   shortens speech without changing its pitch.
+# - The short interjections sit lower in the mix, and the two grunts must be one short sound
+#   (the first takes said "aargh" twice): their takes are ranked on that, not on the transcript.
+TEMPO, TEMPO_FROM_NUM, TEMPO_ALSO = 1.12, 35, {"ko_je_misaja"}
+INTERJECTIONS = {"argh", "joj", "oho", "ehe", "ma_daj", "pff"}   # rows 45-50 of §9.3
+GRUNTS = {"argh", "pff"}
+INTERJECTION_LUFS = -19.0
+
+
+def tempo_for(line):
+    if line["id"] in INTERJECTIONS:
+        return 1.0
+    return TEMPO if (line["num"] >= TEMPO_FROM_NUM or line["id"] in TEMPO_ALSO) else 1.0
+
+
+def lufs_for(line):
+    return INTERJECTION_LUFS if line["id"] in INTERJECTIONS else VOICE_LUFS
+
+
+def burst_runs(x, sr=None, win_ms=20, rel_db=-28.0, gap_ms=120):
+    """(start, end, energy) in samples of each sound burst, gaps shorter than gap_ms merged."""
+    sr = sr or dsp.SR
+    m = x[0] if x.ndim == 2 else x
+    w = int(sr * win_ms / 1000)
+    n = len(m) // w
+    if n == 0:
+        return []
+    e = (m[: n * w].reshape(n, w) ** 2).mean(1) + 1e-12
+    on = 10 * np.log10(e / e.max()) > rel_db
+    need, runs = max(1, int(gap_ms / win_ms)), []
+    i = 0
+    while i < n:
+        if not on[i]:
+            i += 1
+            continue
+        j = i
+        while j < n and (on[j] or (j + need < n and on[j:j + need].any())):
+            j += 1
+        runs.append((i * w, j * w, float(e[i:j].sum())))
+        i = j
+    return runs
+
+
+def strongest_burst(x, pre_ms=40, post_ms=90):
+    """Only the loudest sound of a take (a grunt the model said twice keeps one)."""
+    runs = burst_runs(x)
+    if len(runs) <= 1:
+        return x
+    a, b, _ = max(runs, key=lambda r: r[2])
+    a = max(0, a - int(dsp.SR * pre_ms / 1000))
+    b = min(x.shape[-1], b + int(dsp.SR * post_ms / 1000))
+    return x[..., a:b]
+
+
+def bursts(x, sr=None, win_ms=20, rel_db=-28.0, gap_ms=120):
+    """Separate sound bursts (runs above rel_db of the peak, split by gaps of at least gap_ms)."""
+    sr = sr or dsp.SR
+    m = x[0] if x.ndim == 2 else x
+    w = int(sr * win_ms / 1000)
+    n = len(m) // w
+    if n == 0:
+        return 0
+    rms = np.sqrt((m[: n * w].reshape(n, w) ** 2).mean(1)) + 1e-9
+    on = 20 * np.log10(rms / rms.max()) > rel_db
+    need, count, gap = max(1, int(gap_ms / win_ms)), 0, 10 ** 9
+    for v in on:
+        if v:
+            if gap >= need:
+                count += 1
+            gap = 0
+        else:
+            gap += 1
+    return count
 STINGER_LUFS, AMBIENT_LUFS = -16.0, -26.0
 SFX_PEAK = -3.0
 SFX_MAX_LUFS = -18.0            # cap for dense short sfx (keeps them below the voices)
@@ -147,7 +223,7 @@ def score_take(path, line, persona_f0):
         s, e = dsp.find_bounds(x, rel_db=-45, floor_db=-60)
         ps = dsp.pitch_stats(x[:, s:e])
         st = stt.transcribe(path, LANG) if stt.available() else None
-        info = {"mtime": mtime, "duration": x.shape[1] / dsp.SR, "active": (e - s) / dsp.SR,
+        info = {"mtime": mtime, "duration": x.shape[1] / dsp.SR, "active": (e - s) / dsp.SR, "bursts": bursts(x),
                 "f0_median": ps.get("f0_median"), "f0_sd": ps.get("f0_semitone_sd"),
                 "stt_text": (st or {}).get("text"), "stt_model": (st or {}).get("_model"),
                 "similarity": similarity((st or {}).get("text") or "", line["subtitle"]) if st else None}
@@ -155,6 +231,12 @@ def score_take(path, line, persona_f0):
             takes = load_json(TAKES_JSON, {})
             takes[key] = info
             save_json(TAKES_JSON, takes)
+    if line["id"] in GRUNTS:
+        # processing keeps only the loudest burst; rank takes on how long that one sound is
+        # (about half a second reads as a short, subtle grunt). The transcript of a grunt means little.
+        if "grunt_s" not in info:
+            info["grunt_s"] = strongest_burst(dsp.decode(path)).shape[-1] / dsp.SR
+        return 1.0 - abs(info["grunt_s"] - 0.5), info
     score = info["similarity"] if info["similarity"] is not None else 0.8
     # Duration sanity: ~0.11-0.45 s per vowel for an emotional short line
     # (+1.5 s allowance for a sigh/laugh/breath from the audio tag).
@@ -195,13 +277,19 @@ def encode_corrected(y, dst, channels, target_lufs=None, tp_max=None, target_pea
         y = (y * 10 ** (delta / 20)).astype(np.float32)
 
 
-def process_voice(src, dst):
+def process_voice(src, dst, line=None):
     x = dsp.decode(src)  # mono 44.1k
+    if line and line["id"] in GRUNTS:
+        x = strongest_burst(x)
+    tempo = tempo_for(line) if line else 1.0
+    if tempo != 1.0:
+        x = dsp.ffmpeg_filter(x, f"atempo={tempo}")
     y = dsp.trim(x, lead_ms=25, tail_ms=110, rel_db=-45, floor_db=-60,
                  fade_in_ms=10, fade_out_ms=80)
-    y = dsp.normalize_lufs(y, VOICE_LUFS, VOICE_TP)
+    target = lufs_for(line) if line else VOICE_LUFS
+    y = dsp.normalize_lufs(y, target, VOICE_TP)
     # 64 kbps mono is transparent for speech and halves the web payload.
-    encode_corrected(y, dst, 1, target_lufs=VOICE_LUFS, tp_max=VOICE_TP, bitrate="64k")
+    encode_corrected(y, dst, 1, target_lufs=target, tp_max=VOICE_TP, bitrate="64k")
 
 
 def voice_job(persona, line, voice_id, persona_f0, args):
@@ -221,7 +309,7 @@ def voice_job(persona, line, voice_id, persona_f0, args):
         p = ensure_take(voice_id, persona, line, n)
         scored.append((score_take(p, line, persona_f0), p))
     (best_score, best_info), best = max(scored, key=lambda t: t[0][0])
-    process_voice(best, dst)
+    process_voice(best, dst, line)
     return {"status": "made", "take": os.path.basename(best), "score": round(best_score, 3),
             "takes": [{"take": os.path.basename(p), "score": round(s[0], 3),
                        "similarity": s[1]["similarity"], "stt": s[1]["stt_text"]} for s, p in scored]}
@@ -422,7 +510,7 @@ def cmd_verify(args):
             bad.append("duration")
         if p["channels"] != 1 or p["sample_rate"] != 44100:
             bad.append("format")
-        if abs(I - VOICE_LUFS) > 0.5:
+        if abs(I - lufs_for(ln)) > (1.5 if ln["id"] in INTERJECTIONS else 0.5):
             bad.append("loudness")
         if TP > -0.5:
             bad.append("true_peak")
@@ -478,7 +566,7 @@ def cmd_verify(args):
     rep["sfx_files"] = sfx_rows
     rep["missing"] = missing
     rep["problems"] = [{"file": k, "issues": b, "measured": r} for k, b, r in problems]
-    rep["counts"] = {"voice_expected": 90, "voice_present": len(voice_rows),
+    rep["counts"] = {"voice_expected": len(spec.voice_jobs()), "voice_present": len(voice_rows),
                      "sfx_expected": 27, "sfx_present": len(sfx_rows)}
     rep["usage"] = load_json(USAGE_JSON, {})
     rep["generated_at"] = time.strftime("%Y-%m-%d %H:%M:%S")

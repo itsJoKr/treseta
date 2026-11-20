@@ -45,18 +45,30 @@ describe('akuze', () => {
     expect(r.total).toBe(6);
   });
 
-  it('check after a draw', () => {
+  it('no akuža after a draw: declarations only at the deal (play-test round 4)', () => {
+    // the player draws the 3 of kupe that would complete a napolitana with A and 2 in hand
     const s = makeState({ player: { hand: ['kupe_A', 'kupe_2', 'bate_4'] }, bot: { hand: ['bate_5', 'dinari_4'] }, leader: 'player', mac: ['spade_4', 'kupe_3'] });
     let r = applyAction(s, { type: 'play', side: 'player', uid: uid('bate_4', 'player') });
     r = applyAction(r.state, { type: 'play', side: 'bot', uid: uid('bate_5', 'bot') });
-    const ak = r.events.find((e) => e.t === 'akuza') as Extract<GameEvent, { t: 'akuza' }>;
-    expect(ak).toBeDefined();
-    expect(ak.side).toBe('player');
-    expect(ak.total).toBe(3);
-    expect(r.state.sides.player.akuzaPoints).toBe(3);
-    // akuza event comes after the player's draw
-    const iDraw = r.events.findIndex((e) => e.t === 'cardDrawn' && e.side === 'player');
-    expect(r.events.indexOf(ak)).toBeGreaterThan(iDraw);
+    expect(r.events.some((e) => e.t === 'cardDrawn' && e.side === 'player')).toBe(true);
+    expect(r.events.some((e) => e.t === 'akuza')).toBe(false);
+    expect(r.state.sides.player.akuzaPoints).toBe(0);
+  });
+
+  it('akuža at the deal still counts', () => {
+    const deck: DeckCard[] = standardDeck();
+    let found = false;
+    for (let i = 0; i < 400 && !found; i++) {
+      const { events } = createHand({ seed: `ak-${i}`, handNo: 1, dealer: 'bot', deck, rakija: { player: 0, bot: 0 }, fore: { player: [], bot: [] } });
+      const ak = events.filter((e) => e.t === 'akuza') as Extract<GameEvent, { t: 'akuza' }>[];
+      if (ak.length) {
+        found = true;
+        // both checks happen before the first turn
+        const iTurn = events.findIndex((e) => e.t === 'turn');
+        for (const a of ak) expect(events.indexOf(a)).toBeLessThan(iTurn);
+      }
+    }
+    expect(found).toBe(true);
   });
 
   it('Glasno +2 for new combos, not for upgrades', () => {

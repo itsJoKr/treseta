@@ -31,24 +31,12 @@ OUT = ROOT / "public" / "assets"
 SRC = ROOT / "assets_src"
 REMBG = os.environ.get("REMBG", shutil.which("rembg") or os.path.expanduser("~/.local/bin/rembg"))
 
-INK = (0x3A, 0x26, 0x18)
-TERRACOTTA = (0xB5, 0x45, 0x2B)
-OCHRE = (0xD9, 0xA4, 0x41)
-CREAM = (0xF3, 0xE6, 0xC8)
+OCHRE = (0xD9, 0xA4, 0x41)   # contact-sheet ring colour
 
 SUITS = ["kupe", "bate", "spade", "dinari"]
 RANKS = ["3", "2", "a", "k", "c", "f", "7", "6", "5", "4"]
 INDEX_TEXT = {"a": "1", "2": "2", "3": "3", "4": "4", "5": "5", "6": "6", "7": "7",
               "f": "11", "c": "12", "k": "13"}
-PIPS = {
-    "2": [(240, 250), (240, 518)],
-    "3": [(240, 200), (240, 384), (240, 568)],
-    "4": [(160, 250), (320, 250), (160, 518), (320, 518)],
-}
-PIPS["5"] = PIPS["4"] + [(240, 384)]
-PIPS["6"] = [(160, 200), (320, 200), (160, 384), (320, 384), (160, 568), (320, 568)]
-PIPS["7"] = PIPS["6"] + [(240, 292)]
-
 W, H = 480, 768
 SS = 4  # supersampling factor for drawn vector shapes
 
@@ -179,7 +167,7 @@ def flood_from_border(m):
 
 
 CUTOUT_HOLES = ()              # gen ids whose enclosed background pockets are cut out
-CUTOUT_HOLES_PREFIX = ("ace_",)
+CUTOUT_HOLES_PREFIX = ("ace_", "tri_")
 
 
 def cutout(gid, force=False):
@@ -240,155 +228,148 @@ def cutout(gid, force=False):
     return img
 
 
-# --------------------------------------------------------------------------- suits
+# --------------------------------------------------------------------------- Triestine faces
+#
+# The faces follow the Triestine pattern (GAME_DESIGN.md section 13.5): a white card, a thin
+# black frame line, a black serif numeral top-left and rotated bottom-right, flat red/blue/
+# yellow print art. Pips are generated once as cut-outs and placed, rotated, mirrored and
+# recoloured in code, so every count is exact; the sword ovals are drawn in code; courts are
+# generated half figures made double-ended here; text (court banners, numerals) is drawn here.
 
-_suit_cache = {}
+# flat print colours, sampled from the generated pips (tri_coin)
+RED = (234, 46, 24)
+BLUE = (8, 92, 222)
+YELLOW = (250, 208, 10)
+BLACK = (12, 12, 12)
+WHITE = (255, 255, 255)
 
-
-def suit_icon_hi(suit):
-    """Trimmed high-res suit symbol (RGBA)."""
-    if suit not in _suit_cache:
-        _suit_cache[suit] = trim(cutout(f"suit_{suit}"), thr=24)
-    return _suit_cache[suit]
-
-
-def step_suits():
-    for s in SUITS:
-        if not have(f"suit_{s}"):
-            print("  missing suit", s)
-            continue
-        ic = pad_square(suit_icon_hi(s), 0.04)
-        save_png(resize(ic, (256, 256)), OUT / "cards" / "suits" / f"{s}.png")
-    print("  suits done")
-
-
-# Clubs and swords are tall and narrow; fitted into the nominal square pip box
-# they read as tiny next to cups and coins, so they may grow taller than the box.
-NARROW_SUITS = ("bate", "spade")
-
-
-def icon(suit, box, rotate=False, tall=1.0):
-    """Suit symbol fitted into a box x box square; narrow suits may use a box
-    `tall` times higher (same width limit)."""
-    h = box * (tall if suit in NARROW_SUITS else 1.0)
-    ic = fit_box(suit_icon_hi(suit), box, h)
-    return ic.rotate(180) if rotate else ic
+FRAME_INSET, FRAME_R, FRAME_W = 20, 12, 3   # thin black frame line (keep in sync with FACE in placeholders.ts)
+INDEX_FONT = ("/System/Library/Fonts/Supplemental/Bodoni 72.ttc", 2)   # Bodoni 72 Bold
+INDEX_PX = 60
+INDEX_C = (54, 58)     # ink-box centre of a one-digit numeral; two digits sit 8 px further right
+INDEX_HALO = 3         # px white outline round the numeral (keeps it legible over court art)
+LABEL_FONT = ("/System/Library/Fonts/Supplemental/Times New Roman.ttf", 0)
+LABEL_PX = 32
+BANNER = (362, 406)    # court name banner, y0..y1
+LABEL_RANK = {"f": "FANTE", "c": "CAVAL", "k": "RE"}
+LABEL_SUIT = {"kupe": "COPPE", "bate": "BASTONI", "spade": "SPADE", "dinari": "DANARI"}
+INNER = (FRAME_INSET + FRAME_W, FRAME_INSET + FRAME_W,
+         W - FRAME_INSET - FRAME_W, H - FRAME_INSET - FRAME_W)   # art area inside the frame line
 
 
-# --------------------------------------------------------------------------- card base
-
-def arch_path_mask(d=0.0):
-    """Supersampled mask for the court arch panel, grown by d px (negative = shrink)."""
-    m = Image.new("L", (W * SS, H * SS), 0)
-    dr = ImageDraw.Draw(m)
-    cx, cy, r = 240, 298, 170 + d
-    dr.ellipse([(cx - r) * SS, (cy - r) * SS, (cx + r) * SS, (cy + r) * SS], fill=255)
-    dr.rectangle([(70 - d) * SS, cy * SS, (410 + d) * SS, (688 + d) * SS], fill=255)
-    return m
+def tfont(spec, size):
+    path, idx = spec
+    if Path(path).exists():
+        return ImageFont.truetype(path, size, index=idx)
+    return font(size)
 
 
-def rounded_mask_ss(r=24, inset=0.0):
-    m = Image.new("L", (W * SS, H * SS), 0)
-    ImageDraw.Draw(m).rounded_rectangle(
-        [inset * SS, inset * SS, (W - inset) * SS - 1, (H - inset) * SS - 1],
-        radius=(r - inset) * SS, fill=255)
-    return m
+def whiten_rgba(img, thr=226):
+    """Snap near-white, unsaturated pixels of a cut-out to pure white (the generations print
+    their whites at ~248, which would read as grey on the white card)."""
+    a = np.asarray(img.convert("RGBA")).copy()
+    rgb = a[..., :3].astype(np.int16)
+    m = (rgb.min(-1) >= thr) & ((rgb.max(-1) - rgb.min(-1)) < 22)
+    a[..., :3][m] = 255
+    return Image.fromarray(a)
 
 
-def apply_card_mask(img):
-    """Rounded-rect alpha (r 24) and a 2 px inner ink stroke at 60% alpha."""
-    img = img.convert("RGBA")
-    outer = rounded_mask_ss(24, 0)
-    inner = rounded_mask_ss(24, 2)
-    ring = np.asarray(outer).astype(np.int16) - np.asarray(inner).astype(np.int16)
-    ring = Image.fromarray(np.clip(ring, 0, 255).astype(np.uint8), "L").resize((W, H), Image.LANCZOS)
-    mask = outer.resize((W, H), Image.LANCZOS)
-    stroke = Image.new("RGBA", (W, H), INK + (0,))
-    stroke.putalpha(ring.point(lambda v: int(v * 0.6)))
-    img.alpha_composite(stroke)
-    a = np.minimum(np.asarray(img.getchannel("A")), np.asarray(mask))
-    img.putalpha(Image.fromarray(a.astype(np.uint8), "L"))
-    return img
-
-
-_frame = None
-
-FRAME_MARGIN_TRIM = 10   # px (raw scale) of outer cream margin trimmed on every side
-
-
-def remove_centre_strip(img, target_w, blend=48):
-    """Narrow an image whose centre is plain parchment by cutting a vertical strip
-    out of the middle and cross-fading the seam (keeps borders undistorted)."""
-    a = np.asarray(img).astype(np.float32)
-    h, w = a.shape[:2]
-    cut = w - target_w
-    if cut <= 0:
-        return img
-    left_w = target_w // 2 + blend // 2
-    right_start = w - (target_w - target_w // 2) - blend // 2
-    left = a[:, :left_w]
-    right = a[:, right_start:]
-    out = np.zeros((h, target_w, a.shape[2]), np.float32)
-    lw_solid = left_w - blend
-    out[:, :lw_solid] = left[:, :lw_solid]
-    t = np.linspace(0, 1, blend)[None, :, None]
-    out[:, lw_solid:lw_solid + blend] = left[:, lw_solid:] * (1 - t) + right[:, :blend] * t
-    out[:, lw_solid + blend:] = right[:, blend:]
-    return Image.fromarray(np.clip(out, 0, 255).astype(np.uint8), img.mode)
-
-
-def erase_corner_ornament(img, box, shift_y):
-    """Paint parchment over the ornament inside `box` (x0,y0,x1,y1) by copying the
-    same columns from `shift_y` px away (vertical borders line up), masked to the
-    pixels that differ from the parchment, dilated and feathered."""
-    a = np.asarray(img.convert("RGB")).astype(np.float32)
-    x0, y0, x1, y1 = box
-    region = a[y0:y1, x0:x1]
-    src = a[y0 + shift_y:y1 + shift_y, x0:x1]
-    paper = np.median(src.reshape(-1, 3), axis=0)
-    diff = np.sqrt(((region - paper) ** 2).sum(-1))
-    m = Image.fromarray(((diff > 28) * 255).astype(np.uint8), "L")
-    m = m.filter(ImageFilter.MaxFilter(13)).filter(ImageFilter.GaussianBlur(3))
-    mk = np.asarray(m).astype(np.float32)[..., None] / 255.0
-    a[y0:y1, x0:x1] = region * (1 - mk) + src * mk
+def white_art(gid):
+    """A generation drawn on plain white, levelled so its background is pure white (RGB)."""
+    im = raw(gid).convert("RGB")
+    a = np.asarray(im).astype(np.float32)
+    border = np.concatenate([a[:6].reshape(-1, 3), a[-6:].reshape(-1, 3),
+                             a[:, :6].reshape(-1, 3), a[:, -6:].reshape(-1, 3)])
+    bright = border[border.min(-1) > 200]
+    paper = np.median(bright, axis=0) if len(bright) else np.array([255.0, 255.0, 255.0])
+    a = np.clip(a * (255.0 / np.maximum(paper, 1.0))[None, None, :], 0, 255)
+    m = (a.min(-1) >= 238) & ((a.max(-1) - a.min(-1)) < 20)
+    a[m] = 255
     return Image.fromarray(a.astype(np.uint8), "RGB")
 
 
-def prepare_frame():
-    """card_frame raw -> 480x768 RGB base.
-    Deviation from a plain centre-crop (which would cut the generated side borders):
-    trim the outer cream margin, cut a plain strip out of the centre to reach the
-    1.6 ratio, and remove the top-left and bottom-right olive flourishes where
-    the corner indices sit (the other two corners keep theirs)."""
-    im = raw("card_frame").convert("RGB")
-    # normalise to 1024 wide first
-    if im.width != 1024:
-        im = resize(im, (1024, round(im.height * 1024 / im.width)))
-    m = FRAME_MARGIN_TRIM
-    im = im.crop((m, m, im.width - m, im.height - m))
-    im = remove_centre_strip(im, round(im.height / 1.6))
-    w, h = im.size
-    # ornament boxes (inside the inner ochre line), detected from the raw layout
-    inset = 54 - m
-    tl = (inset, inset, inset + 175, inset + 160)
-    br = (w - inset - 175, h - inset - 160, w - inset, h - inset)
-    im = erase_corner_ornament(im, tl, 230)
-    im = erase_corner_ornament(im, br, -230)
-    return resize(im, (W, H))
+def ink_bbox(rgb, thr=236):
+    """Bounding box of the non-white pixels of an RGB art."""
+    a = np.asarray(rgb)
+    m = a.min(-1) < thr
+    ys, xs = np.nonzero(m)
+    return xs.min(), ys.min(), xs.max() + 1, ys.max() + 1
 
 
-def frame_base():
-    global _frame
-    if _frame is None:
-        _frame = prepare_frame().convert("RGBA")
-    return _frame.copy()
+def multiply_onto(card, art_rgb, x, y):
+    """Multiply a white-background RGB art onto the (white) card at (x, y)."""
+    x, y = round(x), round(y)
+    x0, y0 = max(0, x), max(0, y)
+    x1, y1 = min(card.width, x + art_rgb.width), min(card.height, y + art_rgb.height)
+    if x1 <= x0 or y1 <= y0:
+        return
+    region = np.asarray(card.crop((x0, y0, x1, y1))).astype(np.float32)
+    art = np.asarray(art_rgb.crop((x0 - x, y0 - y, x1 - x, y1 - y))).astype(np.float32)
+    region[..., :3] = region[..., :3] * art / 255.0
+    card.paste(Image.fromarray(region.astype(np.uint8), "RGBA"), (x0, y0))
 
 
-def draw_index_text(d, txt, f, cx, cy, track=0):
-    """Draw `txt` with its ink box centred on (cx, cy); `track` adds px between glyphs."""
+def recolour(img, mapping):
+    """Swap the flat print colours of a cut-out, e.g. {"red": "blue", "blue": "red"}.
+    Pixels are classed by hue; each keeps its brightness relative to the source colour."""
+    a = np.asarray(img.convert("RGBA")).astype(np.float32)
+    rgb = a[..., :3]
+    mx = rgb.max(-1)
+    mn = rgb.min(-1)
+    sat = (mx - mn) / np.maximum(mx, 1.0)
+    hue = np.asarray(img.convert("RGB").convert("HSV"))[..., 0].astype(np.float32) * 360.0 / 255.0
+    colourful = sat > 0.3
+    classes = {
+        "red": colourful & ((hue < 25) | (hue > 335)),
+        "yellow": colourful & (hue >= 35) & (hue < 75),
+        "blue": colourful & (hue >= 190) & (hue < 260),
+    }
+    ref = {"red": RED, "yellow": YELLOW, "blue": BLUE}
+    out = a.copy()
+    for src, m in classes.items():
+        dst = mapping.get(src)
+        if not dst or not m.any():
+            continue
+        k = (mx[m] / max(ref[src]))[:, None]
+        out[..., :3][m] = np.clip(np.array(ref[dst], np.float32)[None, :] * k, 0, 255)
+    return Image.fromarray(out.astype(np.uint8))
+
+
+_pip_cache = {}
+
+# Widening of the generated pips: the cup came out taller and the baton and sword slimmer
+# than their printed counterparts; the flat art takes a mild horizontal stretch well.
+PIP_WIDEN = {"tri_cup": 1.4, "tri_baton": 1.45, "tri_sword": 1.6, "tri_coin": 1.0, "tri_hilt": 1.0}
+
+
+def pip_art(gid, colours=None):
+    """Trimmed, whitened, widened cut-out of a pip generation, optionally recoloured."""
+    key = (gid, tuple(sorted((colours or {}).items())))
+    if key not in _pip_cache:
+        im = whiten_rgba(trim(cutout(gid), 24))
+        k = PIP_WIDEN.get(gid, 1.0)
+        if k != 1.0:
+            im = resize(im, (round(im.width * k), im.height))
+        if colours:
+            im = recolour(im, colours)
+        _pip_cache[key] = im
+    return _pip_cache[key]
+
+
+def fit_height(img, h):
+    return resize(img, (max(1, round(img.width * h / img.height)), round(h)))
+
+
+def rotated(img, deg):
+    """Rotate counter-clockwise by deg (premultiplied, expand)."""
+    return img.convert("RGBa").rotate(deg, resample=Image.BICUBIC, expand=True).convert("RGBA")
+
+
+# ---- text, frame, mask
+
+def text_ink_centered(d, txt, f, cx, cy, fill, track=0, stroke=0, stroke_fill=None):
+    """Draw txt with its ink box centred on (cx, cy); `track` adds px between glyphs."""
     widths = [f.getlength(ch) for ch in txt]
-    total = sum(widths) + track * (len(txt) - 1)
-    # ink extents of the whole string at origin, with tracking applied per glyph
     x = 0.0
     l = t = 1e9
     r = b = -1e9
@@ -399,169 +380,439 @@ def draw_index_text(d, txt, f, cx, cy, track=0):
     ox, oy = cx - (l + r) / 2, cy - (t + b) / 2
     x = ox
     for ch, wch in zip(txt, widths):
-        d.text((x, oy), ch, font=f, fill=INK + (255,), anchor="ls")
+        d.text((x, oy), ch, font=f, fill=fill, anchor="ls",
+               stroke_width=stroke, stroke_fill=stroke_fill)
         x += wch + track
 
 
-INDEX_TWO_DIGIT_NUDGE = 4   # px: keeps "11/12/13" clear of the frame's inner line
-INDEX_TWO_DIGIT_TRACK = -1  # px between the two digits
-
-
-def index_block(suit, rank):
-    """92x140 block: index text centred at (46,52), suit icon centred at (46,104).
-    Two-digit indices (court cards) are nudged 4 px inward so the wide "11/12/13"
-    clears the frame's inner ochre line."""
-    blk = Image.new("RGBA", (92 * SS, 140 * SS), (0, 0, 0, 0))
-    txt = INDEX_TEXT[rank] if rank not in ACE_NO_INDEX else ""
-    if txt:
-        f = font(52 * SS)
-        d = ImageDraw.Draw(blk)
-        two = len(txt) > 1
-        cx = 46 + (INDEX_TWO_DIGIT_NUDGE if two else 0)
-        draw_index_text(d, txt, f, cx * SS, 52 * SS, (INDEX_TWO_DIGIT_TRACK * SS) if two else 0)
-    blk = resize(blk, (92, 140))
-    paste_center(blk, icon(suit, 40, tall=CORNER_TALL), 46, 104)
-    return blk
-
-
-def add_indices(card, suit, rank):
-    blk = index_block(suit, rank)
-    card.alpha_composite(blk, (0, 0))
-    card.alpha_composite(blk.rotate(180), (W - 92, H - 140))
-
-
-def ace_ornament():
+def index_layer(rank):
+    """Top-left numeral plus its 180° copy bottom-right, on a transparent full-card layer."""
+    txt = INDEX_TEXT[rank]
     lay = ss_layer()
     d = ImageDraw.Draw(lay)
-    cx, cy = 240 * SS, 384 * SS
+    two = len(txt) > 1
+    cx = INDEX_C[0] + (8 if two else 0)
+    text_ink_centered(d, txt, tfont(INDEX_FONT, INDEX_PX * SS), cx * SS, INDEX_C[1] * SS,
+                      BLACK + (255,), track=(-2 * SS) if two else 0,
+                      stroke=INDEX_HALO * SS, stroke_fill=WHITE + (255,))
+    lay = ss_down(lay)
+    out = lay.copy()
+    out.alpha_composite(lay.rotate(180))
+    return out
 
-    def ring(r, w, col):
-        d.ellipse([cx - (r + w / 2) * SS, cy - (r + w / 2) * SS, cx + (r + w / 2) * SS, cy + (r + w / 2) * SS],
-                  outline=col + (255,), width=int(w * SS))
 
-    ring(170, 6, OCHRE)
-    ring(160, 3, TERRACOTTA)
-    for k in range(8):
-        ang = math.radians(22.5 + 45 * k)
-        x, y = cx + 188 * SS * math.cos(ang), cy + 188 * SS * math.sin(ang)
-        rr = 6 * SS
-        d.ellipse([x - rr, y - rr, x + rr, y + rr], fill=TERRACOTTA + (255,))
+def frame_layer():
+    lay = ss_layer()
+    i = FRAME_INSET * SS
+    ImageDraw.Draw(lay).rounded_rectangle([i, i, W * SS - i - 1, H * SS - i - 1], radius=FRAME_R * SS,
+                                          outline=BLACK + (255,), width=FRAME_W * SS)
     return ss_down(lay)
 
 
-def court_panel(gid):
-    art = raw(gid).convert("RGB")
-    if art.width != 1024:
-        art = resize(art, (1024, round(art.height * 1024 / art.width)))
-    art = art.crop((0, COURT_PRECROP, art.width, art.height - COURT_PRECROP))
-    # cover-fit: scale to the panel height, centre-crop the width
-    k = 560 / art.height
-    art = resize(art, (round(art.width * k), 560))
-    x0 = (art.width - 340) // 2
-    art = art.crop((x0, 0, x0 + 340, 560)).convert("RGBA")
-    lay = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    lay.paste(art, (70, 128))
-    mask = arch_path_mask(0).resize((W, H), Image.LANCZOS)
-    lay.putalpha(Image.fromarray(np.minimum(np.asarray(lay.getchannel("A")), np.asarray(mask)), "L"))
-    # 4 px border drawn just inside the arch shape, so the panel stays within
-    # (70,128)-(410,688)
-    outer = np.asarray(arch_path_mask(0)).astype(np.int16)
-    inner = np.asarray(arch_path_mask(-4)).astype(np.int16)
-    ring = Image.fromarray(np.clip(outer - inner, 0, 255).astype(np.uint8), "L").resize((W, H), Image.LANCZOS)
-    border = Image.new("RGBA", (W, H), INK + (0,))
-    border.putalpha(ring)
-    lay.alpha_composite(border)
-    return lay
+def rounded_mask_ss(r=24, inset=0.0):
+    m = Image.new("L", (W * SS, H * SS), 0)
+    ImageDraw.Draw(m).rounded_rectangle(
+        [inset * SS, inset * SS, (W - inset) * SS - 1, (H - inset) * SS - 1],
+        radius=(r - inset) * SS, fill=255)
+    return m
 
 
-# Aces (play-test change): a generated ornate emblem (gen ace_<suit>) fitted into
-# ACE_BOX and centred at (240,384); the corners keep only the small suit icon at
-# the index's suit-mark position (no "1").
-ACE_BOX = (380, 580)
-ACE_NO_INDEX = {"a"}
-PIP_TALL = 1.4      # number-card pips of bate/spade: height up to 1.4 x pip size
-ACE_TALL = 1.1      # ace of bate/spade: 308 px tall (still inside the 160 px ring)
-CORNER_TALL = 1.25  # corner icon of bate/spade: 50 px tall
-COURT_PRECROP = 24  # px (raw scale) cut from top and bottom of court art: removes the
-                    # generated image's own outer frame line before the cover-fit
+def apply_card_mask(img, edge=(0, 0, 0), edge_alpha=0.22):
+    """Rounded-rect alpha (r 24) and a faint 2 px edge stroke (the card's cut edge)."""
+    img = img.convert("RGBA")
+    outer = rounded_mask_ss(24, 0)
+    inner = rounded_mask_ss(24, 2)
+    ring = np.asarray(outer).astype(np.int16) - np.asarray(inner).astype(np.int16)
+    ring = Image.fromarray(np.clip(ring, 0, 255).astype(np.uint8), "L").resize((W, H), Image.LANCZOS)
+    mask = outer.resize((W, H), Image.LANCZOS)
+    stroke = Image.new("RGBA", (W, H), edge + (0,))
+    stroke.putalpha(ring.point(lambda v: int(v * edge_alpha)))
+    img.alpha_composite(stroke)
+    a = np.minimum(np.asarray(img.getchannel("A")), np.asarray(mask))
+    img.putalpha(Image.fromarray(a.astype(np.uint8), "L"))
+    return img
 
 
-def build_face(suit, rank):
-    card = frame_base()
-    if rank in PIPS:
-        box = 120 if rank in ("2", "3") else 104
-        for (x, y) in PIPS[rank]:
-            rot = suit in ("bate", "spade") and y > 384
-            paste_center(card, icon(suit, box, rot, tall=PIP_TALL), x, y)
-    elif rank == "a":
-        if have(f"ace_{suit}"):
-            # Triestine-style ace: one large ornate emblem, no ring, no number
-            em = fit_box(trim(cutout(f"ace_{suit}"), 24), *ACE_BOX)
-            paste_center(card, em, 240, 384)
-        else:  # fallback: the section 13.5 ace (pip in an ornamental ring)
-            card.alpha_composite(ace_ornament())
-            paste_center(card, icon(suit, 280, tall=ACE_TALL), 240, 384)
-    else:
-        gid = f"court_{suit}_{rank}"
-        if have(gid):
-            card.alpha_composite(court_panel(gid))
-        # nominal 48x48 at (240,724) would overlap the frame's inner ochre line
-        # (y 745-750), so it is drawn 44 px at (240,719)
-        paste_center(card, icon(suit, 44), 240, 719)
-    add_indices(card, suit, rank)
+def blank_card():
+    return Image.new("RGBA", (W, H), WHITE + (255,))
+
+
+def finish(card, rank):
+    card.alpha_composite(frame_layer())
+    card.alpha_composite(index_layer(rank))
     return apply_card_mask(card)
 
 
+def number_diamond(card, cx, cy, w, h, txt, px, upside_down=False):
+    """Yellow diamond with a black outline, an inner hairline and the numeral."""
+    lay = ss_layer()
+    d = ImageDraw.Draw(lay)
+    X, Y, w2, h2 = cx * SS, cy * SS, w * SS / 2, h * SS / 2
+    d.polygon([(X, Y - h2), (X + w2, Y), (X, Y + h2), (X - w2, Y)], fill=YELLOW + (255,),
+              outline=BLACK + (255,), width=3 * SS)
+    k = 0.78
+    d.polygon([(X, Y - h2 * k), (X + w2 * k, Y), (X, Y + h2 * k), (X - w2 * k, Y)],
+              outline=BLACK + (255,), width=round(1.2 * SS))
+    tl = ss_layer()
+    text_ink_centered(ImageDraw.Draw(tl), txt, tfont(INDEX_FONT, px * SS), X, Y, BLACK + (255,),
+                      track=(-2 * SS) if len(txt) > 1 else 0)
+    if upside_down:
+        tl = tl.rotate(180, center=(X, Y))
+    lay.alpha_composite(tl)
+    card.alpha_composite(ss_down(lay))
+
+
+# ---- cups and coins: pips in columns (no overlaps)
+
+CUP_LAYOUT = {
+    "2": (270, [(240, 213), (240, 555)]),
+    "3": (250, [(240, 205), (150, 563), (330, 563)]),
+    "4": (250, [(150, 215), (330, 215), (150, 553), (330, 553)]),
+    "5": (190, [(150, 172), (330, 172), (240, 384), (150, 596), (330, 596)]),
+    "6": (190, [(150, 172), (330, 172), (150, 384), (330, 384), (150, 596), (330, 596)]),
+    "7": (164, [(118, 172), (240, 172), (362, 172), (150, 393), (330, 393), (150, 598), (330, 598)]),
+}
+COIN_LAYOUT = {   # diameter, centres
+    "2": (236, [(240, 222), (240, 546)]),
+    "3": (186, [(240, 172), (240, 384), (240, 596)]),
+    "4": (150, [(150, 196), (330, 196), (150, 572), (330, 572)]),
+    "5": (150, [(150, 182), (330, 182), (240, 384), (150, 586), (330, 586)]),
+    "6": (148, [(150, 170), (330, 170), (150, 384), (330, 384), (150, 598), (330, 598)]),
+    "7": (136, [(150, 160), (330, 160), (240, 282), (150, 420), (330, 420), (150, 600), (330, 600)]),
+}
+
+
+def cups_card(rank):
+    card = blank_card()
+    h, pts = CUP_LAYOUT[rank]
+    cup = fit_height(pip_art("tri_cup"), h)
+    for (x, y) in pts:
+        paste_center(card, cup, x, y)
+    return card
+
+
+def coins_card(rank):
+    card = blank_card()
+    d, pts = COIN_LAYOUT[rank]
+    coin = resize(pip_art("tri_coin"), (d, d))
+    mirror = coin.transpose(Image.FLIP_LEFT_RIGHT)   # yellow left, blue right
+    for i, (x, y) in enumerate(pts):
+        paste_center(card, mirror if (i + (y > 384)) % 2 else coin, x, y)
+    return card
+
+
+# ---- clubs: batons crossing in X arrangements, the number in a yellow diamond
+
+BATON = {   # parallel batons per direction, tilt from vertical, spacing, length, width scale, diamond
+    1: dict(tilt=24, gap=0, length=610, width=0.95, diamond=(72, 120, 54)),
+    2: dict(tilt=24, gap=66, length=600, width=0.8, diamond=(84, 140, 62)),
+    3: dict(tilt=24, gap=54, length=590, width=0.66, diamond=(96, 160, 70)),
+}
+BATON_COLOURS = {"red": None, "blue": {"red": "blue", "blue": "red"},
+                 "yellow": {"red": "yellow", "yellow": "red"}}
+
+
+def baton(colour, length, width_k):
+    art = pip_art("tri_baton", BATON_COLOURS[colour])
+    art = fit_height(art, length)
+    return resize(art, (max(1, round(art.width * width_k)), art.height))
+
+
+def clubs_card(rank):
+    card = blank_card()
+    n = {"2": 1, "3": 1, "4": 2, "5": 2, "6": 3, "7": 3}[rank]
+    cfg = BATON[n]
+    offs = [(i - (n - 1) / 2) * cfg["gap"] for i in range(n)]
+    back = ["red", "blue", "red"]     # "\" batons (cap top-left)
+    fwd = ["blue", "red", "blue"]     # "/" batons (cap top-right)
+    for i, o in enumerate(offs):
+        paste_center(card, rotated(baton(back[i], cfg["length"], cfg["width"]), cfg["tilt"]), 240 + o, 384)
+    for i, o in enumerate(reversed(offs)):
+        paste_center(card, rotated(baton(fwd[i], cfg["length"], cfg["width"]), -cfg["tilt"]), 240 + o, 384)
+    if rank in ("3", "5", "7"):
+        paste_center(card, baton("yellow", cfg["length"] + 20, cfg["width"]), 240, 384)
+    w, h, px = cfg["diamond"]
+    number_diamond(card, 240, 384, w, h, rank, px)
+    return card
+
+
+# ---- swords: curved blades drawn in code as interlaced ovals, generated hilts, a straight
+# sword through the middle on odd numbers, the number in diamonds at both crossings
+
+SWORD = {   # blades per side: band width, horizontal reach of each oval, hilt size, run past the crossings, diamond
+    1: dict(w=54, reach=[240], hilt=156, ext=(104, 118), diamond=(64, 92, 46)),
+    2: dict(w=40, reach=[246, 150], hilt=122, ext=(90, 112), diamond=(76, 108, 56)),
+    3: dict(w=31, reach=[250, 178, 106], hilt=102, ext=(76, 106), diamond=(84, 118, 60)),
+}
+SWORD_T, SWORD_B = 160, 608      # top and bottom crossing (centre line)
+SWORD_BULGE = 150                # vertical pull of the Bezier handles (pointed oval ends)
+SWORD_STRAIGHT = 620             # length of the straight sword on 3, 5, 7
+SWORD_GUARD = 0.218              # its guard, as a fraction of its length from the pommel
+HILT_KEEP = 0.78                 # part of the hilt generation kept (pommel and leaves)
+
+
+def _bezier(p0, p1, p2, p3, n):
+    t = np.linspace(0.0, 1.0, n)[:, None]
+    return (1 - t) ** 3 * p0 + 3 * (1 - t) ** 2 * t * p1 + 3 * (1 - t) * t ** 2 * p2 + t ** 3 * p3
+
+
+def blade_path(reach, ext):
+    """Centre line of one 'left' blade (hilt top-right, sweeps round the left, tip bottom-right),
+    resampled every 1 px. Returns points, arc length, and the arc length at both crossings."""
+    p0, p1 = np.array([240.0, SWORD_T]), np.array([240.0 - reach, SWORD_T + SWORD_BULGE])
+    p2, p3 = np.array([240.0 - reach, SWORD_B - SWORD_BULGE]), np.array([240.0, SWORD_B])
+    d0 = (p0 - p1) / np.linalg.norm(p0 - p1)
+    d1 = (p3 - p2) / np.linalg.norm(p3 - p2)
+    hilt = p0 + d0 * ext[0]      # straight run past the top crossing to the hilt
+    tip = p3 + d1 * ext[1]       # and past the bottom crossing to the tip
+    pts = np.concatenate([np.linspace(hilt, p0, 60, endpoint=False), _bezier(p0, p1, p2, p3, 600),
+                          np.linspace(p3, tip, 61)[1:]])
+    seg = np.sqrt((np.diff(pts, axis=0) ** 2).sum(-1))
+    s = np.concatenate([[0.0], np.cumsum(seg)])
+    total = s[-1]
+    u = np.arange(0.0, total, 1.0)
+    pts = np.stack([np.interp(u, s, pts[:, 0]), np.interp(u, s, pts[:, 1])], -1)
+    sT = ext[0]
+    sB = len(u) - ext[1]
+    return pts, sT, sB, d0
+
+
+def _normals(pts):
+    t = np.gradient(pts, axis=0)
+    t /= np.maximum(np.linalg.norm(t, axis=1, keepdims=True), 1e-6)
+    return t, np.stack([-t[:, 1], t[:, 0]], -1)
+
+
+def draw_blade(lay, pts, sT, sB, w, col_a, col_b):
+    """One curved blade on a supersampled layer: colour A from the hilt round the first bend,
+    yellow with black diamonds along the side, colour B into the far crossing, then yellow with
+    diamonds to the square-cut tip with a red and blue end stripe."""
+    d = ImageDraw.Draw(lay)
+    tan, nrm = _normals(pts)
+    L = pts + nrm * w / 2
+    R = pts - nrm * w / 2
+    n = len(pts)
+    c_len = sB - sT
+    a_end = int(sT + 0.24 * c_len)
+    y_end = int(sT + 0.76 * c_len)
+    segs = [(0, a_end, col_a, False), (a_end, y_end, YELLOW, True), (y_end, int(sB), col_b, False),
+            (int(sB), n - 15, YELLOW, True), (n - 15, n - 8, RED, False), (n - 8, n, BLUE, False)]
+
+    def poly(i0, i1):
+        i1 = min(i1, n - 1)
+        return [tuple(p * SS) for p in L[i0:i1 + 1]] + [tuple(p * SS) for p in R[i0:i1 + 1][::-1]]
+
+    for i0, i1, col, diamonds in segs:
+        d.polygon(poly(i0, i1), fill=col + (255,))
+        if diamonds:
+            # small black diamonds along the centre line, clear of the crossings and the segment ends
+            for s in np.arange(i0 + 26, i1 - 18, 44):
+                if abs(s - sT) < 40 or abs(s - sB) < 40:
+                    continue
+                k = int(s)
+                c, tv, nv = pts[k], tan[k], nrm[k]
+                a, b = 0.38 * w, 0.17 * w
+                q = [c + tv * a, c + nv * b, c - tv * a, c - nv * b]
+                d.polygon([tuple(p * SS) for p in q], fill=BLACK + (255,))
+    # white separators with black hairlines between the coloured segments
+    for i in (a_end, y_end, int(sB)):
+        for off, col, wd in ((0, WHITE, 6), (-3, BLACK, 1.6), (3, BLACK, 1.6)):
+            k = max(0, min(n - 1, i + off))
+            d.line([tuple(L[k] * SS), tuple(R[k] * SS)], fill=col + (255,), width=round(wd * SS))
+    # outlines: both edges and the square tip
+    d.line([tuple(p * SS) for p in L], fill=BLACK + (255,), width=3 * SS, joint="curve")
+    d.line([tuple(p * SS) for p in R], fill=BLACK + (255,), width=3 * SS, joint="curve")
+    for k in (n - 15, n - 8, n - 1):
+        d.line([tuple(L[k] * SS), tuple(R[k] * SS)], fill=BLACK + (255,), width=round(2.5 * SS))
+
+
+def place_hilt(card, end, direction, size, leaves):
+    """Hilt cut-out at a blade end; its pommel points along `direction` (away from the blade)."""
+    art = pip_art("tri_hilt", None if leaves == "blue" else {"blue": "red", "red": "blue"})
+    # drop the generated blade stub (bottom 22%): the drawn band runs into the leaves instead
+    art = trim(art.crop((0, 0, art.width, round(art.height * HILT_KEEP))), 24)
+    art = fit_height(art, size * HILT_KEEP)
+    ang = math.degrees(math.atan2(direction[0], -direction[1]))   # clockwise from up
+    rot = rotated(art, -ang)
+    c = np.array(end) + np.array(direction) * art.height * 0.36
+    paste_center(card, rot, c[0], c[1])
+
+
+def swords_card(rank):
+    card = blank_card()
+    n = {"2": 1, "3": 1, "4": 2, "5": 2, "6": 3, "7": 3}[rank]
+    cfg = SWORD[n]
+    blades = []
+    for k, reach in enumerate(cfg["reach"]):
+        pts, sT, sB, d0 = blade_path(reach, cfg["ext"])
+        a, b = (BLUE, RED) if k % 2 == 0 else (RED, BLUE)
+        blades.append((pts, sT, sB, d0, a, b))
+    lay = ss_layer()
+    rot_pts = lambda p: np.stack([480.0 - p[:, 0], 768.0 - p[:, 1]], -1)   # 180° about the centre
+    # left blades, then the right blades (the same blades turned 180°, colours swapped)
+    for pts, sT, sB, d0, a, b in blades:
+        draw_blade(lay, pts, sT, sB, cfg["w"], a, b)
+    for pts, sT, sB, d0, a, b in blades:
+        draw_blade(lay, rot_pts(pts), sT, sB, cfg["w"], b, a)
+    card.alpha_composite(ss_down(lay))
+    for k, (pts, sT, sB, d0, a, b) in enumerate(blades):
+        leaves = "blue" if a == BLUE else "red"
+        place_hilt(card, pts[0], d0, cfg["hilt"], leaves)
+        place_hilt(card, (480.0 - pts[0][0], 768.0 - pts[0][1]), -d0, cfg["hilt"],
+                   "red" if leaves == "blue" else "blue")
+    w, h, px = cfg["diamond"]
+    if rank in ("3", "5", "7"):
+        # straight sword through the middle, point down, its guard over the top crossing
+        sw = fit_height(pip_art("tri_sword"), SWORD_STRAIGHT)
+        paste_center(card, sw, 240, SWORD_T - SWORD_GUARD * SWORD_STRAIGHT + SWORD_STRAIGHT / 2)
+        number_diamond(card, 240, SWORD_B, w, h, rank, px, upside_down=True)
+    else:
+        number_diamond(card, 240, SWORD_T, w, h, rank, px)
+        number_diamond(card, 240, SWORD_B, w, h, rank, px, upside_down=True)
+    return card
+
+
+# ---- aces: one large generated emblem on white
+
+ACE_BOX = (404, 642)       # fit box inside the frame, centred at ACE_CENTRE
+ACE_CENTRE = (240, 398)
+
+
+def ace_card(suit):
+    card = blank_card()
+    art = white_art(f"tri_ace_{suit}")
+    art = art.crop(ink_bbox(art))
+    art = fit_box(art, *ACE_BOX)
+    x = ACE_CENTRE[0] - art.width / 2
+    if suit == "bate":
+        # the hand comes in from the right: its cuff runs into the frame line
+        x = INNER[2] - art.width + 2
+    multiply_onto(card, art, x, ACE_CENTRE[1] - art.height / 2)
+    return card
+
+
+# ---- courts: double-ended, generated half figure + its 180° copy, name banner across the middle
+
+def court_half(gid):
+    """The generated half figure scaled and cropped to the top half of the art area (RGB)."""
+    art = white_art(gid)
+    x0, y0, x1, y1 = ink_bbox(art)
+    hw = INNER[2] - INNER[0]                  # 434
+    hh = BANNER[0] - INNER[1]                 # 339
+    # keep what matters (head, raised symbol, horse head: the upper 60% of the figure) and fit
+    # the width; when the figure is wider than the 1.28 half-card, trim the robe at the sides
+    top = art.crop((0, y0, art.width, y0 + int((y1 - y0) * 0.6)))
+    kx0, _, kx1, _ = ink_bbox(top)
+    k = hh / (y1 - y0 + 8)
+    need_w = hw / k
+    cx = (kx0 + kx1) / 2
+    if need_w < (x1 - x0):
+        half = need_w / 2
+        cx = min(max(cx, kx1 - half + 6), kx0 + half - 6) if kx1 - kx0 < need_w else (kx0 + kx1) / 2
+        cx = min(max(cx, half), art.width - half)
+        crop = (cx - half, y0 - 8, cx + half, y1)
+    else:
+        k = hw / (x1 - x0)
+        hgt = hh / k
+        crop = ((x0 + x1) / 2 - (x1 - x0) / 2, y1 - hgt, (x0 + x1) / 2 + (x1 - x0) / 2, y1)
+    img = Image.new("RGB", (round(crop[2] - crop[0]), round(crop[3] - crop[1])), WHITE)
+    img.paste(art.crop(tuple(round(v) for v in crop)), (0, 0))
+    return resize(img, (hw, hh))
+
+
+def court_card(suit, rank):
+    card = blank_card()
+    half = court_half(f"tri_court_{suit}_{rank}")
+    multiply_onto(card, half, INNER[0], INNER[1])
+    multiply_onto(card, half.rotate(180), INNER[2] - half.width, BANNER[1])
+    lay = ss_layer()
+    d = ImageDraw.Draw(lay)
+    d.rectangle([FRAME_INSET * SS, BANNER[0] * SS, (W - FRAME_INSET) * SS, BANNER[1] * SS], fill=WHITE + (255,))
+    for y in BANNER:
+        d.line([(FRAME_INSET * SS, y * SS), ((W - FRAME_INSET) * SS, y * SS)], fill=BLACK + (255,), width=2 * SS)
+    txt = f"{LABEL_RANK[rank]} DI {LABEL_SUIT[suit]}"
+    text_ink_centered(d, txt, tfont(LABEL_FONT, LABEL_PX * SS), 240 * SS, (sum(BANNER) / 2) * SS,
+                      BLACK + (255,), track=round(0.6 * SS), stroke=round(0.35 * SS), stroke_fill=BLACK + (255,))
+    card.alpha_composite(ss_down(lay))
+    return card
+
+
+def build_face(suit, rank):
+    if rank == "a":
+        card = ace_card(suit)
+    elif rank in LABEL_RANK:
+        card = court_card(suit, rank)
+    else:
+        card = {"kupe": cups_card, "dinari": coins_card, "bate": clubs_card, "spade": swords_card}[suit](rank)
+    return finish(card, rank)
+
+
+FACE_GENS = ["tri_cup", "tri_coin", "tri_baton", "tri_hilt", "tri_sword"] + \
+    [f"tri_ace_{s}" for s in SUITS] + [f"tri_court_{s}_{r}" for s in SUITS for r in ("f", "c", "k")]
+
+
 def step_cards():
-    if not have("card_frame"):
-        print("  card_frame missing: no faces built")
+    missing = [g for g in FACE_GENS if not have(g)]
+    if missing:
+        print("  missing generations, no faces built:", missing)
         return
     for s in SUITS:
-        if not have(f"suit_{s}"):
-            print("  suit missing, skipping", s)
-            continue
         for r in RANKS:
-            if r in ("k", "c", "f") and not have(f"court_{s}_{r}"):
-                print("  court missing, skipping", s, r)
-                continue
             save_png(build_face(s, r), OUT / "cards" / f"{s}_{r}.png")
     print("  card faces done")
 
 
-# --------------------------------------------------------------------------- backs
+# ---- suit icons (UI and placeholders): the pips themselves
 
-def hue_rotate(img, deg, sat_mul=1.0):
-    """Luminance-preserving hue rotation + saturation, i.e. exactly the CSS
-    filter `hue-rotate(deg) saturate(sat_mul)`. (A plain HSV rotation keeps V and
-    turns the terracotta back into a glaring cyan; this reads as teal-green.)"""
-    t = math.radians(deg)
-    c, sn = math.cos(t), math.sin(t)
-    hr = np.array([
-        [0.213 + c * 0.787 - sn * 0.213, 0.715 - c * 0.715 - sn * 0.715, 0.072 - c * 0.072 + sn * 0.928],
-        [0.213 - c * 0.213 + sn * 0.143, 0.715 + c * 0.285 + sn * 0.140, 0.072 - c * 0.072 - sn * 0.283],
-        [0.213 - c * 0.213 - sn * 0.787, 0.715 - c * 0.715 + sn * 0.715, 0.072 + c * 0.928 + sn * 0.072]])
-    k = sat_mul
-    sm = np.array([
-        [0.213 + 0.787 * k, 0.715 - 0.715 * k, 0.072 - 0.072 * k],
-        [0.213 - 0.213 * k, 0.715 + 0.285 * k, 0.072 - 0.072 * k],
-        [0.213 - 0.213 * k, 0.715 - 0.715 * k, 0.072 + 0.928 * k]])
-    a = np.asarray(img.convert("RGBA")).astype(np.float32)
-    rgb = a[..., :3] / 255.0
-    rgb = np.clip(rgb @ hr.T @ sm.T, 0, 1) * 255.0
-    out = np.concatenate([rgb, a[..., 3:]], -1).astype(np.uint8)
-    return Image.fromarray(out)
+def step_suits():
+    icons = {
+        "kupe": pip_art("tri_cup"),
+        "dinari": pip_art("tri_coin"),
+        "bate": rotated(pip_art("tri_baton"), -38),
+        "spade": rotated(pip_art("tri_sword").rotate(180), -38),   # point up, leaning right
+    }
+    for s, ic in icons.items():
+        ic = pad_square(trim(ic, 16), 0.04)
+        save_png(resize(ic, (256, 256)), OUT / "cards" / "suits" / f"{s}.png")
+    print("  suits done")
+
+
+# ---- backs: fine diamond lattice in a white border (drawn in code)
+
+BACK_COLOURS = {"player": ((196, 34, 40), (150, 18, 26)), "bot": ((28, 112, 140), (14, 76, 100))}
+
+
+def build_back(owner):
+    main, dark = BACK_COLOURS[owner]
+    lay = Image.new("RGBA", (W * SS, H * SS), WHITE + (255,))
+    d = ImageDraw.Draw(lay)
+    x0, y0, x1, y1 = 26, 26, W - 26, H - 26
+    field = Image.new("RGBA", lay.size, (0, 0, 0, 0))
+    fd = ImageDraw.Draw(field)
+    fd.rectangle([0, 0, W * SS, H * SS], fill=main + (255,))
+    cw, ch = 30, 40                     # diamond cell, centred on the card so the pattern is symmetric
+    nx, ny = int(W / cw) + 3, int(H / ch) + 3
+    for j in range(-ny, ny + 1):
+        for i in range(-nx, nx + 1):
+            cx = W / 2 + i * cw + (cw / 2 if j % 2 else 0)
+            cy = H / 2 + j * ch / 2
+            q = [(cx, cy - ch * 0.42), (cx + cw * 0.42, cy), (cx, cy + ch * 0.42), (cx - cw * 0.42, cy)]
+            fd.polygon([(x * SS, y * SS) for x, y in q], fill=(dark if (i + j) % 2 else main) + (255,),
+                       outline=WHITE + (255,), width=round(1.6 * SS))
+            r = 2.2 * SS
+            fd.ellipse([cx * SS - r, cy * SS - r, cx * SS + r, cy * SS + r], fill=WHITE + (255,))
+    m = Image.new("L", lay.size, 0)
+    ImageDraw.Draw(m).rounded_rectangle([x0 * SS, y0 * SS, x1 * SS, y1 * SS], radius=10 * SS, fill=255)
+    lay.paste(field, (0, 0), m)
+    d.rounded_rectangle([x0 * SS, y0 * SS, x1 * SS, y1 * SS], radius=10 * SS, outline=dark + (255,), width=3 * SS)
+    d.rounded_rectangle([14 * SS, 14 * SS, (W - 14) * SS, (H - 14) * SS], radius=16 * SS,
+                        outline=main + (255,), width=2 * SS)
+    return apply_card_mask(ss_down(lay))
 
 
 def step_backs():
-    if not have("card_back"):
-        print("  card_back missing")
-        return
-    # Deviation: a centre-crop to 1.6 would cut the painted side borders and the
-    # corner rosettes of this symmetric pattern, so the whole back is resized
-    # to 480x768 instead (about 6% horizontal compression, not noticeable).
-    back = apply_card_mask(resize(raw("card_back").convert("RGB"), (W, H)))
-    save_png(back, OUT / "cards" / "back_player.png")
-    save_png(hue_rotate(back, 150, 0.85), OUT / "cards" / "back_bot.png")
+    for owner in ("player", "bot"):
+        save_png(build_back(owner), OUT / "cards" / f"back_{owner}.png")
     print("  backs done")
 
 
@@ -857,6 +1108,28 @@ def step_contact_portraits():
     print("  portrait contact sheet written")
 
 
+MASTERS = SRC / "masters"
+BADGE = (22, 92, 80)   # ukras badge x, y, size on a face (FACE.badge in src/render/placeholders.ts)
+
+
+def asset_path(p):
+    """A built image: the fresh PNG in public/assets, else its WebP, else the master PNG
+    (tools/optimize_assets.py moves the PNGs to assets_src/masters)."""
+    p = Path(p)
+    for c in (p, p.with_suffix(".webp"), MASTERS / p.relative_to(OUT)):
+        if c.exists():
+            return c
+    return None
+
+
+def ex(p):
+    return asset_path(p) is not None
+
+
+def opn(p):
+    return Image.open(asset_path(p))
+
+
 def step_contact():
     bgc = (42, 26, 16, 255)
     tw, th, g = 192, 307, 14
@@ -873,8 +1146,8 @@ def step_contact():
         for ri, r in enumerate(RANKS):
             p = OUT / "cards" / f"{s}_{r}.png"
             x = g + ri * (tw + g)
-            if p.exists():
-                sheet.alpha_composite(resize(Image.open(p).convert("RGBA"), (tw, th)), (x, y))
+            if ex(p):
+                sheet.alpha_composite(resize(opn(p).convert("RGBA"), (tw, th)), (x, y))
             else:
                 ImageDraw.Draw(sheet).rectangle([x, y, x + tw, y + th], outline=(200, 60, 60, 255), width=3)
             label(sheet, f"{s}_{r}", (x + 4, y + th + 2), 16)
@@ -882,15 +1155,15 @@ def step_contact():
     for i, b in enumerate(["back_player", "back_bot"]):
         p = OUT / "cards" / f"{b}.png"
         x = g + i * (tw + g)
-        if p.exists():
-            sheet.alpha_composite(resize(Image.open(p).convert("RGBA"), (tw, th)), (x, y))
+        if ex(p):
+            sheet.alpha_composite(resize(opn(p).convert("RGBA"), (tw, th)), (x, y))
         label(sheet, b, (x + 4, y + th + 2), 16)
     # the 4 suit icons beside the backs
     for i, s in enumerate(SUITS):
         p = OUT / "cards" / "suits" / f"{s}.png"
         x = g + (3 + i) * (tw + g)
-        if p.exists():
-            ic = resize(Image.open(p).convert("RGBA"), (tw, tw))
+        if ex(p):
+            ic = resize(opn(p).convert("RGBA"), (tw, tw))
             sheet.alpha_composite(checker(tw, tw), (x, y))
             sheet.alpha_composite(ic, (x, y))
         label(sheet, f"suits/{s}", (x + 4, y + tw + 2), 16)
@@ -906,18 +1179,25 @@ def step_contact():
         p = OUT / "cards" / f"{s}_{r}.png"
         if x + small_w > sheet_w - 420:   # leave room for the fan check
             break
-        if p.exists():
-            sheet.alpha_composite(resize(Image.open(p).convert("RGBA"), (small_w, small_h)), (x, y))
+        if ex(p):
+            sheet.alpha_composite(resize(opn(p).convert("RGBA"), (small_w, small_h)), (x, y))
         x += small_w + 8
     # fanned-hand check: overlapping 96x154 cards, only the left strip of each shows
-    fan = [("kupe", "a"), ("kupe", "3"), ("bate", "a"), ("bate", "k"), ("spade", "a"), ("spade", "2"),
-           ("dinari", "a"), ("dinari", "7"), ("kupe", "f"), ("bate", "4")]
+    # fanned-hand check: overlapping 96x154 cards; in the game the next card covers the right
+    # ~45%, so the corner numeral and the ukras badge (left side) must stay visible
+    fan = [("kupe", "a", "pozlaceno"), ("kupe", "3", None), ("bate", "k", "ljuto"), ("spade", "2", None),
+           ("spade", "7", "ponocno"), ("dinari", "c", "divlje")]
     fx = x + 24
-    label(sheet, "fan:", (fx, y - 26), 18)
-    for i, (s, r) in enumerate(fan):
+    label(sheet, "fan (with badges):", (fx, y - 26), 18)
+    step = round(small_w * 0.55)
+    for i, (s, r, b) in enumerate(fan):
         p = OUT / "cards" / f"{s}_{r}.png"
-        if p.exists() and fx + i * 30 + small_w < sheet_w:
-            sheet.alpha_composite(resize(Image.open(p).convert("RGBA"), (small_w, small_h)), (fx + i * 30, y))
+        if ex(p) and fx + i * step + small_w < sheet_w:
+            card = opn(p).convert("RGBA")
+            bp = OUT / "ukrasi" / f"{b}.png" if b else None
+            if bp and ex(bp):
+                card.alpha_composite(resize(opn(bp).convert("RGBA"), (BADGE[2], BADGE[2])), BADGE[:2])
+            sheet.alpha_composite(resize(card, (small_w, small_h)), (fx + i * step, y))
     out = SRC / "contact_cards.png"
     sheet.convert("RGB").save(out, optimize=True)
     (SRC / "preview").mkdir(exist_ok=True)
@@ -944,27 +1224,27 @@ def step_contact():
     x = g
     for f in FORE:
         p = OUT / "fore" / f"{f}.png"
-        if p.exists():
-            misc.alpha_composite(resize(Image.open(p).convert("RGBA"), (180, 288)), (x, y))
+        if ex(p):
+            misc.alpha_composite(resize(opn(p).convert("RGBA"), (180, 288)), (x, y))
         label(misc, f, (x, y + 290), 14)
         x += 196
     y += 320
     x = g
     for f in FORE:
         p = OUT / "fore" / f"{f}.png"
-        if p.exists():
-            misc.alpha_composite(resize(Image.open(p).convert("RGBA"), (104, 166)), (x, y))
+        if ex(p):
+            misc.alpha_composite(resize(opn(p).convert("RGBA"), (104, 166)), (x, y))
         x += 120
     y += 190
-    label(misc, "ukrasi badges (256 on checker; and 112 on a card, 48 small)", (g, y), 20)
+    label(misc, "ukrasi badges (256 on checker; and 80 on a card, under the corner numeral)", (g, y), 20)
     y += 30
     x = g
     allb = BADGES["ukrasi_sheet_a"] + BADGES["ukrasi_sheet_b"]
     for b in allb:
         p = OUT / "ukrasi" / f"{b}.png"
         misc.alpha_composite(checker(180, 180), (x, y))
-        if p.exists():
-            misc.alpha_composite(resize(Image.open(p).convert("RGBA"), (180, 180)), (x, y))
+        if ex(p):
+            misc.alpha_composite(resize(opn(p).convert("RGBA"), (180, 180)), (x, y))
         label(misc, b, (x, y + 182), 14)
         x += 196
     y += 215
@@ -973,10 +1253,10 @@ def step_contact():
     for i, b in enumerate(allb):
         cp = OUT / "cards" / f"{SUITS[i % 4]}_{RANKS[i % 10]}.png"
         p = OUT / "ukrasi" / f"{b}.png"
-        if cp.exists():
-            card = Image.open(cp).convert("RGBA")
-            if p.exists():
-                card.alpha_composite(resize(Image.open(p).convert("RGBA"), (112, 112)), (338, 118))
+        if ex(cp):
+            card = opn(cp).convert("RGBA")
+            if ex(p):
+                card.alpha_composite(resize(opn(p).convert("RGBA"), (BADGE[2], BADGE[2])), BADGE[:2])
             misc.alpha_composite(resize(card, (180, 288)), (x, y))
         x += 196
     y += 310
@@ -986,8 +1266,8 @@ def step_contact():
     for u in ["coin", "rakija_full", "rakija_empty"]:
         p = OUT / "ui" / f"{u}.png"
         misc.alpha_composite(checker(256, 256), (x, y))
-        if p.exists():
-            im = Image.open(p).convert("RGBA")
+        if ex(p):
+            im = opn(p).convert("RGBA")
             misc.alpha_composite(im, (x, y))
             misc.alpha_composite(fit_box(im, 44, 60) if "rakija" in u else resize(im, (40, 40)), (x + 266, y + 100))
         x += 340
@@ -1000,8 +1280,8 @@ def step_contact():
     x = g
     for gid, name in ENV.items():
         p = OUT / "env" / name
-        if p.exists():
-            misc.alpha_composite(resize(Image.open(p).convert("RGBA"), (480, 320)), (x, y))
+        if ex(p):
+            misc.alpha_composite(resize(opn(p).convert("RGBA"), (480, 320)), (x, y))
         label(misc, name, (x, y + 322), 14)
         x += 490
     y += 360
@@ -1044,9 +1324,8 @@ if __name__ == "__main__":
         args = ["suits", "cards", "backs", "badges", "fore", "portraits", "env", "ui", "optimize", "contact"]
     for a in args:
         if a == "cutouts":
-            for gid in ["suit_kupe", "suit_bate", "suit_spade", "suit_dinari", "ukrasi_sheet_a",
-                        "ukrasi_sheet_b", "ui_coin", "ui_rakija", "logo",
-                        "ace_kupe", "ace_bate", "ace_spade", "ace_dinari"]:
+            for gid in ["tri_cup", "tri_coin", "tri_baton", "tri_hilt", "tri_sword", "ukrasi_sheet_a",
+                        "ukrasi_sheet_b", "ui_coin", "ui_rakija", "logo"]:
                 if have(gid):
                     cutout(gid, force=True)
             print("  cutouts refreshed")

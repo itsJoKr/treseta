@@ -155,13 +155,16 @@ function drawFor(s: HandState, side: Side, events: GameEvent[], winningCard: Car
   return true;
 }
 
-/** A hidden draw (§19.3.2): never adds to knownByOpp; clears this side's known voids. */
+/**
+ * A hidden draw (§19.3.2): never adds to knownByOpp; clears this side's known voids.
+ * No akuža check here (play-test round 4): akuže are declared only at the deal, before the
+ * first trick, as in Partneri. A combination completed by a later draw does not count.
+ */
 function drawIntoHand(s: HandState, side: Side, c: CardInst, events: GameEvent[], via: 'mac' | 'ribarsko' | 'zamjena'): void {
   const st = s.sides[side];
   st.hand.push(toHeld(c, side));
   st.voidKnown = [];
   events.push({ t: 'cardDrawn', side, uid: c.uid, via });
-  akuzaCheck(s, side, events);
 }
 
 function drawTop(s: HandState, side: Side, events: GameEvent[], via: 'mac' | 'zamjena'): void {

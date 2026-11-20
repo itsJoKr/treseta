@@ -1,7 +1,7 @@
 // Voice director (§9.5). No DOM: the speak sink and clock are injected.
 import { VOICE_EVENTS } from '../data/voiceEvents';
 import type { VoiceEventCfg, VoiceEventType } from '../data/voiceEvents';
-import { VOICE_BY_ID } from '../data/voiceLines';
+import { VOICE_BY_ID, variantsOf } from '../data/voiceLines';
 import type { VoiceLine, VoiceLineId } from '../data/voiceLines';
 import type { Rng } from '../game/rng';
 import type { PersonaId } from '../game/types';
@@ -31,7 +31,7 @@ export interface DirectorDeps<T extends string = VoiceEventType> {
 export interface EventCtx { lines?: VoiceLineId[]; p?: number; /** skip the global gap (the argument reply, §18.7.4) */ ignoreGap?: boolean }
 
 export const GLOBAL_GAP_MS = 3500;
-export const PER_HAND_CAP = 8;
+export const PER_HAND_CAP = 10; // §22: mid-trick reactions need a little more room
 export const NO_AUDIO_HOLD_MS = 2200;
 
 export class VoiceDirector<T extends string = VoiceEventType> {
@@ -60,9 +60,9 @@ export class VoiceDirector<T extends string = VoiceEventType> {
     const now = this.deps.now();
     const arb = this.deps.arbiter;
     if (arb) {
-      if (!arb.allows(this.deps.speaker ?? '', cfg.priority, ctx?.ignoreGap)) return null;
+      if (!arb.allows(this.deps.speaker ?? '', cfg.priority, ctx?.ignoreGap, cfg.gapMs)) return null;
     } else if (cfg.priority < 3) {
-      if (!ctx?.ignoreGap && now - this.lastLineEndAt < GLOBAL_GAP_MS) return null;
+      if (!ctx?.ignoreGap && now - this.lastLineEndAt < (cfg.gapMs ?? GLOBAL_GAP_MS)) return null;
       if (this.isPlaying()) return null;
       if (this.linesThisHand >= PER_HAND_CAP) return null;
     }
@@ -80,10 +80,23 @@ export class VoiceDirector<T extends string = VoiceEventType> {
     let id: VoiceLineId;
     if (exclusive.length > 0 && this.deps.rng() < 0.5) id = exclusive[Math.floor(this.deps.rng() * exclusive.length) % exclusive.length];
     else id = pool[Math.floor(this.deps.rng() * pool.length) % pool.length];
-    if (!this.speak(VOICE_BY_ID[id], cfg.priority)) return null;
+    const line = this.wording(id);
+    if (!this.speak(line, cfg.priority)) return null;
     this.lastFiredAt[type] = now;
-    this.log.push({ type, line: id, at: now });
-    return id;
+    this.log.push({ type, line: line.id, at: now });
+    return line.id;
+  }
+
+  private lastWording: Partial<Record<VoiceLineId, VoiceLineId>> = {};
+
+  /** §22.4: one of the group's wordings, not the one this speaker used last time. */
+  private wording(group: VoiceLineId): VoiceLine {
+    const all = variantsOf(group, this.deps.persona);
+    if (all.length <= 1) return VOICE_BY_ID[group];
+    const fresh = all.filter((l) => l.id !== this.lastWording[group]);
+    const line = fresh[Math.floor(this.deps.rng() * fresh.length) % fresh.length];
+    this.lastWording[group] = line.id;
+    return line;
   }
 
   private speak(line: VoiceLine, priority: number): boolean {
@@ -106,7 +119,7 @@ export class VoiceDirector<T extends string = VoiceEventType> {
     this.playingUntil = now + dur;
     this.lastLineEndAt = now + dur;
     this.linesThisHand += 1;
-    this.recent.push(line.id);
+    this.recent.push(line.group);
     if (this.recent.length > 3) this.recent.shift();
     return true;
   }

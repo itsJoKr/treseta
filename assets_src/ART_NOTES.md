@@ -1,5 +1,25 @@
 # Art notes (visual asset agent)
 
+## Triestine card faces (play-test round 4: replaces the painted faces below)
+
+Players did not recognise the painted "antique parchment" cards, so the 40 faces, both backs and the 4 suit
+icons now follow the **Triestine pattern** played in Dalmatia (GAME_DESIGN.md §13.1, §13.5): white card, thin
+black frame line, black Bodoni numeral top-left and rotated bottom-right (the ace shows "1"), flat red / blue /
+yellow print art, double-ended courts with a `FANTE / CAVAL / RE DI …` banner. File names and sizes are unchanged.
+
+- **Generations:** 21 (`tri_*` in `prompts.py`, style `STYLE_TRIESTINE`), all accepted first time: 5 pip cut-outs
+  (cup, coin, baton, sword hilt, straight sword), 4 aces and 12 court half figures on white.
+- **Build:** `build.py cards backs suits contact`, then `npm run optimize-assets`. Pips are placed, rotated,
+  mirrored and recoloured in code (exact counts); the sword ovals, number diamonds, numerals, banners and the
+  lattice backs are drawn in code. Courts and aces are levelled to pure white and multiplied onto the card.
+- **Variations from the printed decks:** fresh art; no maker's marks, deer, mottos or tax-stamp ring; no crosses;
+  every numeral top-left (real courts and aces often print it top-right) so it shows in the hand fan; courts hold
+  their symbol on the right; numerals have a thin white outline; the ace of coins carries a rosette.
+- **QA:** `assets_src/contact_cards.png` (faces, backs, suit icons, deck-grid row, fanned hand with badges at the
+  new left-side badge position).
+
+Everything from here on describes the earlier painted faces; the badge, fore, portrait, env and ui notes still apply.
+
 All 78 files of GAME_DESIGN.md §13.6, plus the 4 Partneri portraits of §18.4.5, are delivered at
 their exact paths and pixel sizes (82 files). Nothing is missing. Total image payload in
 `public/assets/`: about 20.6 MB (cards 13 MB, fore 2.9 MB, env 2.0 MB, portraits 1.6 MB,

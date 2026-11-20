@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { VoiceDirector } from '../src/audio/voiceDirector';
-import { akuzaBotLines, handEndEvent, trickEndEvent } from '../src/audio/voiceTriggers';
-import { VOICE_BY_ID } from '../src/data/voiceLines';
+import { akuzaBotLines, handEndEvent, playReactions, trickEndEvent } from '../src/audio/voiceTriggers';
+import { REACT_GAP_MS } from '../src/data/voiceEvents';
+import { VOICE_BY_ID, variantsOf } from '../src/data/voiceLines';
 import { rngFor } from '../src/game/rng';
 import type { GameEvent } from '../src/game/types';
 import { card } from './helpers';
@@ -40,7 +41,7 @@ describe('voice director (§9.5)', () => {
     expect(said).toEqual(['sidi_misaj', 'plati_rakiju']);
   });
 
-  it('event cooldown and per-hand cap of 8', () => {
+  it('event cooldown and per-hand cap of 10 (§22: was 8)', () => {
     const { d, advance } = director();
     expect(d.onEvent('idle')).not.toBeNull();
     advance(6000);
@@ -50,7 +51,7 @@ describe('voice director (§9.5)', () => {
     const { d: d2, advance: adv2 } = director();
     let spoken = 0;
     for (let i = 0; i < 30; i++) { if (d2.onEvent('match_start')) spoken++; adv2(5000); }
-    expect(spoken).toBe(8);
+    expect(spoken).toBe(10);
     d2.newHand();
     expect(d2.onEvent('match_start')).not.toBeNull();
   });
@@ -77,5 +78,63 @@ describe('voice director (§9.5)', () => {
     expect(handEndEvent(b(9, 2))).toBe('big_swing');
     expect(handEndEvent(b(2, 9))).toBe('hand_end_bot_win');
     expect(handEndEvent(b(6, 5))).toBe('hand_end_bot_lose');
+  });
+});
+
+describe('mid-trick reactions (§22.3)', () => {
+  const C = (spec: string, owner: 'player' | 'bot' = 'player') => card(spec, owner);
+
+  it('ace_snatched: the bot must give its only ace to the player\'s 3', () => {
+    const r = playReactions({ side: 'bot', card: C('kupe_A', 'bot'), legal: [C('kupe_A', 'bot')], lead: C('kupe_3') });
+    expect(r).toEqual(['ace_snatched']);
+    // not forced (it also had the 5): no reaction
+    expect(playReactions({ side: 'bot', card: C('kupe_A', 'bot'), legal: [C('kupe_A', 'bot'), C('kupe_5', 'bot')], lead: C('kupe_3') })).toEqual([]);
+    // the lead was only a King: the ace wins, nothing to be mad about
+    expect(playReactions({ side: 'bot', card: C('kupe_A', 'bot'), legal: [C('kupe_A', 'bot')], lead: C('kupe_K') })).toEqual([]);
+  });
+
+  it('knew_trica / knew_ace when the player beats the bot\'s lead', () => {
+    expect(playReactions({ side: 'player', card: C('bate_3'), legal: [C('bate_3'), C('bate_4')], lead: C('bate_2', 'bot') })[0]).toBe('knew_trica');
+    expect(playReactions({ side: 'player', card: C('bate_3'), legal: [C('bate_3')], lead: C('bate_A', 'bot') })[0]).toBe('knew_trica');
+    expect(playReactions({ side: 'player', card: C('spade_A'), legal: [C('spade_A')], lead: C('spade_C', 'bot') })).toEqual(['knew_ace']);
+    // beating a 7 with a 3 is just a grunt
+    expect(playReactions({ side: 'player', card: C('bate_3'), legal: [C('bate_3')], lead: C('bate_7', 'bot') })).toEqual(['react_short']);
+  });
+
+  it('gloat when the player must give up an ace to the bot\'s 2', () => {
+    expect(playReactions({ side: 'player', card: C('dinari_A'), legal: [C('dinari_A')], lead: C('dinari_2', 'bot') })).toEqual(['gloat']);
+  });
+
+  it('a led 3 by the player may get a grunt; the bot\'s own leads say nothing here', () => {
+    expect(playReactions({ side: 'player', card: C('kupe_3'), legal: [C('kupe_3')] })).toEqual(['react_short']);
+    expect(playReactions({ side: 'bot', card: C('kupe_3', 'bot'), legal: [C('kupe_3', 'bot')] })).toEqual([]);
+  });
+
+  it('reactions need only REACT_GAP_MS of silence, not the 3500 ms global gap', () => {
+    const { d, advance } = director();
+    d.onEvent('match_start');
+    advance(1000 + REACT_GAP_MS);
+    expect(d.onEvent('idle')).toBeNull();
+    expect(d.onEvent('ace_snatched', { p: 1 })).not.toBeNull();
+    expect(VOICE_BY_ID.argh.short).toBe(true);
+  });
+});
+
+describe('line variants (§22.4)', () => {
+  it('a group speaks one of its wordings and does not repeat the last one', () => {
+    const { d, advance } = director('mali');
+    const said: string[] = [];
+    for (let i = 0; i < 6; i++) {
+      const id = d.onEvent('knew_ace', { p: 1 });
+      if (id) said.push(id);
+      advance(60000);
+    }
+    expect(said.length).toBe(6);
+    for (const id of said) expect(VOICE_BY_ID[id as 'zna_sam_asa'].group).toBe('zna_sam_asa');
+    for (let i = 1; i < said.length; i++) expect(said[i]).not.toBe(said[i - 1]);
+    expect(new Set(said).size).toBeGreaterThan(1);
+    expect(variantsOf('ko_je_misaja', 'barba').map((l) => l.subtitleHr)).toEqual([
+      'Ko je ovo miša, a?!', 'Ko je ovo miša, da mu jebem sve!', 'Jebem ti sve i onog ko je miša ove karte!',
+    ]);
   });
 });

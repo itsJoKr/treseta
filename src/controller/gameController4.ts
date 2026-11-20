@@ -2,8 +2,8 @@
 import * as THREE from 'three';
 import gsap from 'gsap';
 import type { AudioManager } from '../audio/audio';
-import { detectMisplay, playerTurnCtx, playEvent4, trickEndCandidates4, VoiceTable4 } from '../audio/voiceTriggers4';
-import type { PlayerTurnCtx, VSeat } from '../audio/voiceTriggers4';
+import { detectMisplay, playerTurnCtx, playEvent4, playReactions4, trickEndCandidates4, VoiceTable4 } from '../audio/voiceTriggers4';
+import type { Candidate, PlayerTurnCtx, VSeat } from '../audio/voiceTriggers4';
 import type { Voice4EventType } from '../data/voiceEvents4';
 import { getLang, t } from '../data/strings';
 import { chooseCard4, chooseFora4, Eval4, thinkTime4 } from '../game/bot4';
@@ -91,6 +91,8 @@ export class GameController4 {
   private turnCtx: PlayerTurnCtx | null = null;
   private trickCtx = { playerUsedDuplo: false };
   private pendingVoice: { seat: VSeat; ev: Voice4EventType } | null = null;
+  private pendingReact: Candidate[] = [];
+  private reactRng: () => number = Math.random;
   private destroyed = false;
   private animating = 0;
   private keyHandler: (e: KeyboardEvent) => void;
@@ -110,6 +112,7 @@ export class GameController4 {
     this.autoRng = rngFor(run.seed, 'auto4', run.ladderIndex, run.attempt);
     this.thinkRng = rngFor(run.seed, 'think4', run.ladderIndex, run.attempt);
     const vrng = rngFor(run.seed, 'voice4', run.ladderIndex, run.attempt);
+    this.reactRng = vrng;
     const sp = (id: CharacterId) => ({ persona: CHARACTERS[id].persona, cussMult: cussMultFor(id) });
     this.voice = new VoiceTable4({
       now: () => performance.now(), rng: vrng,
@@ -203,6 +206,14 @@ export class GameController4 {
 
   private async act(a: Action4): Promise<void> {
     if (a.type === 'play' && a.seat === 'S') this.turnCtx = playerTurnCtx(this.hand, a.uid, this.deck);
+    if (a.type === 'play') {
+      // §22.3 reactions, worked out before the engine applies the card (the trick may resolve in the same step)
+      const s = this.hand;
+      this.pendingReact = playReactions4({
+        seat: a.seat, card: this.card(a.uid), legal: legalPlays4(s, a.seat).map((u) => this.card(u)),
+        before: s.trick.plays.map((p) => ({ seat: p.seat, card: this.card(p.uid) })), rng: this.reactRng,
+      });
+    }
     const r = matchAct4(this.match, a);
     this.match = r.match;
     this.observe(r.events);
@@ -657,7 +668,12 @@ export class GameController4 {
         await anim.seatToTrick(o, e.seat, e.pos - 1, strong);
         if (e.seat !== 'S') this.refreshSeen();
         this.forgeryTip([c]);
-        if (this.pendingVoice && this.pendingVoice.seat === e.seat) { this.voice.speak(this.pendingVoice.seat, this.pendingVoice.ev); this.pendingVoice = null; }
+        // reactions first (most specific, any bot may speak), then the bot's own play line; at most one
+        const cands = this.pendingReact;
+        this.pendingReact = [];
+        if (this.pendingVoice && this.pendingVoice.seat === e.seat) cands.push({ seat: this.pendingVoice.seat, event: this.pendingVoice.ev });
+        this.pendingVoice = null;
+        if (cands.length) this.voice.first(cands);
         break;
       }
       case 'signal': {

@@ -56,19 +56,19 @@ def voice_lines():
             "subtitle": _TAG_RE.sub("", tts).strip(), "gloss": gloss.strip('"'),
             "tag": m.group(1) if m else None,
         })
-    assert len(lines) == 34, f"expected 34 voice lines, parsed {len(lines)}"
+    assert len(lines) == 60, f"expected 60 voice lines (34 + 16 from §22.2 + 4 variants + 6 picks), parsed {len(lines)}"
     return lines
 
 
 def voice_jobs():
-    """(persona, line) pairs: 30 per persona, 90 total."""
+    """(persona, line) pairs: barba 52, gazda 52, mali 54 = 158."""
     jobs = []
     lines = voice_lines()
     for persona in PERSONAS:
         for ln in lines:
             if persona in ln["personas"]:
                 jobs.append((persona, ln))
-    assert len(jobs) == 90, len(jobs)
+    assert len(jobs) == 158, len(jobs)
     return jobs
 
 

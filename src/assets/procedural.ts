@@ -1,7 +1,7 @@
 // Fallback drawings for the §19 items (Prevrtljivo badge, Briškula! art), used only when their
 // image files are missing (e.g. ?noassets=1). The painted versions are in the manifest.
-import { canvas, drawSuitShape, roundRect } from '../render/placeholders';
-import type { Suit } from '../game/types';
+import { canvas, drawSuitShape, FACE, indexNumeral, roundRect } from '../render/placeholders';
+import type { Rank, Suit } from '../game/types';
 
 /** Prevrtljivo badge: circle r 56 #C46FA0, 4 px darker rim, white "⇄" glyph. */
 export function prevrtljivoBadge(size = 128): HTMLCanvasElement {
@@ -62,29 +62,31 @@ function penLine(ctx: CanvasRenderingContext2D, pts: [number, number][]): void {
 }
 
 /**
- * Forgery shown as what it counts as (§19.4.3, play-test round 3): the printed corner number is
- * crossed out in blue pen and the copy's number is written next to it ("6" crossed out, "3"
- * written), in both corners. A forgery keeps its suit, so only the number changes. Call it on the
- * PRINTED face.
+ * Forgery shown as what it counts as (§19.4.3, play-test round 3): the printed corner numeral is
+ * crossed out in blue pen and the copy's numeral is written beside it, to its right ("6" crossed
+ * out, "3" written), in both corners. A forgery keeps its suit, so only the number changes. The
+ * written numeral uses the corner numerals (A → "1"). Everything stays above the ukras badge
+ * (FACE.badge), so a forged card with a badge shows both. Call it on the PRINTED face.
  */
-export function drawPenCorrection(ctx: CanvasRenderingContext2D, copyRank: string): void {
+export function drawPenCorrection(ctx: CanvasRenderingContext2D, copyRank: Rank): void {
   const W = 480, H = 768;
+  const { x: ix, y: iy } = FACE.index;
   const corner = () => {
     ctx.save();
     ctx.strokeStyle = PEN; ctx.lineWidth = 6; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
     ctx.globalAlpha = 0.92;
-    // cross out the printed number (centred at 46,52)
-    penLine(ctx, [[22, 30], [40, 46], [58, 62], [71, 77]]);
-    penLine(ctx, [[70, 27], [54, 44], [37, 62], [23, 78]]);
-    // the copy's number, written beside it
-    ctx.translate(118, 54);
+    // cross out the printed numeral (ink box about 34 x 42 around FACE.index)
+    penLine(ctx, [[ix - 24, iy - 26], [ix - 8, iy - 9], [ix + 8, iy + 8], [ix + 22, iy + 24]]);
+    penLine(ctx, [[ix + 21, iy - 28], [ix + 5, iy - 10], [ix - 10, iy + 8], [ix - 23, iy + 25]]);
+    // the copy's numeral, written to the right of it
+    ctx.translate(ix + 74, iy - 4);
     ctx.rotate((-9 * Math.PI) / 180);
     ctx.fillStyle = PEN;
-    ctx.font = 'italic 800 68px Alegreya, Georgia, serif';
+    ctx.font = 'italic 800 64px Alegreya, Georgia, serif';
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillText(copyRank, 0, 0);
-    // a quick underline flourish
-    penLine(ctx, [[-24, 36], [0, 40], [26, 34]]);
+    ctx.fillText(indexNumeral(copyRank), 0, 0);
+    // a quick underline flourish (ends above the badge's top edge)
+    penLine(ctx, [[-22, 32], [0, 36], [24, 30]]);
     ctx.restore();
   };
   corner();
@@ -97,14 +99,16 @@ export function drawPenCorrection(ctx: CanvasRenderingContext2D, copyRank: strin
 
 /**
  * Forgery held by the side it does NOT work for (a plain card for them): the printed face and a
- * small circled "F" in the same blue pen, so it can be recognised; the tooltip explains it.
+ * small circled "F" in the same blue pen beside the corner numeral (right of it, clear of the
+ * ukras badge below), so it can be recognised; the tooltip explains it.
  */
 export function drawForgeTag(ctx: CanvasRenderingContext2D): void {
+  const cx = FACE.index.x + 66, cy = FACE.index.y;
   ctx.save();
   ctx.strokeStyle = PEN; ctx.fillStyle = PEN; ctx.lineWidth = 4; ctx.globalAlpha = 0.9;
-  ctx.beginPath(); ctx.ellipse(52, 152, 25, 23, -0.2, 0.15, Math.PI * 2 - 0.05); ctx.stroke();
+  ctx.beginPath(); ctx.ellipse(cx, cy, 25, 23, -0.2, 0.15, Math.PI * 2 - 0.05); ctx.stroke();
   ctx.font = 'italic 700 34px Alegreya, Georgia, serif';
   ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  ctx.fillText('F', 52, 154);
+  ctx.fillText('F', cx, cy + 2);
   ctx.restore();
 }

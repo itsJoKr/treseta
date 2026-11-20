@@ -126,7 +126,7 @@ This section is the contract for `src/game/rules.ts` and must be unit-tested (§
    1. *Leader's turn.* The leader may use any number of **distinct** fore that are legal and affordable (§6), one at a time, then **must play one card** (any card; exception: Vrati!, §6.3).
    2. *Follower's turn.* The follower may use fore, then must play a **legal** card (§3.4).
    3. *Resolve* (§3.5). If t = 20, award the ultima.
-   4. *Draw* (only if t ≤ 10). The winner draws the top card of its own mac (Ribarsko may turn this into a choice, §5). The card is **revealed** to both players and added to the hand; run an akuža check for that side. Then the loser does the same.
+   4. *Draw* (only if t ≤ 10). The winner draws the top card of its own mac (Ribarsko may turn this into a choice, §5). The card is **revealed** to both players and added to the hand (no akuža check: see §22). Then the loser does the same.
    5. The trick winner becomes the leader of trick t+1. Clear the trick modifiers (forcedHighest, multiplier).
 6. **Hand scoring** (§3.6), then the match score update and the match-end check (§3.8).
 
@@ -179,7 +179,7 @@ handTotal   = cardPoints + ultimaPoints + bonusPoints
 | `kind:2` | 2s of ≥ 3 different suits | 3 / 4 | "TRI DUJE!" / "ČETIRI DUJE!" |
 | `kind:A` | aces of ≥ 3 different suits | 3 / 4 | "TRI AŠA!" / "ČETIRI AŠA!" |
 
-- **Upgrade:** if `kind:x` was declared at 3 and the side later holds all four, award **+1** (the record for that key becomes 4).
+- **Upgrade:** if `kind:x` was declared at 3 and the side later holds all four, award **+1** (the record for that key becomes 4). Since §22 akuže are checked only at the deal, so this no longer happens in play; the detector keeps the rule.
 - The same card may count in several combinations (e.g. the 3 of kupe in `napolitana:kupe` and `kind:3`).
 - **Glasno:** every newly awarded combination that includes a card with *Glasno* gives +2 extra points. Upgrades (+1) do not re-trigger Glasno.
 - **Divlje:** for detection only, each Divlje card in hand takes exactly **one** identity per evaluation: its real rank, or the 3, 2 or A **of its own suit**. Brute-force all assignments (4^w, where w is the number of Divlje cards in hand) and pick the one that maximises the **new** points awarded now. On ties prefer real > 3 > 2 > A, deciding card by card in hand order. A duplicate identity (e.g. a Divlje 5 of kupe standing in as the A of kupe while the real A of kupe is in hand) adds nothing, because combinations need distinct suits or distinct ranks. Trick strength and points are never affected.
@@ -314,7 +314,7 @@ Implementation notes:
 | Id | Name (HR) | Cost | Rarity | Price | When | Effect (EN), exact | Opis (HR) | Bot may own |
 |---|---|---|---|---|---|---|---|---|
 | `pogled` | Pogled (A peek) | 1 | common | 4 | your turn | Reveal up to 3 random opponent hand cards you don't already know. They stay known (Viđeno strip) until played. Not usable if you know the whole hand. | Vidiš do 3 nasumične karte protivnika. | yes |
-| `zamjena` | Zamjena (Swap) | 1 | common | 4 | your turn, mac ≥ 1 | Choose a card in your hand: it goes to the **bottom** of your mac. Draw the top card of your mac (revealed as usual; akuža check). | Karta iz ruke ide na dno maca, uzimaš gornju. | yes (unused in MVP) |
+| `zamjena` | Zamjena (Swap) | 1 | common | 4 | your turn, mac ≥ 1 | Choose a card in your hand: it goes to the **bottom** of your mac. Draw the top card of your mac (revealed as usual; no akuža check, §22). | Karta iz ruke ide na dno maca, uzimaš gornju. | yes (unused in MVP) |
 | `namjesteno` | Namješteno (Rigged) | 1 | common | 4 | your turn, mac ≥ 1 | Look at the top 3 (or fewer) cards of your mac and put them back in any order. | Pogledaj gornje 3 karte maca i složi ih. | no |
 | `krivi_racun` | Krivi račun (Wrong bill) | 1 | common | 4 | your turn | At the end of this hand, round your card thirds **up** instead of down. | Na kraju ruke bele se zaokružuju prema gore. | yes |
 | `ti_otvaraj` | Ti otvaraj (You lead) | 1 | common | 4 | your turn as **leader** | The opponent must lead this trick instead; you follow. | Protivnik mora otvoriti ovaj štih. | no |
@@ -563,7 +563,7 @@ Columns: **id** (also the file name), **personas** (`all` = barba, gazda, mali),
 | 14 | `evo_ti_ga_na` | all | `[excited] Evo ti ga na!` | "There, take that!" |
 | 15 | `srice_nima` | all | `[sighs] Jebi ga, sriće nima.` | "Damn it, no luck at all." |
 | 16 | `ne_mogu_virovat` | all | `[frustrated] Ma ne mogu virovat!` | "I can't believe it!" |
-| 17 | `ko_je_misaja` | all | `[angry] Ko je ovo mišaja, a?!` | "Who shuffled this, huh?!" |
+| 17 | `ko_je_misaja` | all | `[angry] Ko je ovo miša, a?!` | "Who shuffled this, huh?!" |
 | 18 | `ukra_si_mi` | all | `[shouting] Ukra' si mi to, lopove!` | "You stole that from me, you thief!" |
 | 19 | `same_lisine` | all | `[sighs] Same lišine, same lišine...` | "Nothing but junk cards..." |
 | 20 | `igraj_vise` | all | `[impatient] Ajde, igraj više, zaspa si!` | "Come on, play already, you fell asleep!" |
@@ -587,7 +587,48 @@ Columns: **id** (also the file name), **personas** (`all` = barba, gazda, mali),
 | 33 | `ka_riba` | barba | `[grumbling] Šta čekaš, da riba zagrize?` | "What are you waiting for, a fish to bite?" |
 | 34 | `stari_ja` | barba | `[laughs] Igra' san ja ovo prije nego si se ti rodija!` | "I was playing this before you were born!" |
 
-Each persona folder therefore holds the 28 common lines plus its 2 exclusives = **30 files**.
+**Play-test round 4 lines, common to all personas (§22.2):** 35–44 are the user's lines verbatim (35 is an internal joke the user asked for word for word), 45–50 are short interjections for quick mid-trick reactions.
+
+| # | id | personas | TTS text | gloss |
+|---|---|---|---|---|
+| 35 | `pusi_mrtav` | all | `[furious] Puši kurac pederu, mrtav si za mene!` | "Suck it, you f*g, you're dead to me!" |
+| 36 | `muci` | all | `[angry] Muči!` | "Shut up!" |
+| 37 | `pizda_ti_materina` | all | `[furious] Pizda ti materina!` | "Damn your mother!" |
+| 38 | `jebenti_iruda` | all | `[exasperated] Jebenti Iruda!` | "Damn Herod!" |
+| 39 | `dava_odnija` | all | `[frustrated] A da te đava odnija!` | "May the devil take you!" |
+| 40 | `kruv_i_mast` | all | `[shouting] Jebemti kruv i mast i ko ih sastavi!` | "Damn the bread and the lard and whoever put them together!" |
+| 41 | `jebemti_dan` | all | `[sighs] Jebemti dan!` | "Damn this day!" |
+| 42 | `asti_sto` | all | `[surprised] Asti sto!` | "Well, I'll be!" |
+| 43 | `zna_sam_tricu` | all | `[frustrated] A zna sam da ima tricu... jebenti tricu!` | "I knew he had the three... damn the three!" |
+| 44 | `zna_sam_asa` | all | `[frustrated] A zna sam da ima aša, jebemti aša i ko ga stvori!` | "I knew he had the ace, damn the ace and whoever made it!" |
+| 45 | `argh` | all | `[groans] Argh.` | "Argh." |
+| 46 | `joj` | all | `[sighs] Joj, joj, joj...` | "Oh no, oh no..." |
+| 47 | `oho` | all | `[surprised] Oho!` | "Whoa!" |
+| 48 | `ehe` | all | `[chuckles] Ehe-he!` | "Heh-heh!" |
+| 49 | `ma_daj` | all | `[annoyed] Ma daj!` | "Oh, come on!" |
+| 50 | `pff` | all | `[exhales] Pff.` | "Pff." |
+
+**Variants (§22.4):** other wordings of a line. Event pools name the base line; the director picks one of its wordings at random, not the one the same speaker used last time.
+
+| # | id | personas | TTS text | gloss |
+|---|---|---|---|---|
+| 51 | `zna_sam_asa_2` | all | `[angry] Jebemti aša i ko ga stvori!` | "Damn the ace and whoever made it!" |
+| 52 | `zna_sam_asa_3` | all | `[frustrated] Jebemti aša, zna sam da ga imaš!` | "Damn the ace, I knew you had it!" |
+| 53 | `ko_je_misaja_2` | all | `[furious] Ko je ovo miša, da mu jebem sve!` | "Who shuffled this, damn everything of his!" |
+| 54 | `ko_je_misaja_3` | all | `[shouting] Jebem ti sve i onog ko je miša ove karte!` | "Damn it all and whoever shuffled these cards!" |
+
+**The user's picks (§22.5),** mostly one character each so the voices differ:
+
+| # | id | personas | TTS text | gloss |
+|---|---|---|---|---|
+| 55 | `smrdis_bakalar` | barba | `[mocking] Smrdiš ka bakalar!` | "You stink like salt cod!" |
+| 56 | `kartu_izmisli` | gazda | `[angry] Jebem ti kartu i ko je izmisli!` | "Damn the card and whoever invented it!" |
+| 57 | `idi_u_kurac` | mali | `[angry] Iđi u kurac!` | "Go to hell!" |
+| 58 | `odjebi_tricon` | mali | `[annoyed] Odjebi s tom tricon!` | "Piss off with that three!" |
+| 59 | `jebi_se_karte` | mali | `[furious] Ma jebi se ti i tvoje karte!` | "Screw you and your cards!" |
+| 60 | `kurac_lisine` | all | `[frustrated] Kurac moj, opet lišine!` | "Damn it, junk cards again!" |
+
+Each persona folder therefore holds the 28 common lines plus its 2 exclusives = **30 files**, plus the 16 round-4 lines, the 4 variants and the §22.5 picks: barba 52, gazda 52, mali 54 files (158 in all).
 
 Line metadata (id, subtitle HR, gloss EN, personas, mood) lives in `src/data/voiceLines.ts`. Moods are used for portrait reactions: `angry` → lines 1, 6, 7, 17, 18; `laugh` → 11, 25, 27, 29, 34; `sad` → 5, 15, 19, 32; everything else `neutral`.
 
@@ -678,7 +719,7 @@ The director uses its own RNG stream (`rngFor(runSeed, 'voice', matchIndex)`) so
 
 - Card size **0.80 × 1.28** units (ratio 1.6 = texture 480×768).
 - Mesh: two `PlaneGeometry` quads back to back (front face texture, back texture), material `MeshStandardMaterial({ roughness 0.6, alphaTest 0.5 })`, `castShadow = true`. Rounded corners come from texture alpha (placeholders draw rounded corners too).
-- Front texture = `CanvasTexture` composited at runtime: base face (`cards/<suit>_<rank>.png`) + ukras badge (`ukrasi/<id>.png`) drawn at (338, 118), size 112×112 on the 480×768 canvas + a 6 px inner edge stroke in the ukras colour at 70% alpha. Cache by `suit_rank|ukras`.
+- Front texture = `CanvasTexture` composited at runtime: base face (`cards/<suit>_<rank>.png`) + ukras badge (`ukrasi/<id>.png`) drawn at (22, 92), size 80×80 on the 480×768 canvas (left side, under the corner numeral, so it shows in the hand fan; `FACE.badge` in `placeholders.ts`) + a 6 px inner edge stroke in the ukras colour at 70% alpha. Cache by `suit_rank|ukras`.
 - Glow: a child plane scaled 1.08× behind the card, additive blending, a soft rounded-rect gradient texture (procedural), `opacity` 0 by default. Colours: hover/legal `#FFD27A`, winning card `#FFE9A8`, Pogled reveal `#E0483A`.
 - Back texture: `cards/back_player.png` for player-owned cards, `cards/back_bot.png` for bot-owned cards.
 
@@ -739,7 +780,7 @@ All tweens use **gsap**. All durations are multiplied by the speed setting: Fast
 | A16 | Draw: mac → reveal point | 380 | `power2.out` | Flips face up on the way. sfx `card_slide` at start, `card_flip` at 60%. |
 | A17 | Reveal hold | 600 | – | Both players see the drawn card. A bot reveal also adds it to the Viđeno strip with a 200 ms pop. |
 | A18 | Reveal → hand | 320 | `power2.inOut` | Player: into its new fan slot (A3 runs in parallel). Bot: flips face down and joins the opponent fan. |
-| A19 | Draw choreography | ≈1500 total | – | The winner's draw runs A16 → A17 → A18. The loser's draw starts 250 ms after the winner's A17 begins. An akuža check runs after each A18 and may insert A23. |
+| A19 | Draw choreography | ≈1500 total | – | The winner's draw runs A16 → A17 → A18. The loser's draw starts 250 ms after the winner's A17 begins. No akuža check after a draw (§22). |
 | A20 | Shuffle | 700 | `sine.inOut` | Each deck stack splits into two half-stacks that hop 3 times (+0.15 y) and interleave. sfx `shuffle` once. |
 | A21 | Deal | flight 300 per card, stagger 90 | `power2.out` | From each deck stack to its owner's hand, in packets of 5: player 5, bot 5, player 5, bot 5 (about 2.1 s). sfx `deal` per card (pitch ±5% random, at most 1 per 70 ms). Player cards flip face up on arrival (200 ms). |
 | A22 | Mac form and remainder | 300 | `power2.out` | The next 10 cards slide to the mac position. The unused remainder slides 2 units off the table edge and fades (300 ms). |
@@ -888,11 +929,18 @@ The texts are in Appendix B, shown as a scrollable panel with a mini rank strip 
 
 ### 13.1 Style
 
-Everything shares one look: **painterly antique Triestine/Venetian playing card, warm Adriatic palette**. Use bold dark-brown ink outlines, flat warm colour areas with gouache brush and paper grain, and a slightly humorous character feel. Avoid glossy 3D, neon, gems, sci-fi frames and any likeness to existing games.
+**The playing cards** (40 faces, 2 backs, 4 suit icons) follow the real **Triestine pattern** that Dalmatia plays Trešeta with, so players recognise them at a glance: a white card, a thin black rounded frame line, a plain black serif numeral top-left (and rotated bottom-right), flat red / blue / yellow print colours with black outlines and hatching, double-ended court figures with an Italian name banner, one big emblem on each ace. The art is drawn fresh (no manufacturer's marks, logo, deer, mottos or tax-stamp ring) and has no crosses or other religious symbols.
+
+**Everything else** (badges, fore art, portraits, backgrounds, ui, logo) keeps the **painterly antique Venetian look, warm Adriatic palette**: bold dark-brown ink outlines, flat warm colour areas with gouache brush and paper grain, and a slightly humorous character feel. Avoid glossy 3D, neon, gems, sci-fi frames and any likeness to existing games.
 
 Prepend one of these prefixes to every prompt in §13.2:
 
-- **`STYLE_CARD`** (cards, suits, badges, fore art, icons, logo):
+- **`STYLE_TRIESTINE`** (card faces):
+  > Traditional Italian playing-card art in the Triestine pattern, printed like a 19th-century chromolithograph from a woodcut: crisp black outlines of even weight, fine parallel black hatching lines for shading, and flat unshaded fills in a strictly limited palette of bright vermilion red, cobalt blue, golden yellow and black, with small touches of leaf green and pale flesh pink. Clean graphic print look: no gradients, no paper texture, no painterly brushwork, no 3D rendering. No text, letters, numbers, logo or watermark anywhere. No crosses and no religious symbols.
+
+  Card-face generations that are not cut out end with `WHITE_BG` ("Plain flat pure white background (#FFFFFF) … no card outline, no frame, no border line, no shadow."); every one states its aspect ratio in words (the image tool takes the format from the prompt, not from the size).
+
+- **`STYLE_CARD`** (badges, fore art, icons, logo):
   > Hand-painted gouache and ink illustration in the style of an antique 19th-century Triestine/Venetian Italian playing card, woodcut-coloured print look: bold confident dark-brown ink outlines, flat areas of warm colour with subtle brush texture and aged paper grain, limited palette of terracotta red #B5452B, ochre gold #D9A441, olive green #6B7A3A, Adriatic blue #2F5D7C, cream parchment #F3E6C8 and deep brown ink #3A2618. No religious symbols, no crosses, no halos. Absolutely no text, letters, numbers or watermark.
 - **`STYLE_SCENE`** (portraits, backgrounds, table):
   > Warm painterly illustration with gouache and oil texture, Mediterranean Dalmatian atmosphere, oil-lamp and dusk lighting, palette of terracotta, ochre, olive, Adriatic blue, cream and deep brown, soft edges, cosy and slightly humorous, matching an antique Italian playing-card aesthetic. No religious symbols. Absolutely no text, letters, signs or watermark.
@@ -901,17 +949,24 @@ Prepend one of these prefixes to every prompt in §13.2:
 
 Generation: use the `gen-image` skill (Codex CLI, gpt-image-2). Generate only at **1024×1024, 1024×1536 or 1536×1024**. Transparent assets use the skill's `rembg` cutout step (or native transparency if available). Save raw outputs to `assets_src/gen/<gen_id>.png`. Then resize, crop and composite with Python PIL into `public/assets/...`. If a generation is clearly off-brief (wrong subject, text in the image, a religious symbol), regenerate it, at most 2 retries per id.
 
-### 13.2 Generated images (41 generations)
+### 13.2 Generated images
+
+**Card faces (Triestine, 21 generations).** The pips are generated once as cut-outs and composed in code, so every count is exact; the courts and aces are generated on white and multiplied onto the white card. Full prompts: `tools/art/prompts.py`.
+
+| gen_id | Gen size | Cut-out | Used for | Subject |
+|---|---|---|---|---|
+| `tri_cup` | 1024×1536 | yes | cup pips, `cards/suits/kupe` | one hexagonal goblet: black lid with a red flower, ribbed yellow rim, blue leaf stem with a red knot, yellow and black foot |
+| `tri_coin` | 1024×1024 | yes | coin pips, `cards/suits/dinari` | one rosette in a white ring: blue petals left, yellow right, red centre |
+| `tri_baton` | 1024×1536 | yes | baton pips (recoloured red / blue / yellow in code), `cards/suits/bate` | one long baton: blue dome cap, yellow capital, red ribbed shaft with black diamonds, yellow bulb knob |
+| `tri_hilt` | 1024×1024 | yes | the hilts of the curved swords | yellow melon pommel and two curling blue leaves (red in code for the other blade) |
+| `tri_sword` | 1024×1536 | yes | the straight sword of the 3, 5, 7 of swords, `cards/suits/spade` | slender straight sword, point down, white blade, yellow grip, white scroll guard |
+| `tri_ace_<suit>` (4) | 1024×1536 | no (white) | the aces | cups: a big ornate hexagonal goblet with handles and rays; coins: a big medallion in red, blue and yellow scrollwork; clubs: a hand gripping a huge baton between tulip garlands; swords: a big upright sword with a leaf crown, a ribbon and two griffins |
+| `tri_court_<suit>_<f\|c\|k>` (12) | 1536×1024 | no (white) | the courts (§13.3) | the upper half of a double-ended court figure |
+
+**Everything else:**
 
 | # | gen_id | Gen size | Cut-out | Final output(s) | Prompt (after the prefix) |
 |---|---|---|---|---|---|
-| 1 | `card_frame` | 1024×1536 | no | used by the compositor only | Front face of an antique Italian playing card, completely flat and front-on, the card fills the entire image edge to edge with no table, no perspective, no shadow. Warm cream parchment with faint paper grain, a thin double border inset about 3% from the edges in terracotta red and ochre gold, tiny symmetrical olive-leaf flourishes just inside the four corners, and a large completely empty plain centre covering 85% of the card. No symbols, no figures. |
-| 2 | `suit_kupe` | 1024×1024 | yes | `cards/suits/kupe.png` 256×256 | A single Italian playing-card suit symbol for "coppe" (cups): an ornate golden wine goblet with a wide bowl, a terracotta-red band and a short stem on a round foot, perfectly frontal and upright, centred, filling 80% of the frame. |
-| 3 | `suit_bate` | 1024×1024 | yes | `cards/suits/bate.png` 256×256 | A single Italian playing-card suit symbol for "bastoni" (clubs): a knobbly warm-brown wooden cudgel with small olive-green leaf buds sprouting from the knots, perfectly vertical with the thick end up, centred, filling 85% of the frame height. |
-| 4 | `suit_spade` | 1024×1024 | yes | `cards/suits/spade.png` 256×256 | A single Italian playing-card suit symbol for "spade" (swords): a straight double-edged sword with an Adriatic-blue steel blade, a simple ochre-gold crossguard and a round pommel, perfectly vertical with the point up, centred, filling 85% of the frame height. |
-| 5 | `suit_dinari` | 1024×1024 | yes | `cards/suits/dinari.png` 256×256 | A single Italian playing-card suit symbol for "denari" (coins): one round gold coin with a raised rim and a stylised eight-petal flower in the centre with a small terracotta-red dot, frontal, centred, filling 80% of the frame. |
-| 6–17 | `court_<suit>_<k\|c\|f>` | 1024×1536 | no | used by the compositor | **Court template:** "Court-card figure for an antique Triestine-style Italian playing card: {SPEC}. Shown from the knees up (the knight: horse and rider complete), centred, three-quarter view, against a plain cream parchment background with a faint arched niche; the figure fills about 85% of the image height and the head is not cropped. Costume in 18th-century Venetian-Dalmatian style; crowns and hats carry no cross or religious symbol. Dominant colours: {COLOURS}." The 12 SPEC/COLOURS values are in §13.3. |
-| 18 | `card_back` | 1024×1536 | no | `cards/back_player.png` 480×768 and (derived) `cards/back_bot.png` | The back of a playing card filling the entire image edge to edge, flat and front-on: a perfectly symmetric ornamental pattern in terracotta red, ochre and cream; a central oval medallion containing a small rakija shot glass and a sprig of olive, surrounded by a fine lattice of diamond and wave motifs inspired by Dalmatian stone carving and lace; thin cream border; symmetric vertically and horizontally. |
 | 19 | `ukrasi_sheet_a` | 1536×1024 | yes | 5 badges (§13.4) | Five round wax-seal medallion icons in a single horizontal row, evenly spaced with wide empty gaps, all the same size (each about 230 px across), flat frontal view, each seal a different colour with an embossed symbol, left to right: (1) gold seal with a gilded laurel leaf and a sparkle, (2) silver seal with a small coin, (3) steel-blue seal with a whetstone and a knife blade, (4) chilli-red seal with a hot red pepper, (5) white-cream seal with a small salt cellar and salt crystals. |
 | 20 | `ukrasi_sheet_b` | 1536×1024 | yes | 5 badges (§13.4) | Same layout and style as sheet A; left to right: (1) herb-green seal with a small tipped rakija bottle, (2) violet seal with a wild boar's head in profile, (3) orange seal with a brass horn, (4) midnight-blue seal with a crescent moon over waves, (5) sea-teal seal with a fishing net and a small fish. |
 | 21 | `fora_pogled` | 1024×1536 | no | `fore/pogled.png` 480×768 | Small vignette scene: an old card player's single sly eye peeking over the top edge of a fan of face-down playing cards, warm oil-lamp light, dark tavern background. |
@@ -938,22 +993,15 @@ Generation: use the `gen-image` skill (Codex CLI, gpt-image-2). Generate only at
 
 Logo fallback: if the "Š" (or any letter) is malformed after 2 retries, generate `logo` without the word ("emblem only: two crossed playing cards, an olive branch and a small rakija glass") and render "TREŠETA" onto it with PIL (Georgia Bold, cream fill `#F3E6C8`, 6 px stroke `#3A2618`, above the emblem).
 
-### 13.3 Court figures (SPEC and COLOURS for gens 6–17)
+### 13.3 Court figures (`tri_court_*`)
 
-| gen_id | SPEC | COLOURS |
-|---|---|---|
-| `court_kupe_k` | Kralj kupe, the King of Cups: a jovial red-bearded king in a simple gold crown, raising a large golden goblet as if making a toast | terracotta red and ochre gold |
-| `court_kupe_c` | Konj kupe, the Knight of Cups: a young rider on a sturdy chestnut horse, holding a golden goblet high in one hand | terracotta red and ochre gold |
-| `court_kupe_f` | Fanat kupe, the Knave of Cups: a cheerful young page in a small red Dalmatian cap, carrying a golden goblet carefully in both hands | terracotta red and ochre gold |
-| `court_bate_k` | Kralj bate, the King of Clubs: a stern grey-bearded king resting a big knobbly wooden club on his shoulder | olive green and ochre |
-| `court_bate_c` | Konj bate, the Knight of Clubs: a rider on a dappled grey horse carrying a knobbly wooden club upright | olive green and ochre |
-| `court_bate_f` | Fanat bate, the Knave of Clubs: a cheeky young page with a crooked grin, leaning on a knobbly wooden club | olive green and ochre |
-| `court_spade_k` | Kralj špade, the King of Swords: a proud dark-bearded king holding a straight sword upright in front of him with both hands on the hilt | Adriatic blue and steel grey with ochre trim |
-| `court_spade_c` | Konj špade, the Knight of Swords: a rider on a black horse with a straight sword raised | Adriatic blue and steel grey with ochre trim |
-| `court_spade_f` | Fanat špade, the Knave of Swords: an alert young guard holding a straight sword lowered at his side | Adriatic blue and steel grey with ochre trim |
-| `court_dinari_k` | Kralj dinari, the King of Coins: a plump smiling king holding a big gold coin against his chest | ochre gold and terracotta |
-| `court_dinari_c` | Konj dinari, the Knight of Coins: a rider on a white horse holding a large gold coin like a small shield | ochre gold and terracotta |
-| `court_dinari_f` | Fanat dinari, the Knave of Coins: a young page holding up a gold coin and admiring it with wide eyes | ochre gold and terracotta |
+Template: the **upper half** of a double-ended Triestine court figure, from the top of the head to the waist; the bottom edge of the image cuts across the waist and the robe spreads to both side edges; the figure holds its suit symbol **on the viewer's right** and the **upper-left corner stays empty white** (the corner numeral sits there; in the double-ended card the rotated half puts the symbol bottom-left, clear of the other numeral). Caval = a rider whose horse's head and neck come in from the viewer's left. Flat red, blue and yellow clothes, flesh-pink faces, no crosses on crowns or robes.
+
+| Rank | Kupe (coppe) | Bate (bastoni) | Špade (spade) | Dinari (danari) |
+|---|---|---|---|---|
+| F (Fante, 11) | page in a flat red cap, raising a goblet | page in a blue and red cap, a baton across his chest | bareheaded man with long hair and a moustache, sword upright | page in a red cap, holding up a coin |
+| C (Caval, 12) | rider in a round yellow hat, goblet | rider with a feathered hat, baton upright | rider in a yellow and red hat, short sword raised | rider in a red hat, coin held up |
+| K (Re, 13) | young king, rounded gold crown, goblet | young king, spiked crown, big baton | young king, blue and gold crown, sword upright | bearded king, spiked crown, coin held up |
 
 ### 13.4 Badge sheet cutting
 
@@ -968,26 +1016,24 @@ If a sheet does not yield 5 clean blobs after 2 retries, generate the missing ba
 
 ### 13.5 Card face compositing (PIL), producing the 40 faces
 
-**Canvas:** 480×768 RGBA. The generated 1024×1536 images (ratio 1.5) are centre-cropped to 960×1536 (ratio 1.6) and then resized to 480×768 (Lanczos).
+`tools/art/build.py` (steps `cards`, `backs`, `suits`) composes every face on a **480×768** canvas (4× supersampled for drawn shapes). Text is always drawn in code, never generated.
 
-1. **Base:** the cropped and resized `card_frame`. Apply a rounded-rectangle alpha mask (radius 24 px) and draw a 2 px inner stroke in `#3A2618` at 60% alpha along the rounded edge.
-2. **Corner index blocks** (all 40 cards): the index text uses the Triestine numerals: `A`→"1", `2`→"2", `3`→"3", `4`–`7`→"4"–"7", `F`→"11", `C`→"12", `K`→"13". Font: Georgia Bold (`/System/Library/Fonts/Supplemental/Georgia Bold.ttf`; fallback DejaVu Serif Bold; fallback the PIL default), 52 px, colour `#3A2618`, centred at (46, 52). The suit icon is 40×40, centred at (46, 104). Bottom-right: the same block rotated 180°, so the text is centred at (434, 716) and the icon at (434, 664).
-3. **Number cards** (ranks `2`, `3`, `4`, `5`, `6`, `7`): suit pips at these centres. Pip size is 120 px for the 2 and 3, and 104 px for the 4–7. For **bate** and **spade**, pips in the lower half (y > 384) are rotated 180°; kupe and dinari pips stay upright.
+1. **Card:** white, rounded-rectangle alpha (radius 24) and a faint 2 px edge. **Frame line:** 3 px black, inset 20 px, radius 12.
+2. **Corner numerals** (all 40 cards): the Triestine numerals `A`→"1", `2`–`7`, `F`→"11", `C`→"12", `K`→"13" in Bodoni 72 Bold 60 px, black with a 3 px white outline, ink box centred at (54, 58) (two-digit numerals at (62, 58)); the same rotated 180° bottom-right. No suit mark under the numeral. The printed ace shows "1" like a real Triestine ace; this supersedes §19.7 for the art (`RANK_INDEX.A` stays empty in code).
+3. **Cups and coins:** pips in columns (2: one above the other; 3: cups 1 + 2, coins 3 in a column; 4: 2×2; 5: 2 + 1 + 2; 6: 2×3; 7: cups 3 + 2 + 2, coins 2 + 1 + 2 + 2). Coins alternate with their mirror image (blue left / yellow left).
+4. **Clubs:** batons crossing in an X through the centre (24° from vertical): 1, 2 or 3 parallel batons per direction for the 2–3, 4–5 and 6–7, red and blue alternating, plus a vertical yellow baton on 3, 5, 7. The number sits in a yellow diamond at the crossing.
+5. **Swords:** curved blades drawn in code: each blade is a band (yellow with black diamonds along the side, red or blue near the crossings, white separators, a red and blue end stripe at the tip) that leaves a generated hilt at the top right, sweeps round the left and ends at the bottom right; the same blade turned 180° completes the oval. 1, 2 or 3 nested ovals for the 2–3, 4–5, 6–7. Even numbers: the number in a yellow diamond at both crossings (the lower one upside down). Odd numbers: the straight sword runs down the middle with its guard over the top crossing, and the number diamond sits at the bottom crossing.
+6. **Aces:** the generated emblem, levelled to pure white and multiplied onto the card, fitted into 404×642 centred at (240, 398); the clubs ace is set against the right frame line so the cuff runs into it.
+7. **Courts:** the half figure is fitted to the top half of the art area (434×339 above the banner, keeping the head and the held symbol), multiplied onto the card, and the same half turned 180° fills the bottom half. A white banner (y 362–406, black rules) carries the Italian name in black Times capitals: `FANTE / CAVAL / RE` + `DI COPPE / BASTONI / SPADE / DANARI`.
+8. Save as `public/assets/cards/<suit>_<rank>.png`; `tools/optimize_assets.py` turns them into the shipped WebP.
 
-| Rank | Pip centres (x, y) |
-|---|---|
-| 2 | (240, 250), (240, 518) |
-| 3 | (240, 200), (240, 384), (240, 568) |
-| 4 | (160, 250), (320, 250), (160, 518), (320, 518) |
-| 5 | the 4 layout + (240, 384) |
-| 6 | (160, 200), (320, 200), (160, 384), (320, 384), (160, 568), (320, 568) |
-| 7 | the 6 layout + (240, 292) |
+**Runtime overlays** (`src/render/cardMesh.ts`, `src/assets/procedural.ts`, positions in `FACE`, `src/render/placeholders.ts`): the ukras badge is drawn **80×80 at (22, 92)**, under the corner numeral on the left, so it stays visible in the hand fan (the next card covers the right ~45%); a Vi mark adds a ring round it and a "VI" tab below it. A forged copy gets the printed numeral crossed out in blue pen and the copy's numeral (A → "1") written to its right, in both corners; a forgery seen as a plain card gets a circled "F" right of the numeral. None of these touch each other, so a card can carry a badge and a forgery mark at once.
 
-4. **Aces:** one 280×280 suit icon centred at (240, 384), surrounded by a PIL-drawn ornament: a circle of radius 170 (6 px stroke `#D9A441`), an inner circle of radius 160 (3 px stroke `#B5452B`), and 8 dots of radius 6 (`#B5452B`) at radius 188, every 45° starting at 22.5°.
-5. **Courts (K, C, F):** the court art is cover-fitted into the panel rectangle (70, 128)–(410, 688) (340×560): scale to the panel height, then centre-crop the width. Mask the panel with an arched top (a semicircle of radius 170 centred at (240, 298), joined to the rectangle below) and draw a 4 px `#3A2618` border around the arch shape. Add a small 48×48 suit icon centred at (240, 724).
-6. Save as `public/assets/cards/<suit>_<rank>.png` (PNG, RGBA).
+**Card backs:** drawn in code, no generation: a fine diamond lattice (two-tone diamonds, white lines and dots) inside a white border with a thin coloured frame line; `back_player.png` in red, `back_bot.png` the same pattern in blue-teal.
 
-**Card back derivation:** `back_player.png` = the cropped and resized `card_back` with the same rounded mask and stroke. `back_bot.png` = `back_player.png` with its hue rotated +150° and saturation ×0.85 (it reads as teal-green).
+**Suit icons** (256×256, transparent): the pips themselves: the cup, the coin, the baton and the straight sword (point up), the last two leaning 38°.
+
+**Fallback faces** (`?noassets=1`, `cardFacePlaceholder` / `cardBackPlaceholder`): the same layout drawn procedurally: white card, black frame line, corner numerals, simple drawn cups, batons, swords and coins (columns, or an X for clubs and swords), a white name banner on courts, and the red / blue-teal lattice back.
 
 **Rakija empty derivation:** `rakija_empty.png` = `rakija_full.png` with saturation ×0.15 and alpha ×0.45.
 
@@ -1008,7 +1054,7 @@ If a sheet does not yield 5 clean blobs after 2 retries, generate the missing ba
 | Environment (4) | `env/table_wood.jpg`, `env/bg_konoba.jpg`, `env/bg_map.jpg`, `env/bg_shop.jpg` |
 | UI (4) | `ui/coin.png`, `ui/rakija_full.png`, `ui/rakija_empty.png`, `ui/logo.png` |
 
-Total: 78 final files from 41 generations. The asset agent should also save a QA contact sheet of all 40 faces plus the backs to `assets_src/preview/cards_contact_sheet.png` (not loaded by the game).
+Total: 78 final files (shipped as WebP by `tools/optimize_assets.py`). The 46 card files come from the 21 `tri_*` generations of §13.2 plus code (backs, sword ovals, text). The art build also writes a QA contact sheet of all 40 faces, both backs, the suit icons, a deck-grid-size row and a fanned hand with badges to `assets_src/contact_cards.png` and `assets_src/preview/cards_contact_sheet.png` (not loaded by the game).
 
 ---
 
@@ -1401,7 +1447,7 @@ Loading: images load in parallel with a progress bar on the menu. Each failure r
 |---|---|
 | `rules.test.ts` | rank order; leader wins ties; off-suit never wins; follow-suit legality; forcedHighest (Ljuto, Tučem!); 20 tricks and 10 draws per side; winner draws first; drawn cards added to `knownByOpp`; void tracking set and cleared; Vrati! re-lead excludes the returned card; Ti otvaraj swaps the leader; Napij ga forces a random legal play; a deterministic deal for a fixed seed |
 | `scoring.test.ts` | floor of thirds per side (e.g. 7 thirds → 2); ultima +1; Ponoćno ultima +3; Krivi račun ceil; Pozlaćeno +1 only for the owner who won; Usoljeno redirect; Duplo ×2 (bonuses not doubled); with two standard decks and no ukrasi, the hand totals equal floor(a/3) + floor(b/3) + 1 |
-| `akuze.test.ts` | napolitana; three and four of a kind; upgrade 3 → 4 gives +1; no double scoring; check after a draw; Glasno +2; Divlje best assignment; reveal uids |
+| `akuze.test.ts` | napolitana; three and four of a kind; upgrade 3 → 4 gives +1 (detector only); no double scoring; no akuža after a draw (§22); Glasno +2; Divlje best assignment; reveal uids |
 | `fore.test.ts` | each of the 10 fore: preconditions (reason keys), cost, once per hand, effect |
 | `ukrasi.test.ts` | each of the 10 ukrasi in a minimal scenario |
 | `bot.test.ts` | the bot only returns legal moves across 500 random seeded hands per opponent; BotView leaks no unknown player uids; follows the §8.4 rules in hand-built positions (takes a led A when it can; dumps a lišina when it can't win; keeps a master for the ultima with 2 cards left) |
@@ -2308,7 +2354,7 @@ Fore keep §6.3 with these changes:
 | `pogled` | Unchanged, and now the only way to see the bot's hand. |
 | `briskula`, Prevrtljivo, Falsa karta | As §19.2.3. |
 
-Akuže are still announced (at the deal and after each draw) and reveal **only the declared cards**.
+Akuže are still announced (at the deal only, §22) and reveal **only the declared cards**.
 
 #### 19.3.4 Scene and animation (Dvoboj; replaces the §10.5 mac/reveal rows and A16–A19, A22)
 
@@ -2321,7 +2367,7 @@ Akuže are still announced (at the deal and after each draw) and reveal **only t
 | Deal (A21) | from the dealer stack in packets of 5 as §19.3.1; flight 280 ms, stagger 60 ms, 250 ms between packets; then the remaining 20 slide to the mac (300 ms) |
 | Draw: player | mac → the player's fan slot, 420 ms `power2.inOut`. It flips face up during the last 40% (only the player sees it). No reveal hold. sfx `card_slide` |
 | Draw: bot | mac → the bot fan, **face down**, 380 ms `power2.inOut`. sfx `card_slide` |
-| Draw choreography | the winner's draw starts; the loser's starts 200 ms later (≈ 620 ms in total); then the akuža check (A23 if any) |
+| Draw choreography | the winner's draw starts; the loser's starts 200 ms later (≈ 620 ms in total); no akuža check (§22) |
 | Reveal points | unused |
 
 ### 19.4 Forgeries, identity and duplicates
@@ -2501,3 +2547,50 @@ Overrides the signal table in §18 (and any later references to Volo).
 - **Scale.** On phones `--ui-scale` = clamp(height / 700, 0.42, 0.7), so the layout has ~700 units of height. `html.phone` CSS (end of `styles.css`) scales and moves groups: home screen logo left and buttons right, compact scoreboard, side portraits lower, power-ups in a 2-column dock without empty slots, signal buttons above the šoldi, smaller shop offers and bottom bar, a smaller result screen and deck grid. Edge items add `env(safe-area-inset-*)`.
 - **Hand.** The hand group moves 2 units toward the camera and 0.5 up, so whole cards and their corners show.
 - **Touch.** Tap a hand card to raise it (and show its tooltip); tap it again to play; tap beside the hand to lower it; dragging still works. Press and hold a face-up table card to see it enlarged. The tracker button drops its "(T)" shortcut hint.
+
+## §22 Play-test round 4: akuža timing and the voice overhaul
+
+### 22.1 Akuže only at the deal
+
+Akuže are checked once, when the cards are dealt, before the first trick (Partneri already worked this way: each seat's check runs at its first turn of trick 1). In Dvoboj the check after every draw from the mac (and after Zamjena or Ribarsko) is gone: a combination completed by a later draw does not count. The `kind:x` upgrade (+1 when the fourth card arrives) stays in the detector but can no longer happen in play. `HOWTO` (rule 8) says so.
+
+### 22.2 New lines
+
+16 lines for every persona (rows 35–50 of §9.3): the user's curses, two "I knew it" lines for programmed moments, and six short interjections (`argh`, `joj`, `oho`, `ehe`, `ma_daj`, `pff`; `VoiceLine.short`). Line 35 keeps the user's exact wording (an internal joke). They also join existing pools: `bot_forced_bad` (+jebenti_iruda, joj, argh), `player_great` (+muci, asti_sto, dava_odnija), `bot_lose_big` (+pizda_ti_materina, kruv_i_mast, dava_odnija, jebemti_dan), `bot_win_big`/`bot_win_trick` (+ehe), `bot_lose_trick` (+ma_daj, pff, joj; p 0.15), `bot_bad_draw` (+jebemti_dan, joj), `player_fora` (+asti_sto, muci), `akuza_player` (+asti_sto, jebemti_dan), `ultima_player` (+dava_odnija, pizda_ti_materina), `big_swing` and `match_bot_lose` (+kruv_i_mast, pusi_mrtav), `hand_end_bot_lose` (+jebemti_dan, pff), `player_illegal` (+ma_daj), `partner_misplay` (+pusi_mrtav, ma_daj), `partner_argument` (+muci), `partner_lose_big` (+jebemti_dan, joj), `partner_match_lose` (+jebemti_dan).
+
+### 22.3 Mid-trick reactions
+
+Before, lines came almost only at the end of a trick: a bot's own play line had to wait out the 2.5–3.5 s gap after the previous trick's line. Now every played card is classified the moment it lands, and **any bot may react, not only the one that played** (`playReactions` in `voiceTriggers.ts`, `playReactions4` in `voiceTriggers4.ts`; worked out in the controllers' `act()` from the state before the card is applied). Candidates are tried in order and at most one is said; the bot's own play line (`bot_play_strong` / `bot_forced_bad`) comes after them.
+
+| Event | Who speaks | When (rank strength only) | p | cooldown | prio | gap | lines |
+|---|---|---|---|---|---|---|---|
+| `ace_snatched` | the bot that played | it had to play its ace (only aces were legal) and the other side's 3 or 2 is winning the trick | 0.9 | 8 s | 2 | 1.2 s | pizda_ti_materina, jebenti_iruda, dava_odnija, kruv_i_mast, jebemti_dan, argh, ukra_si_mi |
+| `gloat` | the opponent whose 3/2 is winning | the player had to give up an ace that way | 0.6 | 10 s | 1 | 1.5 s | ehe, lipo_daj_ovamo, ka_bombone, sta_si_mislija |
+| `knew_trica` | the bot whose A or 2 was winning | the other side's 3 takes over | 0.85 | 45 s | 2 | 1.2 s | zna_sam_tricu |
+| `knew_ace` | the bot whose K, C or F was winning | the other side's ace takes over | 0.85 | 45 s | 2 | 1.2 s | zna_sam_asa |
+| `partner_react` | N | the player takes over from Vi with a 3, or captures Vi's A or 2 | 0.45 | 8 s | 1 | 1.2 s | oho, ehe, asti_sto |
+| `react_short` | a bot on the side that lost the lead (N for the player) | a 3 is led, or a 3 takes the trick over | 0.35 | 7 s | 1 | 1.2 s | oho, ma_daj, argh, pff, asti_sto |
+
+Dvoboj uses the same events with the single bot as speaker. `VoiceEventCfg.gapMs` lets an event speak after a shorter silence than the global gap (director and `VoiceArbiter.allows`); `bot_forced_bad` uses 1.2 s too. The per-hand caps rise: Dvoboj 8 → 10, Partneri 9 → 12 in total and 4 → 5 per speaker.
+
+### 22.4 Line variants
+
+A line can have several wordings (rows 51–54 of §9.3, `VoiceLine.group`). Event pools name the base line (the group). The director picks one of the group's wordings for that persona at random, never the one the same speaker used last time (`variantsOf`). The no-repeat window works on groups. `ko_je_misaja` is now "Ko je ovo miša, a?!" with two variants; `zna_sam_asa` has two.
+
+### 22.5 The user's picks and the audio treatment
+
+Rows 55–60: `smrdis_bakalar` (barba), `kartu_izmisli` (gazda), `idi_u_kurac`, `odjebi_tricon`, `jebi_se_karte` (mali), `kurac_lisine` (all). They join these pools:
+
+- `bot_win_big` and `gloat`: smrdis_bakalar
+- `bot_lose_big` and `ace_snatched`: kartu_izmisli
+- `player_great`: idi_u_kurac, jebi_se_karte
+- `bot_lose_big`: idi_u_kurac
+- `big_swing`: jebi_se_karte
+- `knew_trica` and `react_short`: odjebi_tricon
+- `bot_forced_bad`, `bot_bad_draw` and `hand_end_bot_lose`: kurac_lisine
+
+Audio (`tools/audio/generate_audio.py`):
+
+- **Tempo.** Lines from row 35 on, their variants and the re-worded `ko_je_misaja` are played 12% faster (ffmpeg `atempo` 1.12, pitch kept). eleven_v4 ignores `voice_settings.speed`.
+- **Interjections** (rows 45–50) stay at normal speed, normalised to −19 LUFS instead of −16.
+- **Grunts.** The model says them as a groan plus the word, so `argh` and `pff` keep only their loudest burst (about 0.6–0.8 s).

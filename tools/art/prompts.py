@@ -1,8 +1,10 @@
-"""Prompt table for the 41 generations of GAME_DESIGN.md section 13.2 / 13.3.
+"""Prompt table for the generations of GAME_DESIGN.md section 13.2 / 13.3.
 
 Each entry: gen_id -> (width, height, cutout, prompt_without_prefix, prefix_kind)
-prefix_kind is 'card' (STYLE_CARD) or 'scene' (STYLE_SCENE). Cut-out prompts get
-the CUTOUT suffix appended.
+prefix_kind is 'tri' (STYLE_TRIESTINE: the playing cards themselves), 'card'
+(STYLE_CARD: badges, fore art, ui icons, logo) or 'scene' (STYLE_SCENE).
+Cut-out prompts get the CUTOUT suffix appended; 'tri' gens that are not cut out
+are drawn on plain white (WHITE_BG) and multiplied onto the white card.
 """
 
 STYLE_CARD = (
@@ -13,6 +15,21 @@ STYLE_CARD = (
     "#6B7A3A, Adriatic blue #2F5D7C, cream parchment #F3E6C8 and deep brown ink #3A2618. "
     "No religious symbols, no crosses, no halos. Absolutely no text, letters, numbers or watermark."
 )
+
+# The card faces follow the real Triestine pattern played in Dalmatia (section 13.1):
+# flat litho print colours on white, black outlines, no painterly texture.
+STYLE_TRIESTINE = (
+    "Traditional Italian playing-card art in the Triestine pattern, printed like a 19th-century "
+    "chromolithograph from a woodcut: crisp black outlines of even weight, fine parallel black "
+    "hatching lines for shading, and flat unshaded fills in a strictly limited palette of bright "
+    "vermilion red, cobalt blue, golden yellow and black, with small touches of leaf green and pale "
+    "flesh pink. Clean graphic print look: no gradients, no paper texture, no painterly brushwork, "
+    "no 3D rendering. No text, letters, numbers, logo or watermark anywhere. No crosses and no "
+    "religious symbols."
+)
+
+WHITE_BG = ("Plain flat pure white background (#FFFFFF) with nothing else on it: no card outline, "
+            "no frame, no border line, no shadow.")
 
 STYLE_SCENE = (
     "Warm painterly illustration with gouache and oil texture, Mediterranean Dalmatian "
@@ -28,48 +45,58 @@ CUTOUT = (
 )
 
 COURT_TEMPLATE = (
-    "Court-card figure for an antique Triestine-style Italian playing card: {SPEC}. Shown from "
-    "the knees up (the knight: horse and rider complete), centred, three-quarter view, against "
-    "a plain cream parchment background with a faint arched niche; the figure fills about 85% "
-    "of the image height and the head is not cropped. Costume in 18th-century Venetian-Dalmatian "
-    "style; crowns and hats carry no cross or religious symbol. Dominant colours: {COLOURS}."
+    "The upper half of a double-ended court card of the Triestine Italian playing-card pattern. "
+    "{SPEC} The figure is seen from the front, from the top of the head down to the waist, and the "
+    "bottom edge of the image cuts straight across the figure at the waist; the wide robe and "
+    "sleeves spread out and touch both side edges of the image along the bottom. The head is in "
+    "the upper middle with a little white space above the headgear. The upper-left corner of the "
+    "image stays empty white. Flat vermilion red, cobalt blue and golden yellow clothes with black "
+    "outlines and hatching, pale flesh-pink face and hands, a little green."
 )
 
+# Each figure holds its suit symbol on the viewer's right: the corner index sits top-left,
+# and in the double-ended card the rotated half puts the symbol bottom-left.
 COURTS = {
-    "court_kupe_k": ("Kralj kupe, the King of Cups: a jovial red-bearded king in a simple gold crown, raising a large golden goblet as if making a toast", "terracotta red and ochre gold"),
-    "court_kupe_c": ("Konj kupe, the Knight of Cups: a young rider on a sturdy chestnut horse, holding a golden goblet high in one hand", "terracotta red and ochre gold"),
-    "court_kupe_f": ("Fanat kupe, the Knave of Cups: a cheerful young page in a small red Dalmatian cap, carrying a golden goblet carefully in both hands", "terracotta red and ochre gold"),
-    "court_bate_k": ("Kralj bate, the King of Clubs: a stern grey-bearded king resting a big knobbly wooden club on his shoulder", "olive green and ochre"),
-    "court_bate_c": ("Konj bate, the Knight of Clubs: a rider on a dappled grey horse carrying a knobbly wooden club upright", "olive green and ochre"),
-    "court_bate_f": ("Fanat bate, the Knave of Clubs: a cheeky young page with a crooked grin, leaning on a knobbly wooden club", "olive green and ochre"),
-    "court_spade_k": ("Kralj špade, the King of Swords: a proud dark-bearded king holding a straight sword upright in front of him with both hands on the hilt", "Adriatic blue and steel grey with ochre trim"),
-    "court_spade_c": ("Konj špade, the Knight of Swords: a rider on a black horse with a straight sword raised", "Adriatic blue and steel grey with ochre trim"),
-    "court_spade_f": ("Fanat špade, the Knave of Swords: an alert young guard holding a straight sword lowered at his side", "Adriatic blue and steel grey with ochre trim"),
-    "court_dinari_k": ("Kralj dinari, the King of Coins: a plump smiling king holding a big gold coin against his chest", "ochre gold and terracotta"),
-    "court_dinari_c": ("Konj dinari, the Knight of Coins: a rider on a white horse holding a large gold coin like a small shield", "ochre gold and terracotta"),
-    "court_dinari_f": ("Fanat dinari, the Knave of Coins: a young page holding up a gold coin and admiring it with wide eyes", "ochre gold and terracotta"),
+    "tri_court_kupe_f": "The knave of cups: a young page with straight brown hair to his shoulders and a flat red cap with a blue band, a red tunic with a yellow and blue front panel, holding one ornate hexagonal goblet (red, blue and yellow, like the cup pips of the deck) raised in his hand at shoulder height on the viewer's right.",
+    "tri_court_kupe_c": "The knight of cups: a young rider with brown hair and a round yellow hat with a black ring pattern, a red tunic with yellow trim, sitting on a brown horse of which only the head and neck show, coming in from the viewer's left at chest height below the upper-left corner; the rider holds one tall ornate hexagonal goblet (red, blue and yellow) upright at shoulder height on the viewer's right.",
+    "tri_court_kupe_k": "The king of cups: a young beardless king with brown hair and a simple golden crown with rounded points, a blue tunic with a red centre stripe and a wide yellow and red mantle, holding one ornate hexagonal goblet (red, blue and yellow) raised at shoulder height on the viewer's right.",
+    "tri_court_bate_f": "The knave of clubs: a young page with brown hair and a flat blue and red cap, a yellow tunic with red and blue geometric patterns and a zigzag collar, holding one long ornate baton (red ribbed shaft, blue dome cap, yellow capital and yellow knob, like the club pips of the deck) diagonally across his chest with its cap end up on the viewer's right.",
+    "tri_court_bate_c": "The knight of clubs: a young rider with brown hair and a blue and red hat with a small feather, a yellow and red tunic, sitting on a brown horse of which only the head and neck show, coming in from the viewer's left at chest height below the upper-left corner; the rider holds one long ornate baton (red shaft, blue cap, yellow knob) upright on the viewer's right.",
+    "tri_court_bate_k": "The king of clubs: a young king with brown hair and a tall golden crown with pointed spikes, a red, yellow and blue robe with zigzag and diamond patterns, holding one big ornate baton (red shaft, blue cap, yellow knob) upright in both hands on the viewer's right.",
+    "tri_court_spade_f": "The knave of swords: a bareheaded man with long dark hair and a curled moustache, a red and yellow tunic with a blue collar, holding one straight sword with a white blade, black outline and yellow hilt upright on the viewer's right, point up.",
+    "tri_court_spade_c": "The knight of swords: a young rider with dark hair and a yellow and red hat, a red tunic with yellow and blue bands, sitting on a dark brown horse of which only the head and neck show, coming in from the viewer's left at chest height below the upper-left corner; the rider raises one short straight sword with a white blade and a yellow hilt on the viewer's right.",
+    "tri_court_spade_k": "The king of swords: a young king with dark hair and a blue and golden crown with rounded points, a red and yellow robe with simple geometric diamond patterns, holding one straight sword with a white blade and yellow hilt upright on the viewer's right, point up.",
+    "tri_court_dinari_f": "The knave of coins: a young page with brown hair and a flat red cap with a blue band, a tunic striped in red, blue and yellow, holding up one round coin (a flat rosette of blue and yellow petals with a red centre in a white ring, like the coin pips of the deck) at head height on the viewer's right.",
+    "tri_court_dinari_c": "The knight of coins: a young rider with brown hair and a red hat with a blue band, a yellow and red tunic, sitting on a brown horse of which only the head and neck show, coming in from the viewer's left at chest height below the upper-left corner; the rider holds up one round coin (blue and yellow petals, red centre, white ring) at head height on the viewer's right.",
+    "tri_court_dinari_k": "The king of coins: a king with a short dark beard and a golden crown with pointed spikes, a red robe with a blue and yellow collar and yellow sleeves, holding up one round coin (blue and yellow petals, red centre, white ring) at head height on the viewer's right.",
 }
 
-ACE_OPEN = ("The single central emblem of the ace of {SUIT} of an antique Triestine Italian playing card, "
-            "painted as a stand-alone ornament (no card, no frame, no background scenery): ")
-ACE_CLOSE = ("Everything forms one connected, mirror-symmetric ornament, perfectly frontal and upright, centred, "
-             "filling about 85% of the image height. No text, no numbers, no letters, no crown.")
+ACE_OPEN = "The single large emblem of the ace of {SUIT} of the Triestine Italian playing-card pattern, drawn on its own (no card, no frame): "
+ACE_CLOSE = ("The emblem is perfectly frontal and upright, centred, and fills about 88% of the image height. "
+             "No text, no letters, no numbers, no banner with writing.")
 
 SAME_FRAMING = "Character portrait, chest up, facing the viewer, background a softly blurred stone konoba wall: "
 
 GENS = {
-    "card_frame": (1024, 1536, False, "card",
-        "Front face of an antique Italian playing card, completely flat and front-on, the card fills the entire image edge to edge with no table, no perspective, no shadow. Warm cream parchment with faint paper grain, a thin double border inset about 3% from the edges in terracotta red and ochre gold, tiny symmetrical olive-leaf flourishes just inside the four corners, and a large completely empty plain centre covering 85% of the card. No symbols, no figures."),
-    "suit_kupe": (1024, 1024, True, "card",
-        "A single Italian playing-card suit symbol for \"coppe\" (cups): an ornate golden wine goblet with a wide bowl, a terracotta-red band and a short stem on a round foot, perfectly frontal and upright, centred, filling 80% of the frame."),
-    "suit_bate": (1024, 1024, True, "card",
-        "A single Italian playing-card suit symbol for \"bastoni\" (clubs): a knobbly warm-brown wooden cudgel with small olive-green leaf buds sprouting from the knots, perfectly vertical with the thick end up, centred, filling 85% of the frame height."),
-    "suit_spade": (1024, 1024, True, "card",
-        "A single Italian playing-card suit symbol for \"spade\" (swords): a straight double-edged sword with an Adriatic-blue steel blade, a simple ochre-gold crossguard and a round pommel, perfectly vertical with the point up, centred, filling 85% of the frame height."),
-    "suit_dinari": (1024, 1024, True, "card",
-        "A single Italian playing-card suit symbol for \"denari\" (coins): one round gold coin with a raised rim and a stylised eight-petal flower in the centre with a small terracotta-red dot, frontal, centred, filling 80% of the frame."),
-    "card_back": (1024, 1536, False, "card",
-        "The back of a playing card filling the entire image edge to edge, flat and front-on: a perfectly symmetric ornamental pattern in terracotta red, ochre and cream; a central oval medallion containing a small rakija shot glass and a sprig of olive, surrounded by a fine lattice of diamond and wave motifs inspired by Dalmatian stone carving and lace; thin cream border; symmetric vertically and horizontally."),
+    # ---- Triestine card faces (section 13.2): pips as cut-outs, composed in code ----
+    "tri_cup": (1024, 1536, True, "tri",
+        "One single cup pip of the coppe suit of a Triestine Italian playing card: a stylised hexagonal goblet seen from the front, perfectly upright and mirror-symmetric. From top to bottom: a flat black hexagonal lid seen slightly from above with a small red eight-petal flower on it; a golden-yellow hexagonal rim band with short vertical black ribs and a row of small yellow leaves under it; a cobalt-blue stem of curling acanthus leaves that curl outward at the top and at the bottom, with a red lens-shaped knot and small white leaves in the middle; and a hexagonal foot made of a golden-yellow ribbed band with red leaf tips above a black base. The goblet is about two thirds as wide as it is tall and fills 85% of the image height."),
+    "tri_coin": (1024, 1024, True, "tri",
+        "One single coin pip of the denari suit of a Triestine Italian playing card: a flat round medallion seen straight from the front: a black outer circle line, a plain white ring, a second black circle line, and inside it a rosette of twelve rounded petals around a small red centre disc with a black ring and a black dot. The petals on the left half are cobalt blue and the petals on the right half are golden yellow, each petal with a few fine black hatching lines; the dividing line between blue and yellow is vertical. Perfectly circular and frontal, filling 85% of the image."),
+    "tri_baton": (1024, 1536, True, "tri",
+        "One single club pip of the bastoni suit of a Triestine Italian playing card: one long straight ornamental baton standing perfectly vertical in the middle. From top to bottom: a small yellow ball finial; a cobalt-blue ribbed dome cap; a golden-yellow capital collar with two small scroll volutes; a long straight cylindrical vermilion-red shaft with fine black lengthwise hatching lines and three small black diamond marks spaced along its centre line; a short black and blue collar; and at the bottom a round golden-yellow ribbed bulb knob ending in a small blue ball. The baton is about one seventh as wide as it is tall and fills 92% of the image height."),
+    "tri_hilt": (1024, 1024, True, "tri",
+        "The hilt end of one curved sword from the spade suit of a Triestine Italian playing card, drawn on its own and pointing straight up: at the top a round golden-yellow ribbed bulb pommel shaped like a small melon, with a little red ball at its tip; below it two cobalt-blue curling acanthus leaves that spread out to the left and right like a bow, their tips curling downward; at the bottom a short straight stub of yellow blade, cut off square. Mirror-symmetric, filling 85% of the image height."),
+    "tri_sword": (1024, 1536, True, "tri",
+        "One single straight sword from the spade suit of a Triestine Italian playing card, standing perfectly vertical with the point DOWN: at the top a small red ribbed pommel ball, a golden-yellow grip with a black spiral line, a white guard whose two short arms curl downward into acanthus scrolls, then a long narrow straight white steel blade with a black outline and a black centre ridge line, tapering to a sharp point at the bottom. The sword is very slender, about one eighth as wide as it is tall at the guard, and fills 92% of the image height."),
+    "tri_ace_kupe": (1024, 1536, False, "tri", ACE_OPEN.format(SUIT="cups (asso di coppe)") +
+        "one big ornate hexagonal goblet in red, blue and golden yellow, a larger and richer version of the cup pips: a domed hexagonal lid with a red flower finial, a wide yellow ribbed rim band with red leaves, a bowl decorated with blue acanthus scrolls, a red lens-shaped knot, a tall stem of curling blue leaves and a wide hexagonal yellow and black foot; two red and blue scroll handles curl out on both sides of the bowl, and small rays of red, blue and yellow fan out behind the lid. Mirror-symmetric. " + ACE_CLOSE),
+    "tri_ace_dinari": (1024, 1536, False, "tri", ACE_OPEN.format(SUIT="coins (asso di denari)") +
+        "one big round medallion in the middle: a broad golden-yellow ring with black outlines and a row of small black dots, around a large rosette of cobalt-blue and golden-yellow petals with a red centre, like a big version of the coin pips. Above and below the medallion, symmetrical scrollwork of red, blue and yellow acanthus leaves curls outward toward the four corners. Mirror-symmetric. " + ACE_CLOSE),
+    "tri_ace_bate": (1024, 1536, False, "tri", ACE_OPEN.format(SUIT="clubs (asso di bastoni)") +
+        "one huge ornate baton standing vertically in the middle, gripped firmly by a large hand in a red and yellow striped cuff that comes in from the right side at the lower middle; the baton has a cobalt-blue dome cap with a yellow ball finial, a golden-yellow capital with scroll volutes, a long red shaft with black hatching and black diamond marks, and a yellow ribbed bulb knob at the bottom; on both sides of the baton hang two garlands of small red and blue tulip-like flowers on thin yellow cords, each ending in a small yellow tassel. " + ACE_CLOSE),
+    "tri_ace_spade": (1024, 1536, False, "tri", ACE_OPEN.format(SUIT="swords (asso di spade)") +
+        "one big straight sword standing perfectly vertical in the middle with the point UP: a long white steel blade with a black outline and a black centre ridge, a golden-yellow crown of simple rounded leaves ringed around the upper part of the blade, a yellow and red hilt at the bottom whose guard curls downward into scrolls, and a red and blue ribbon curling around the lower blade; two small red and yellow griffins stand on either side of the hilt facing the sword and holding it with one claw. Mirror-symmetric. No cross shapes. " + ACE_CLOSE),
     "ukrasi_sheet_a": (1536, 1024, True, "card",
         "Five round wax-seal medallion icons in a single horizontal row, evenly spaced with wide empty gaps, all the same size (each about 230 px across), flat frontal view, each seal a different colour with an embossed symbol, left to right: (1) gold seal with a gilded laurel leaf and a sparkle, (2) silver seal with a small coin, (3) steel-blue seal with a whetstone and a knife blade, (4) chilli-red seal with a hot red pepper, (5) white-cream seal with a small salt cellar and salt crystals."),
     "ukrasi_sheet_b": (1536, 1024, True, "card",
@@ -102,17 +129,6 @@ GENS = {
         SAME_FRAMING + "Barba Luka, a 72-year-old Dalmatian fisherman, weathered sunburnt face with deep wrinkles and white stubble, navy knitted fisherman's cap, thick cream wool sweater, squinting suspiciously over his cards, a coil of fishing net behind him."),
     "portrait_bepo": (1024, 1024, False, "scene",
         SAME_FRAMING + "Did Bepo, an 85-year-old island card champion, bald with a magnificent white moustache, a small flat red cap, a black traditional Dalmatian vest over a white shirt, calm mischievous half-smile, a tiny glass of rakija in front of him."),
-    # Ace centrepieces (play-test request after section 13): in a Triestine deck the
-    # ace carries one large ornate suit emblem instead of a pip. The motifs and
-    # colours follow the suit_* icons so the deck stays coherent.
-    "ace_kupe": (1024, 1536, True, "card", ACE_OPEN.format(SUIT="cups (asso di coppe)") +
-        "one large, richly ornamented gilded chalice: a tall golden goblet with a wide flared bowl decorated with a terracotta-red band of golden scrolls and a lower band of olive-green and Adriatic-blue acanthus leaves, a knopped stem with a fluted terracotta knot and a broad round foot. Around it, symmetrical golden scrollwork with terracotta accents, two small olive-leaf garlands with a flowing terracotta ribbon, and a few small flourishes and dots. " + ACE_CLOSE),
-    "ace_bate": (1024, 1536, True, "card", ACE_OPEN.format(SUIT="clubs (asso di bastoni)") +
-        "one large carved wooden club standing perfectly vertical with the thick knobbly end up: warm-brown wood with carved knots and small olive-green leaf buds sprouting from them, wrapped by a spiralling terracotta-red ribbon and a twining olive branch with a few olives. Around it, symmetrical golden scrollwork flourishes on both sides and a few small dots. " + ACE_CLOSE),
-    "ace_spade": (1024, 1536, True, "card", ACE_OPEN.format(SUIT="swords (asso di spade)") +
-        "one large ornate straight double-edged sword standing perfectly vertical with the point up: an Adriatic-blue steel blade with a central fuller, an elaborate ochre-gold crossguard whose ends curl into scrolls, a grip wrapped in terracotta and olive stripes, and a round gold pommel. Behind and around it, symmetrical golden scrollwork, an olive-leaf garland curving behind the blade and a flowing terracotta ribbon, plus a few small flourishes. " + ACE_CLOSE),
-    "ace_dinari": (1024, 1536, True, "card", ACE_OPEN.format(SUIT="coins (asso di denari)") +
-        "one large decorated gold medallion coin: a broad raised gold rim with a ring of small beads, an inner ring of cream and Adriatic-blue wave scrolls, and in the centre a stylised eight-petal golden flower with a terracotta-red centre dot. The medallion is framed by a symmetrical wreath of olive branches tied with a terracotta ribbon below, with golden scrollwork flourishes above and below it. " + ACE_CLOSE),
     # Partneri (2v2) characters, GAME_DESIGN.md section 18.4.5 (same framing as rows 31-34)
     "portrait_dino": (1024, 1024, False, "scene",
         SAME_FRAMING + "Dino \"Galeb\", a 26-year-old Dalmatian summer charmer, slicked-back dark hair, deep tan, a tight white T-shirt, a seashell necklace and a flashy watch, one eyebrow raised in a confident smirk, holding a fan of cards casually in one hand."),
@@ -145,8 +161,8 @@ GENS = {
         "Vignette: a sly forger's hand with a very fine brush secretly repainting a humble playing card on a cluttered wooden workbench: one half of the card already shows three ornate golden cups, the other half is still a plain card with a few small pips; small ink pots, a magnifying glass and a candle beside it, conspiratorial candlelit mood."),
 }
 
-for _gid, (_spec, _col) in COURTS.items():
-    GENS[_gid] = (1024, 1536, False, "card", COURT_TEMPLATE.format(SPEC=_spec, COLOURS=_col))
+for _gid, _spec in COURTS.items():
+    GENS[_gid] = (1536, 1024, False, "tri", COURT_TEMPLATE.format(SPEC=_spec))
 
 
 # The built-in image tool picks the aspect ratio from the prompt text rather than
@@ -161,20 +177,24 @@ FULL_BLEED = ("The illustration is full-bleed: it fills the entire image edge to
               "no frame, no margin and no rounded corners.")
 
 
+FORMAT_SQUARE = "Format: square image, 1:1 aspect ratio, the subject composed for a square frame."
+
+
 def format_sentence(gen_id: str) -> str:
     w, h, cut, kind, body = GENS[gen_id]
     if gen_id.startswith("fora_") or gen_id.startswith("shop_"):
         return FORMAT_PORTRAIT + " " + FULL_BLEED
     if gen_id.startswith("env_"):
         return FORMAT_LANDSCAPE
-    if gen_id.startswith("ace_"):
-        return FORMAT_PORTRAIT
+    if kind == "tri":
+        # every card-face generation states its format in words
+        return FORMAT_PORTRAIT if h > w else (FORMAT_LANDSCAPE if w > h else FORMAT_SQUARE)
     return ""
 
 
 def full_prompt(gen_id: str, extra: str = "", with_format: bool = True) -> str:
     w, h, cut, kind, body = GENS[gen_id]
-    prefix = STYLE_CARD if kind == "card" else STYLE_SCENE
+    prefix = {"tri": STYLE_TRIESTINE, "card": STYLE_CARD}.get(kind, STYLE_SCENE)
     if gen_id == "logo":
         # The logo is the one image that must contain text, so the "no text"
         # clause of STYLE_CARD is replaced by the logo's own lettering rule.
@@ -188,6 +208,8 @@ def full_prompt(gen_id: str, extra: str = "", with_format: bool = True) -> str:
         p += " " + extra
     if cut:
         p += " " + CUTOUT
+    elif kind == "tri":
+        p += " " + WHITE_BG
     return p
 
 

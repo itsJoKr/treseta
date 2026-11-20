@@ -2,12 +2,125 @@
   "counts": {
     "sfx_expected": 27,
     "sfx_present": 27,
-    "voice_expected": 90,
-    "voice_present": 90
+    "voice_expected": 150,
+    "voice_present": 150
   },
-  "generated_at": "2026-11-15 12:53:10",
+  "generated_at": "2026-11-20 12:13:42",
   "missing": [],
-  "problems": [],
+  "problems": [
+    {
+      "file": "barba/jebem_ti_pasa",
+      "issues": [
+        "loudness"
+      ],
+      "measured": {
+        "channels": 1,
+        "duration": 2.076,
+        "kbps": 66,
+        "lead_ms": 15.0,
+        "lufs": -16.6,
+        "sr": 44100,
+        "tail_ms": 110.0,
+        "tp": -2.0
+      }
+    },
+    {
+      "file": "barba/srice_nima",
+      "issues": [
+        "loudness"
+      ],
+      "measured": {
+        "channels": 1,
+        "duration": 3.348,
+        "kbps": 65,
+        "lead_ms": 24.9,
+        "lufs": -16.6,
+        "sr": 44100,
+        "tail_ms": 90.1,
+        "tp": -1.1
+      }
+    },
+    {
+      "file": "barba/jebemti_dan",
+      "issues": [
+        "loudness"
+      ],
+      "measured": {
+        "channels": 1,
+        "duration": 2.525,
+        "kbps": 66,
+        "lead_ms": 24.9,
+        "lufs": -16.6,
+        "sr": 44100,
+        "tail_ms": 105.1,
+        "tp": -1.1
+      }
+    },
+    {
+      "file": "gazda/lipo_daj_ovamo",
+      "issues": [
+        "loudness"
+      ],
+      "measured": {
+        "channels": 1,
+        "duration": 3.707,
+        "kbps": 65,
+        "lead_ms": 15.0,
+        "lufs": -16.6,
+        "sr": 44100,
+        "tail_ms": 90.0,
+        "tp": -1.2
+      }
+    },
+    {
+      "file": "gazda/napolitana",
+      "issues": [
+        "loudness"
+      ],
+      "measured": {
+        "channels": 1,
+        "duration": 2.45,
+        "kbps": 66,
+        "lead_ms": 10.0,
+        "lufs": -16.6,
+        "sr": 44100,
+        "tail_ms": 110.0,
+        "tp": -2.1
+      }
+    },
+    {
+      "file": "gazda/asti_sto",
+      "issues": [
+        "loudness"
+      ],
+      "measured": {
+        "channels": 1,
+        "duration": 1.257,
+        "kbps": 68,
+        "lead_ms": 24.9,
+        "lufs": -17.0,
+        "sr": 44100,
+        "tail_ms": 110.0,
+        "tp": -1.7
+      }
+    },
+    {
+      "file": "mali/jebemti_dan",
+      "issues": [
+        "loudness"
+      ],
+      "measured": {
+        "channels": 1,
+        "duration": 2.174,
+        "kbps": 66,
+        "lead_ms": 20.0,
+        "lufs": -16.7,
+        "sr": 44100,
+        "tail_ms": 83.8,
+        "tp": -1.2
+      }
+    }
+  ],
   "sfx_files": {
     "akuza_fanfare": {
       "channels": 2,
@@ -383,187 +496,307 @@
       "requests": 27
     },
     "tts": {
-      "character_cost": 2355,
-      "requests": 193
+      "character_cost": 4444,
+      "requests": 378
     }
   },
   "voice_files": {
     "barba/aha_sta_je_sad": {
       "channels": 1,
       "duration": 2.105,
-      "kbps": 132,
+      "kbps": 66,
       "lead_ms": 0.0,
+      "lufs": -16.4,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -2.3
+    },
+    "barba/ajde_tovare": {
+      "channels": 1,
+      "duration": 2.27,
+      "kbps": 66,
+      "lead_ms": 20.0,
+      "lufs": -16.4,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -2.9
+    },
+    "barba/ajme_majko": {
+      "channels": 1,
+      "duration": 3.178,
+      "kbps": 65,
+      "lead_ms": 10.0,
+      "lufs": -16.4,
+      "sr": 44100,
+      "tail_ms": 60.2,
+      "tp": -1.3
+    },
+    "barba/akuzan_cetiri": {
+      "channels": 1,
+      "duration": 3.642,
+      "kbps": 65,
+      "lead_ms": 10.0,
+      "lufs": -16.4,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -1.9
+    },
+    "barba/akuzan_tri": {
+      "channels": 1,
+      "duration": 2.539,
+      "kbps": 66,
+      "lead_ms": 20.0,
+      "lufs": -16.1,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -2.1
+    },
+    "barba/argh": {
+      "channels": 1,
+      "duration": 2.145,
+      "kbps": 66,
+      "lead_ms": 24.9,
+      "lufs": -19.1,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -3.7
+    },
+    "barba/asti_sto": {
+      "channels": 1,
+      "duration": 1.287,
+      "kbps": 68,
+      "lead_ms": 24.9,
+      "lufs": -16.0,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -1.7
+    },
+    "barba/dava_odnija": {
+      "channels": 1,
+      "duration": 2.061,
+      "kbps": 66,
+      "lead_ms": 24.9,
+      "lufs": -16.2,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -0.8
+    },
+    "barba/ehe": {
+      "channels": 1,
+      "duration": 2.25,
+      "kbps": 66,
+      "lead_ms": 24.9,
+      "lufs": -19.0,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -4.5
+    },
+    "barba/ej_ko_te_napravi": {
+      "channels": 1,
+      "duration": 2.105,
+      "kbps": 66,
+      "lead_ms": 5.0,
+      "lufs": -16.5,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -2.1
+    },
+    "barba/evo_ti_ga_na": {
+      "channels": 1,
+      "duration": 1.387,
+      "kbps": 67,
+      "lead_ms": 20.0,
+      "lufs": -16.4,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -3.9
+    },
+    "barba/gledaj_i_uci": {
+      "channels": 1,
+      "duration": 2.559,
+      "kbps": 65,
+      "lead_ms": 5.0,
+      "lufs": -16.4,
+      "sr": 44100,
+      "tail_ms": 100.0,
+      "tp": -1.4
+    },
+    "barba/grom_te_spanija": {
+      "channels": 1,
+      "duration": 2.15,
+      "kbps": 66,
+      "lead_ms": 15.0,
+      "lufs": -16.5,
+      "sr": 44100,
+      "tail_ms": 95.0,
+      "tp": -3.9
+    },
+    "barba/igraj_vise": {
+      "channels": 1,
+      "duration": 2.385,
+      "kbps": 66,
+      "lead_ms": 24.9,
+      "lufs": -16.4,
+      "sr": 44100,
+      "tail_ms": 105.3,
+      "tp": -3.8
+    },
+    "barba/jarca_ti": {
+      "channels": 1,
+      "duration": 1.492,
+      "kbps": 67,
+      "lead_ms": 24.9,
+      "lufs": -16.0,
+      "sr": 44100,
+      "tail_ms": 95.1,
+      "tp": -1.4
+    },
+    "barba/jebate_led": {
+      "channels": 1,
+      "duration": 2.11,
+      "kbps": 66,
+      "lead_ms": 10.0,
+      "lufs": -16.0,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -2.0
+    },
+    "barba/jebem_ti_mliko": {
+      "channels": 1,
+      "duration": 2.544,
+      "kbps": 66,
+      "lead_ms": 20.0,
+      "lufs": -16.4,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -2.7
+    },
+    "barba/jebem_ti_pasa": {
+      "channels": 1,
+      "duration": 2.076,
+      "kbps": 66,
+      "lead_ms": 15.0,
+      "lufs": -16.6,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -2.0
+    },
+    "barba/jebemti_dan": {
+      "channels": 1,
+      "duration": 2.525,
+      "kbps": 66,
+      "lead_ms": 24.9,
+      "lufs": -16.6,
+      "sr": 44100,
+      "tail_ms": 105.1,
+      "tp": -1.1
+    },
+    "barba/jebenti_iruda": {
+      "channels": 1,
+      "duration": 1.946,
+      "kbps": 66,
+      "lead_ms": 24.9,
       "lufs": -16.0,
       "sr": 44100,
       "tail_ms": 110.0,
       "tp": -2.1
     },
-    "barba/ajde_tovare": {
+    "barba/joj": {
       "channels": 1,
-      "duration": 2.27,
-      "kbps": 131,
-      "lead_ms": 20.0,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 110.0,
-      "tp": -2.8
-    },
-    "barba/ajme_majko": {
-      "channels": 1,
-      "duration": 3.178,
-      "kbps": 130,
-      "lead_ms": 10.0,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 60.2,
-      "tp": -1.1
-    },
-    "barba/akuzan_cetiri": {
-      "channels": 1,
-      "duration": 3.642,
-      "kbps": 130,
-      "lead_ms": 10.0,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 110.0,
-      "tp": -1.6
-    },
-    "barba/akuzan_tri": {
-      "channels": 1,
-      "duration": 2.539,
-      "kbps": 132,
-      "lead_ms": 20.0,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 110.0,
-      "tp": -1.8
-    },
-    "barba/ej_ko_te_napravi": {
-      "channels": 1,
-      "duration": 2.105,
-      "kbps": 132,
-      "lead_ms": 5.0,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 110.0,
-      "tp": -2.3
-    },
-    "barba/evo_ti_ga_na": {
-      "channels": 1,
-      "duration": 1.387,
-      "kbps": 135,
-      "lead_ms": 20.0,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 110.0,
-      "tp": -3.8
-    },
-    "barba/gledaj_i_uci": {
-      "channels": 1,
-      "duration": 2.559,
-      "kbps": 131,
-      "lead_ms": 5.0,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 110.0,
-      "tp": -1.3
-    },
-    "barba/grom_te_spanija": {
-      "channels": 1,
-      "duration": 2.15,
-      "kbps": 132,
-      "lead_ms": 15.0,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 110.0,
-      "tp": -3.5
-    },
-    "barba/igraj_vise": {
-      "channels": 1,
-      "duration": 2.385,
-      "kbps": 132,
+      "duration": 2.924,
+      "kbps": 65,
       "lead_ms": 24.9,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 105.3,
-      "tp": -3.2
-    },
-    "barba/jarca_ti": {
-      "channels": 1,
-      "duration": 1.492,
-      "kbps": 134,
-      "lead_ms": 24.9,
-      "lufs": -16.0,
+      "lufs": -19.1,
       "sr": 44100,
       "tail_ms": 110.0,
-      "tp": -1.4
-    },
-    "barba/jebate_led": {
-      "channels": 1,
-      "duration": 2.031,
-      "kbps": 132,
-      "lead_ms": 24.9,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 110.0,
-      "tp": -3.0
-    },
-    "barba/jebem_ti_mliko": {
-      "channels": 1,
-      "duration": 2.544,
-      "kbps": 131,
-      "lead_ms": 20.0,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 110.0,
-      "tp": -2.6
-    },
-    "barba/jebem_ti_pasa": {
-      "channels": 1,
-      "duration": 2.076,
-      "kbps": 132,
-      "lead_ms": 24.9,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 110.0,
-      "tp": -2.5
+      "tp": -2.0
     },
     "barba/ka_riba": {
       "channels": 1,
       "duration": 3.153,
-      "kbps": 130,
+      "kbps": 65,
       "lead_ms": 10.0,
-      "lufs": -16.0,
+      "lufs": -16.5,
       "sr": 44100,
       "tail_ms": 105.1,
-      "tp": -1.2
+      "tp": -0.9
     },
     "barba/ko_je_misaja": {
       "channels": 1,
-      "duration": 1.861,
-      "kbps": 133,
+      "duration": 1.542,
+      "kbps": 67,
+      "lead_ms": 24.9,
+      "lufs": -15.9,
+      "sr": 44100,
+      "tail_ms": 110.5,
+      "tp": -4.0
+    },
+    "barba/ko_je_misaja_2": {
+      "channels": 1,
+      "duration": 2.589,
+      "kbps": 66,
       "lead_ms": 24.9,
       "lufs": -16.0,
       "sr": 44100,
       "tail_ms": 110.0,
-      "tp": -4.3
+      "tp": -2.2
+    },
+    "barba/ko_je_misaja_3": {
+      "channels": 1,
+      "duration": 3.338,
+      "kbps": 65,
+      "lead_ms": 24.9,
+      "lufs": -16.0,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -3.9
+    },
+    "barba/kruv_i_mast": {
+      "channels": 1,
+      "duration": 3.253,
+      "kbps": 65,
+      "lead_ms": 5.0,
+      "lufs": -16.0,
+      "sr": 44100,
+      "tail_ms": 100.0,
+      "tp": -3.6
     },
     "barba/lipo_daj_ovamo": {
       "channels": 1,
       "duration": 3.867,
-      "kbps": 131,
+      "kbps": 65,
       "lead_ms": 10.0,
-      "lufs": -16.0,
+      "lufs": -16.5,
       "sr": 44100,
       "tail_ms": 90.8,
-      "tp": -1.5
+      "tp": -1.7
+    },
+    "barba/ma_daj": {
+      "channels": 1,
+      "duration": 1.442,
+      "kbps": 67,
+      "lead_ms": 24.9,
+      "lufs": -18.9,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -5.1
+    },
+    "barba/muci": {
+      "channels": 1,
+      "duration": 0.958,
+      "kbps": 68,
+      "lead_ms": 24.9,
+      "lufs": -16.4,
+      "sr": 44100,
+      "tail_ms": 95.1,
+      "tp": -1.2
     },
     "barba/napolitana": {
       "channels": 1,
       "duration": 2.709,
-      "kbps": 131,
+      "kbps": 65,
       "lead_ms": 15.0,
-      "lufs": -16.0,
+      "lufs": -16.4,
       "sr": 44100,
       "tail_ms": 110.0,
       "tp": -4.9
@@ -571,149 +804,229 @@
     "barba/ne_mogu_virovat": {
       "channels": 1,
       "duration": 2.13,
-      "kbps": 132,
-      "lead_ms": 24.9,
-      "lufs": -16.0,
+      "kbps": 66,
+      "lead_ms": 20.0,
+      "lufs": -16.4,
       "sr": 44100,
       "tail_ms": 110.0,
-      "tp": -2.3
+      "tp": -2.5
+    },
+    "barba/oho": {
+      "channels": 1,
+      "duration": 0.933,
+      "kbps": 68,
+      "lead_ms": 24.9,
+      "lufs": -19.0,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -7.3
     },
     "barba/opet_akuza": {
       "channels": 1,
       "duration": 3.268,
-      "kbps": 131,
+      "kbps": 65,
+      "lead_ms": 24.9,
+      "lufs": -16.4,
+      "sr": 44100,
+      "tail_ms": 85.1,
+      "tp": -1.4
+    },
+    "barba/pff": {
+      "channels": 1,
+      "duration": 1.128,
+      "kbps": 68,
+      "lead_ms": 24.9,
+      "lufs": -19.0,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -4.9
+    },
+    "barba/pizda_ti_materina": {
+      "channels": 1,
+      "duration": 1.781,
+      "kbps": 67,
       "lead_ms": 24.9,
       "lufs": -16.0,
       "sr": 44100,
-      "tail_ms": 85.1,
-      "tp": -1.3
+      "tail_ms": 110.0,
+      "tp": -1.4
     },
     "barba/plati_rakiju": {
       "channels": 1,
       "duration": 3.447,
-      "kbps": 130,
+      "kbps": 65,
       "lead_ms": 24.9,
-      "lufs": -16.0,
+      "lufs": -16.5,
       "sr": 44100,
-      "tail_ms": 110.0,
-      "tp": -2.1
+      "tail_ms": 115.0,
+      "tp": -2.4
     },
-    "barba/same_lisine": {
+    "barba/pusi_mrtav": {
       "channels": 1,
-      "duration": 4.416,
-      "kbps": 130,
-      "lead_ms": 10.0,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 70.6,
-      "tp": -1.4
-    },
-    "barba/sidi_misaj": {
-      "channels": 1,
-      "duration": 3.17,
-      "kbps": 131,
-      "lead_ms": 24.9,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 82.1,
-      "tp": -1.3
-    },
-    "barba/srice_nima": {
-      "channels": 1,
-      "duration": 3.348,
-      "kbps": 131,
-      "lead_ms": 24.9,
-      "lufs": -16.2,
-      "sr": 44100,
-      "tail_ms": 90.1,
-      "tp": -1.2
-    },
-    "barba/sta_si_mislija": {
-      "channels": 1,
-      "duration": 2.066,
-      "kbps": 133,
-      "lead_ms": 20.0,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 110.0,
-      "tp": -1.4
-    },
-    "barba/stari_ja": {
-      "channels": 1,
-      "duration": 4.535,
-      "kbps": 130,
-      "lead_ms": 15.0,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 110.0,
-      "tp": -1.4
-    },
-    "barba/tucem": {
-      "channels": 1,
-      "duration": 0.998,
-      "kbps": 137,
-      "lead_ms": 24.9,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 110.0,
-      "tp": -3.8
-    },
-    "barba/ukra_si_mi": {
-      "channels": 1,
-      "duration": 2.495,
-      "kbps": 131,
-      "lead_ms": 24.9,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 110.0,
-      "tp": -3.1
-    },
-    "barba/ultima_moja": {
-      "channels": 1,
-      "duration": 2.779,
-      "kbps": 131,
-      "lead_ms": 10.0,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 110.0,
-      "tp": -2.8
-    },
-    "barba/vrag_ti_sricu": {
-      "channels": 1,
-      "duration": 2.39,
-      "kbps": 132,
+      "duration": 2.759,
+      "kbps": 65,
       "lead_ms": 24.9,
       "lufs": -16.0,
       "sr": 44100,
       "tail_ms": 110.0,
       "tp": -2.0
     },
-    "gazda/aha_sta_je_sad": {
+    "barba/same_lisine": {
       "channels": 1,
-      "duration": 2.0,
-      "kbps": 132,
+      "duration": 4.416,
+      "kbps": 65,
+      "lead_ms": 10.0,
+      "lufs": -16.4,
+      "sr": 44100,
+      "tail_ms": 70.6,
+      "tp": -1.2
+    },
+    "barba/sidi_misaj": {
+      "channels": 1,
+      "duration": 3.17,
+      "kbps": 65,
+      "lead_ms": 24.9,
+      "lufs": -16.3,
+      "sr": 44100,
+      "tail_ms": 82.1,
+      "tp": -1.4
+    },
+    "barba/srice_nima": {
+      "channels": 1,
+      "duration": 3.348,
+      "kbps": 65,
+      "lead_ms": 24.9,
+      "lufs": -16.6,
+      "sr": 44100,
+      "tail_ms": 90.1,
+      "tp": -1.1
+    },
+    "barba/sta_si_mislija": {
+      "channels": 1,
+      "duration": 2.066,
+      "kbps": 66,
+      "lead_ms": 20.0,
+      "lufs": -16.4,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -1.7
+    },
+    "barba/stari_ja": {
+      "channels": 1,
+      "duration": 4.535,
+      "kbps": 65,
+      "lead_ms": 15.0,
+      "lufs": -16.4,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -1.6
+    },
+    "barba/tucem": {
+      "channels": 1,
+      "duration": 0.998,
+      "kbps": 69,
+      "lead_ms": 24.9,
+      "lufs": -16.0,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -3.1
+    },
+    "barba/ukra_si_mi": {
+      "channels": 1,
+      "duration": 2.495,
+      "kbps": 66,
+      "lead_ms": 24.9,
+      "lufs": -16.4,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -3.2
+    },
+    "barba/ultima_moja": {
+      "channels": 1,
+      "duration": 2.779,
+      "kbps": 66,
+      "lead_ms": 10.0,
+      "lufs": -16.4,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -3.0
+    },
+    "barba/vrag_ti_sricu": {
+      "channels": 1,
+      "duration": 2.39,
+      "kbps": 66,
+      "lead_ms": 24.9,
+      "lufs": -16.0,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -1.9
+    },
+    "barba/zna_sam_asa": {
+      "channels": 1,
+      "duration": 4.091,
+      "kbps": 65,
+      "lead_ms": 24.9,
+      "lufs": -16.0,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -2.5
+    },
+    "barba/zna_sam_asa_2": {
+      "channels": 1,
+      "duration": 2.644,
+      "kbps": 66,
       "lead_ms": 10.0,
       "lufs": -16.0,
       "sr": 44100,
-      "tail_ms": 99.3,
+      "tail_ms": 130.0,
       "tp": -2.2
+    },
+    "barba/zna_sam_asa_3": {
+      "channels": 1,
+      "duration": 2.929,
+      "kbps": 66,
+      "lead_ms": 10.0,
+      "lufs": -16.0,
+      "sr": 44100,
+      "tail_ms": 115.0,
+      "tp": -1.6
+    },
+    "barba/zna_sam_tricu": {
+      "channels": 1,
+      "duration": 3.597,
+      "kbps": 65,
+      "lead_ms": 24.9,
+      "lufs": -16.0,
+      "sr": 44100,
+      "tail_ms": 120.0,
+      "tp": -2.6
+    },
+    "gazda/aha_sta_je_sad": {
+      "channels": 1,
+      "duration": 2.0,
+      "kbps": 66,
+      "lead_ms": 10.0,
+      "lufs": -16.4,
+      "sr": 44100,
+      "tail_ms": 99.3,
+      "tp": -2.6
     },
     "gazda/ajde_tovare": {
       "channels": 1,
       "duration": 1.886,
-      "kbps": 133,
+      "kbps": 66,
       "lead_ms": 10.0,
-      "lufs": -16.0,
+      "lufs": -16.4,
       "sr": 44100,
-      "tail_ms": 110.0,
-      "tp": -1.5
+      "tail_ms": 100.0,
+      "tp": -2.0
     },
     "gazda/ajme_majko": {
       "channels": 1,
       "duration": 2.998,
-      "kbps": 130,
+      "kbps": 65,
       "lead_ms": 5.0,
-      "lufs": -16.0,
+      "lufs": -16.4,
       "sr": 44100,
       "tail_ms": 85.1,
       "tp": -1.2
@@ -721,157 +1034,307 @@
     "gazda/akuzan_cetiri": {
       "channels": 1,
       "duration": 3.173,
-      "kbps": 131,
+      "kbps": 65,
       "lead_ms": 24.9,
-      "lufs": -16.0,
+      "lufs": -16.4,
       "sr": 44100,
-      "tail_ms": 110.0,
-      "tp": -1.5
+      "tail_ms": 105.1,
+      "tp": -2.2
     },
     "gazda/akuzan_tri": {
       "channels": 1,
       "duration": 2.4,
-      "kbps": 131,
+      "kbps": 65,
       "lead_ms": 20.0,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 110.0,
-      "tp": -2.1
-    },
-    "gazda/ej_ko_te_napravi": {
-      "channels": 1,
-      "duration": 2.135,
-      "kbps": 132,
-      "lead_ms": 10.0,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 105.0,
-      "tp": -1.5
-    },
-    "gazda/evo_ti_ga_na": {
-      "channels": 1,
-      "duration": 1.382,
-      "kbps": 133,
-      "lead_ms": 24.9,
-      "lufs": -16.0,
+      "lufs": -16.3,
       "sr": 44100,
       "tail_ms": 110.0,
       "tp": -2.7
     },
+    "gazda/argh": {
+      "channels": 1,
+      "duration": 2.076,
+      "kbps": 66,
+      "lead_ms": 24.9,
+      "lufs": -19.0,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -3.3
+    },
+    "gazda/asti_sto": {
+      "channels": 1,
+      "duration": 1.257,
+      "kbps": 68,
+      "lead_ms": 24.9,
+      "lufs": -17.0,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -1.7
+    },
+    "gazda/dava_odnija": {
+      "channels": 1,
+      "duration": 1.946,
+      "kbps": 66,
+      "lead_ms": 24.9,
+      "lufs": -16.1,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -1.2
+    },
+    "gazda/ehe": {
+      "channels": 1,
+      "duration": 1.936,
+      "kbps": 66,
+      "lead_ms": 24.9,
+      "lufs": -19.0,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -3.6
+    },
+    "gazda/ej_ko_te_napravi": {
+      "channels": 1,
+      "duration": 2.135,
+      "kbps": 66,
+      "lead_ms": 10.0,
+      "lufs": -16.5,
+      "sr": 44100,
+      "tail_ms": 105.0,
+      "tp": -1.9
+    },
+    "gazda/evo_ti_ga_na": {
+      "channels": 1,
+      "duration": 1.382,
+      "kbps": 67,
+      "lead_ms": 10.0,
+      "lufs": -16.4,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -3.5
+    },
     "gazda/gledaj_i_uci": {
       "channels": 1,
       "duration": 2.345,
-      "kbps": 131,
+      "kbps": 66,
       "lead_ms": 24.9,
-      "lufs": -16.0,
+      "lufs": -16.5,
       "sr": 44100,
       "tail_ms": 110.0,
-      "tp": -1.3
+      "tp": -1.7
     },
     "gazda/grom_te_spanija": {
       "channels": 1,
       "duration": 1.976,
-      "kbps": 132,
+      "kbps": 66,
       "lead_ms": 5.0,
-      "lufs": -16.0,
+      "lufs": -16.4,
       "sr": 44100,
       "tail_ms": 110.0,
-      "tp": -3.4
+      "tp": -4.0
     },
     "gazda/igraj_vise": {
       "channels": 1,
       "duration": 2.34,
-      "kbps": 131,
+      "kbps": 66,
       "lead_ms": 24.9,
-      "lufs": -16.1,
+      "lufs": -16.5,
       "sr": 44100,
       "tail_ms": 75.3,
-      "tp": -1.2
+      "tp": -1.6
     },
     "gazda/jarca_ti": {
       "channels": 1,
       "duration": 1.387,
-      "kbps": 135,
+      "kbps": 67,
       "lead_ms": 24.9,
-      "lufs": -16.0,
+      "lufs": -16.3,
       "sr": 44100,
       "tail_ms": 110.0,
-      "tp": -1.8
+      "tp": -2.1
     },
     "gazda/jebate_led": {
       "channels": 1,
       "duration": 1.991,
-      "kbps": 133,
+      "kbps": 66,
       "lead_ms": 24.9,
-      "lufs": -16.0,
+      "lufs": -16.3,
       "sr": 44100,
-      "tail_ms": 110.0,
-      "tp": -1.6
+      "tail_ms": 105.1,
+      "tp": -1.9
     },
     "gazda/jebem_ti_mliko": {
       "channels": 1,
       "duration": 2.659,
-      "kbps": 131,
+      "kbps": 65,
       "lead_ms": 5.0,
-      "lufs": -16.0,
+      "lufs": -16.4,
       "sr": 44100,
       "tail_ms": 110.0,
-      "tp": -2.8
+      "tp": -2.6
     },
     "gazda/jebem_ti_pasa": {
       "channels": 1,
       "duration": 1.961,
-      "kbps": 133,
+      "kbps": 66,
+      "lead_ms": 20.0,
+      "lufs": -16.4,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -1.7
+    },
+    "gazda/jebemti_dan": {
+      "channels": 1,
+      "duration": 2.425,
+      "kbps": 65,
+      "lead_ms": 5.0,
+      "lufs": -16.1,
+      "sr": 44100,
+      "tail_ms": 75.1,
+      "tp": -0.7
+    },
+    "gazda/jebenti_iruda": {
+      "channels": 1,
+      "duration": 2.021,
+      "kbps": 66,
       "lead_ms": 24.9,
       "lufs": -16.0,
       "sr": 44100,
       "tail_ms": 110.0,
-      "tp": -1.2
+      "tp": -1.1
+    },
+    "gazda/joj": {
+      "channels": 1,
+      "duration": 2.754,
+      "kbps": 66,
+      "lead_ms": 24.9,
+      "lufs": -18.9,
+      "sr": 44100,
+      "tail_ms": 80.1,
+      "tp": -2.5
     },
     "gazda/ko_je_misaja": {
       "channels": 1,
-      "duration": 1.751,
-      "kbps": 134,
+      "duration": 1.582,
+      "kbps": 67,
       "lead_ms": 24.9,
       "lufs": -16.0,
       "sr": 44100,
       "tail_ms": 110.0,
-      "tp": -2.3
+      "tp": -3.9
+    },
+    "gazda/ko_je_misaja_2": {
+      "channels": 1,
+      "duration": 2.505,
+      "kbps": 65,
+      "lead_ms": 24.9,
+      "lufs": -15.9,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -2.5
+    },
+    "gazda/ko_je_misaja_3": {
+      "channels": 1,
+      "duration": 3.103,
+      "kbps": 65,
+      "lead_ms": 5.0,
+      "lufs": -15.9,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -1.9
+    },
+    "gazda/kruv_i_mast": {
+      "channels": 1,
+      "duration": 3.178,
+      "kbps": 65,
+      "lead_ms": 5.0,
+      "lufs": -16.0,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -1.4
     },
     "gazda/lipo_daj_ovamo": {
       "channels": 1,
       "duration": 3.707,
-      "kbps": 130,
+      "kbps": 65,
       "lead_ms": 15.0,
-      "lufs": -16.2,
+      "lufs": -16.6,
       "sr": 44100,
       "tail_ms": 90.0,
       "tp": -1.2
     },
+    "gazda/ma_daj": {
+      "channels": 1,
+      "duration": 1.307,
+      "kbps": 68,
+      "lead_ms": 24.9,
+      "lufs": -19.0,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -4.8
+    },
+    "gazda/muci": {
+      "channels": 1,
+      "duration": 0.928,
+      "kbps": 68,
+      "lead_ms": 24.9,
+      "lufs": -15.9,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -1.8
+    },
     "gazda/napolitana": {
       "channels": 1,
       "duration": 2.45,
-      "kbps": 131,
+      "kbps": 66,
       "lead_ms": 10.0,
-      "lufs": -16.2,
+      "lufs": -16.6,
       "sr": 44100,
       "tail_ms": 110.0,
-      "tp": -1.2
+      "tp": -2.1
     },
     "gazda/ne_mogu_virovat": {
       "channels": 1,
       "duration": 1.931,
-      "kbps": 132,
+      "kbps": 66,
       "lead_ms": 24.9,
-      "lufs": -16.0,
+      "lufs": -16.4,
       "sr": 44100,
       "tail_ms": 110.0,
-      "tp": -3.1
+      "tp": -3.6
+    },
+    "gazda/oho": {
+      "channels": 1,
+      "duration": 0.953,
+      "kbps": 68,
+      "lead_ms": 24.9,
+      "lufs": -19.0,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -6.9
     },
     "gazda/opet_akuza": {
       "channels": 1,
       "duration": 2.794,
-      "kbps": 130,
+      "kbps": 65,
+      "lead_ms": 24.9,
+      "lufs": -16.4,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -1.6
+    },
+    "gazda/pff": {
+      "channels": 1,
+      "duration": 1.552,
+      "kbps": 67,
+      "lead_ms": 24.9,
+      "lufs": -19.0,
+      "sr": 44100,
+      "tail_ms": 100.1,
+      "tp": -1.8
+    },
+    "gazda/pizda_ti_materina": {
+      "channels": 1,
+      "duration": 1.751,
+      "kbps": 67,
       "lead_ms": 24.9,
       "lufs": -16.0,
       "sr": 44100,
@@ -881,412 +1344,662 @@
     "gazda/plati_rakiju": {
       "channels": 1,
       "duration": 3.28,
-      "kbps": 130,
+      "kbps": 65,
       "lead_ms": 10.0,
-      "lufs": -16.0,
+      "lufs": -16.4,
       "sr": 44100,
       "tail_ms": 107.2,
+      "tp": -1.5
+    },
+    "gazda/pusi_mrtav": {
+      "channels": 1,
+      "duration": 2.548,
+      "kbps": 66,
+      "lead_ms": 24.9,
+      "lufs": -16.1,
+      "sr": 44100,
+      "tail_ms": 93.9,
       "tp": -1.4
     },
     "gazda/runda_na_mene": {
       "channels": 1,
       "duration": 3.662,
-      "kbps": 131,
+      "kbps": 65,
       "lead_ms": 10.0,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 105.1,
-      "tp": -1.1
-    },
-    "gazda/same_lisine": {
-      "channels": 1,
-      "duration": 3.901,
-      "kbps": 130,
-      "lead_ms": 15.0,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 105.1,
-      "tp": -1.4
-    },
-    "gazda/sidi_misaj": {
-      "channels": 1,
-      "duration": 2.619,
-      "kbps": 131,
-      "lead_ms": 24.9,
-      "lufs": -16.1,
-      "sr": 44100,
-      "tail_ms": 85.1,
-      "tp": -1.1
-    },
-    "gazda/srice_nima": {
-      "channels": 1,
-      "duration": 2.929,
-      "kbps": 131,
-      "lead_ms": 20.0,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 110.0,
-      "tp": -1.1
-    },
-    "gazda/sta_si_mislija": {
-      "channels": 1,
-      "duration": 1.996,
-      "kbps": 132,
-      "lead_ms": 24.9,
-      "lufs": -16.0,
+      "lufs": -16.4,
       "sr": 44100,
       "tail_ms": 110.0,
       "tp": -1.5
     },
+    "gazda/same_lisine": {
+      "channels": 1,
+      "duration": 3.901,
+      "kbps": 65,
+      "lead_ms": 15.0,
+      "lufs": -16.3,
+      "sr": 44100,
+      "tail_ms": 105.1,
+      "tp": -1.6
+    },
+    "gazda/sidi_misaj": {
+      "channels": 1,
+      "duration": 2.619,
+      "kbps": 66,
+      "lead_ms": 24.9,
+      "lufs": -16.4,
+      "sr": 44100,
+      "tail_ms": 85.1,
+      "tp": -1.2
+    },
+    "gazda/srice_nima": {
+      "channels": 1,
+      "duration": 2.929,
+      "kbps": 66,
+      "lead_ms": 20.0,
+      "lufs": -16.3,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -1.3
+    },
+    "gazda/sta_si_mislija": {
+      "channels": 1,
+      "duration": 1.996,
+      "kbps": 66,
+      "lead_ms": 24.9,
+      "lufs": -16.2,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -1.7
+    },
     "gazda/tucem": {
       "channels": 1,
       "duration": 0.963,
-      "kbps": 135,
+      "kbps": 68,
       "lead_ms": 24.9,
-      "lufs": -16.0,
+      "lufs": -16.5,
       "sr": 44100,
       "tail_ms": 110.0,
-      "tp": -4.9
+      "tp": -5.2
     },
     "gazda/u_mojoj_konobi": {
       "channels": 1,
-      "duration": 2.5,
-      "kbps": 131,
-      "lead_ms": 10.0,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 110.0,
-      "tp": -3.5
-    },
-    "gazda/ukra_si_mi": {
-      "channels": 1,
-      "duration": 2.24,
-      "kbps": 131,
-      "lead_ms": 10.0,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 89.9,
-      "tp": -2.6
-    },
-    "gazda/ultima_moja": {
-      "channels": 1,
-      "duration": 2.45,
-      "kbps": 131,
+      "duration": 2.42,
+      "kbps": 66,
       "lead_ms": 10.0,
       "lufs": -16.0,
       "sr": 44100,
       "tail_ms": 110.0,
       "tp": -2.4
     },
+    "gazda/ukra_si_mi": {
+      "channels": 1,
+      "duration": 2.24,
+      "kbps": 66,
+      "lead_ms": 10.0,
+      "lufs": -16.4,
+      "sr": 44100,
+      "tail_ms": 89.9,
+      "tp": -3.1
+    },
+    "gazda/ultima_moja": {
+      "channels": 1,
+      "duration": 2.45,
+      "kbps": 66,
+      "lead_ms": 10.0,
+      "lufs": -16.4,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -2.8
+    },
     "gazda/vrag_ti_sricu": {
       "channels": 1,
       "duration": 2.285,
-      "kbps": 132,
+      "kbps": 66,
       "lead_ms": 24.9,
+      "lufs": -15.9,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -1.3
+    },
+    "gazda/zna_sam_asa": {
+      "channels": 1,
+      "duration": 3.881,
+      "kbps": 65,
+      "lead_ms": 15.0,
+      "lufs": -16.4,
+      "sr": 44100,
+      "tail_ms": 125.0,
+      "tp": -1.1
+    },
+    "gazda/zna_sam_asa_2": {
+      "channels": 1,
+      "duration": 2.49,
+      "kbps": 66,
+      "lead_ms": 20.0,
       "lufs": -16.0,
       "sr": 44100,
-      "tail_ms": 115.0,
+      "tail_ms": 110.0,
       "tp": -1.5
+    },
+    "gazda/zna_sam_asa_3": {
+      "channels": 1,
+      "duration": 2.575,
+      "kbps": 66,
+      "lead_ms": 5.0,
+      "lufs": -16.1,
+      "sr": 44100,
+      "tail_ms": 70.7,
+      "tp": -1.5
+    },
+    "gazda/zna_sam_tricu": {
+      "channels": 1,
+      "duration": 3.357,
+      "kbps": 65,
+      "lead_ms": 29.9,
+      "lufs": -16.4,
+      "sr": 44100,
+      "tail_ms": 84.3,
+      "tp": -1.2
     },
     "mali/aha_sta_je_sad": {
       "channels": 1,
       "duration": 1.92,
-      "kbps": 132,
+      "kbps": 66,
       "lead_ms": 5.0,
-      "lufs": -16.0,
+      "lufs": -16.4,
       "sr": 44100,
       "tail_ms": 94.1,
-      "tp": -2.6
+      "tp": -2.9
     },
     "mali/ajde_tovare": {
       "channels": 1,
       "duration": 1.931,
-      "kbps": 132,
+      "kbps": 66,
       "lead_ms": 24.9,
-      "lufs": -16.1,
+      "lufs": -16.4,
       "sr": 44100,
       "tail_ms": 110.0,
-      "tp": -1.1
+      "tp": -1.5
     },
     "mali/ajme_majko": {
       "channels": 1,
       "duration": 2.845,
-      "kbps": 130,
+      "kbps": 65,
       "lead_ms": 5.0,
-      "lufs": -16.0,
+      "lufs": -16.4,
       "sr": 44100,
       "tail_ms": 76.4,
-      "tp": -1.1
+      "tp": -1.0
     },
     "mali/akuzan_cetiri": {
       "channels": 1,
       "duration": 2.899,
-      "kbps": 130,
+      "kbps": 65,
+      "lead_ms": 24.9,
+      "lufs": -16.4,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -2.2
+    },
+    "mali/akuzan_tri": {
+      "channels": 1,
+      "duration": 2.225,
+      "kbps": 66,
+      "lead_ms": 24.9,
+      "lufs": -16.4,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -1.8
+    },
+    "mali/argh": {
+      "channels": 1,
+      "duration": 2.155,
+      "kbps": 66,
+      "lead_ms": 24.9,
+      "lufs": -19.0,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -4.6
+    },
+    "mali/asti_sto": {
+      "channels": 1,
+      "duration": 1.033,
+      "kbps": 68,
+      "lead_ms": 24.9,
+      "lufs": -15.9,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -3.0
+    },
+    "mali/dava_odnija": {
+      "channels": 1,
+      "duration": 1.676,
+      "kbps": 67,
+      "lead_ms": 24.9,
+      "lufs": -16.1,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -1.0
+    },
+    "mali/ehe": {
+      "channels": 1,
+      "duration": 1.831,
+      "kbps": 67,
+      "lead_ms": 10.0,
+      "lufs": -19.0,
+      "sr": 44100,
+      "tail_ms": 105.0,
+      "tp": -1.3
+    },
+    "mali/ej_ko_te_napravi": {
+      "channels": 1,
+      "duration": 1.871,
+      "kbps": 66,
+      "lead_ms": 20.0,
+      "lufs": -16.5,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -1.5
+    },
+    "mali/evo_ti_ga_na": {
+      "channels": 1,
+      "duration": 1.267,
+      "kbps": 67,
+      "lead_ms": 24.9,
+      "lufs": -16.4,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -2.8
+    },
+    "mali/gledaj_i_uci": {
+      "channels": 1,
+      "duration": 1.921,
+      "kbps": 66,
+      "lead_ms": 24.9,
+      "lufs": -16.4,
+      "sr": 44100,
+      "tail_ms": 100.0,
+      "tp": -1.5
+    },
+    "mali/grom_te_spanija": {
+      "channels": 1,
+      "duration": 1.751,
+      "kbps": 67,
+      "lead_ms": 24.9,
+      "lufs": -16.4,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -3.3
+    },
+    "mali/igraj_vise": {
+      "channels": 1,
+      "duration": 2.2,
+      "kbps": 66,
+      "lead_ms": 24.9,
+      "lufs": -16.3,
+      "sr": 44100,
+      "tail_ms": 84.9,
+      "tp": -1.8
+    },
+    "mali/jarca_ti": {
+      "channels": 1,
+      "duration": 1.257,
+      "kbps": 68,
+      "lead_ms": 24.9,
+      "lufs": -16.4,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -2.8
+    },
+    "mali/jebate_led": {
+      "channels": 1,
+      "duration": 1.866,
+      "kbps": 66,
+      "lead_ms": 24.9,
+      "lufs": -16.3,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -1.7
+    },
+    "mali/jebem_ti_mliko": {
+      "channels": 1,
+      "duration": 2.125,
+      "kbps": 66,
+      "lead_ms": 24.9,
+      "lufs": -16.4,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -2.8
+    },
+    "mali/jebem_ti_pasa": {
+      "channels": 1,
+      "duration": 1.686,
+      "kbps": 66,
+      "lead_ms": 10.0,
+      "lufs": -16.4,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -2.5
+    },
+    "mali/jebemti_dan": {
+      "channels": 1,
+      "duration": 2.174,
+      "kbps": 66,
+      "lead_ms": 20.0,
+      "lufs": -16.7,
+      "sr": 44100,
+      "tail_ms": 83.8,
+      "tp": -1.2
+    },
+    "mali/jebenti_iruda": {
+      "channels": 1,
+      "duration": 1.906,
+      "kbps": 66,
+      "lead_ms": 15.0,
+      "lufs": -15.9,
+      "sr": 44100,
+      "tail_ms": 100.1,
+      "tp": -2.4
+    },
+    "mali/joj": {
+      "channels": 1,
+      "duration": 2.569,
+      "kbps": 66,
+      "lead_ms": 5.0,
+      "lufs": -19.0,
+      "sr": 44100,
+      "tail_ms": 75.1,
+      "tp": -2.6
+    },
+    "mali/ka_bombone": {
+      "channels": 1,
+      "duration": 3.008,
+      "kbps": 66,
+      "lead_ms": 10.0,
+      "lufs": -16.5,
+      "sr": 44100,
+      "tail_ms": 115.0,
+      "tp": -3.0
+    },
+    "mali/ko_je_misaja": {
+      "channels": 1,
+      "duration": 1.517,
+      "kbps": 67,
+      "lead_ms": 29.9,
+      "lufs": -16.0,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -4.7
+    },
+    "mali/ko_je_misaja_2": {
+      "channels": 1,
+      "duration": 2.288,
+      "kbps": 66,
+      "lead_ms": 20.0,
+      "lufs": -16.0,
+      "sr": 44100,
+      "tail_ms": 72.7,
+      "tp": -3.6
+    },
+    "mali/ko_je_misaja_3": {
+      "channels": 1,
+      "duration": 2.909,
+      "kbps": 66,
+      "lead_ms": 15.0,
+      "lufs": -16.0,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -3.0
+    },
+    "mali/kruv_i_mast": {
+      "channels": 1,
+      "duration": 3.147,
+      "kbps": 65,
+      "lead_ms": 10.0,
+      "lufs": -16.0,
+      "sr": 44100,
+      "tail_ms": 103.8,
+      "tp": -2.2
+    },
+    "mali/lipo_daj_ovamo": {
+      "channels": 1,
+      "duration": 3.482,
+      "kbps": 65,
+      "lead_ms": 15.0,
+      "lufs": -16.4,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -0.9
+    },
+    "mali/ma_daj": {
+      "channels": 1,
+      "duration": 1.173,
+      "kbps": 67,
+      "lead_ms": 5.0,
+      "lufs": -19.0,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -6.6
+    },
+    "mali/muci": {
+      "channels": 1,
+      "duration": 0.923,
+      "kbps": 69,
+      "lead_ms": 24.9,
+      "lufs": -16.4,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -1.4
+    },
+    "mali/napolitana": {
+      "channels": 1,
+      "duration": 2.315,
+      "kbps": 66,
+      "lead_ms": 24.9,
+      "lufs": -16.4,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -2.4
+    },
+    "mali/ne_mogu_virovat": {
+      "channels": 1,
+      "duration": 1.796,
+      "kbps": 66,
+      "lead_ms": 24.9,
+      "lufs": -16.4,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -3.6
+    },
+    "mali/oces_danas": {
+      "channels": 1,
+      "duration": 2.255,
+      "kbps": 66,
+      "lead_ms": 24.9,
+      "lufs": -16.3,
+      "sr": 44100,
+      "tail_ms": 65.2,
+      "tp": -1.7
+    },
+    "mali/oho": {
+      "channels": 1,
+      "duration": 0.868,
+      "kbps": 69,
+      "lead_ms": 24.9,
+      "lufs": -19.0,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -6.8
+    },
+    "mali/opet_akuza": {
+      "channels": 1,
+      "duration": 2.754,
+      "kbps": 66,
+      "lead_ms": 24.9,
+      "lufs": -16.4,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -1.7
+    },
+    "mali/pff": {
+      "channels": 1,
+      "duration": 1.517,
+      "kbps": 67,
+      "lead_ms": 24.9,
+      "lufs": -19.1,
+      "sr": 44100,
+      "tail_ms": 75.1,
+      "tp": -1.8
+    },
+    "mali/pizda_ti_materina": {
+      "channels": 1,
+      "duration": 1.532,
+      "kbps": 67,
+      "lead_ms": 24.9,
+      "lufs": -16.0,
+      "sr": 44100,
+      "tail_ms": 105.1,
+      "tp": -1.9
+    },
+    "mali/plati_rakiju": {
+      "channels": 1,
+      "duration": 2.959,
+      "kbps": 66,
+      "lead_ms": 15.0,
+      "lufs": -16.4,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -2.5
+    },
+    "mali/pusi_mrtav": {
+      "channels": 1,
+      "duration": 2.316,
+      "kbps": 66,
+      "lead_ms": 24.9,
+      "lufs": -15.9,
+      "sr": 44100,
+      "tail_ms": 96.4,
+      "tp": -1.8
+    },
+    "mali/same_lisine": {
+      "channels": 1,
+      "duration": 3.532,
+      "kbps": 65,
+      "lead_ms": 20.0,
+      "lufs": -16.2,
+      "sr": 44100,
+      "tail_ms": 85.1,
+      "tp": -1.6
+    },
+    "mali/sidi_misaj": {
+      "channels": 1,
+      "duration": 2.539,
+      "kbps": 66,
+      "lead_ms": 0.0,
+      "lufs": -16.2,
+      "sr": 44100,
+      "tail_ms": 105.0,
+      "tp": -1.2
+    },
+    "mali/srice_nima": {
+      "channels": 1,
+      "duration": 3.028,
+      "kbps": 65,
+      "lead_ms": 24.9,
+      "lufs": -16.2,
+      "sr": 44100,
+      "tail_ms": 85.1,
+      "tp": -0.9
+    },
+    "mali/sta_si_mislija": {
+      "channels": 1,
+      "duration": 1.886,
+      "kbps": 66,
+      "lead_ms": 20.0,
+      "lufs": -16.3,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -2.1
+    },
+    "mali/tucem": {
+      "channels": 1,
+      "duration": 0.798,
+      "kbps": 69,
+      "lead_ms": 24.9,
+      "lufs": -16.0,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -2.6
+    },
+    "mali/ukra_si_mi": {
+      "channels": 1,
+      "duration": 2.235,
+      "kbps": 66,
+      "lead_ms": 24.9,
+      "lufs": -16.5,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -3.4
+    },
+    "mali/ultima_moja": {
+      "channels": 1,
+      "duration": 2.295,
+      "kbps": 66,
+      "lead_ms": 15.0,
+      "lufs": -16.4,
+      "sr": 44100,
+      "tail_ms": 110.0,
+      "tp": -2.3
+    },
+    "mali/vrag_ti_sricu": {
+      "channels": 1,
+      "duration": 2.21,
+      "kbps": 66,
       "lead_ms": 24.9,
       "lufs": -16.0,
       "sr": 44100,
       "tail_ms": 110.0,
       "tp": -1.6
     },
-    "mali/akuzan_tri": {
+    "mali/zna_sam_asa": {
       "channels": 1,
-      "duration": 2.225,
-      "kbps": 132,
-      "lead_ms": 24.9,
-      "lufs": -16.1,
-      "sr": 44100,
-      "tail_ms": 110.0,
-      "tp": -1.2
-    },
-    "mali/ej_ko_te_napravi": {
-      "channels": 1,
-      "duration": 1.871,
-      "kbps": 132,
-      "lead_ms": 20.0,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 110.0,
-      "tp": -1.2
-    },
-    "mali/evo_ti_ga_na": {
-      "channels": 1,
-      "duration": 1.267,
-      "kbps": 135,
+      "duration": 3.505,
+      "kbps": 65,
       "lead_ms": 24.9,
       "lufs": -16.0,
       "sr": 44100,
-      "tail_ms": 110.0,
-      "tp": -2.3
+      "tail_ms": 92.7,
+      "tp": -1.6
     },
-    "mali/gledaj_i_uci": {
+    "mali/zna_sam_asa_2": {
       "channels": 1,
-      "duration": 1.921,
-      "kbps": 132,
-      "lead_ms": 24.9,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 100.0,
-      "tp": -1.3
-    },
-    "mali/grom_te_spanija": {
-      "channels": 1,
-      "duration": 1.751,
-      "kbps": 134,
-      "lead_ms": 24.9,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 110.0,
-      "tp": -2.9
-    },
-    "mali/igraj_vise": {
-      "channels": 1,
-      "duration": 2.2,
-      "kbps": 132,
-      "lead_ms": 24.9,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 84.9,
-      "tp": -1.4
-    },
-    "mali/jarca_ti": {
-      "channels": 1,
-      "duration": 1.257,
-      "kbps": 136,
-      "lead_ms": 24.9,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 110.0,
-      "tp": -2.2
-    },
-    "mali/jebate_led": {
-      "channels": 1,
-      "duration": 1.866,
-      "kbps": 133,
-      "lead_ms": 24.9,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 110.0,
-      "tp": -1.3
-    },
-    "mali/jebem_ti_mliko": {
-      "channels": 1,
-      "duration": 2.125,
-      "kbps": 132,
-      "lead_ms": 24.9,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 110.0,
-      "tp": -3.0
-    },
-    "mali/jebem_ti_pasa": {
-      "channels": 1,
-      "duration": 1.686,
-      "kbps": 133,
-      "lead_ms": 10.0,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 134.9,
-      "tp": -2.0
-    },
-    "mali/ka_bombone": {
-      "channels": 1,
-      "duration": 3.008,
-      "kbps": 131,
+      "duration": 2.27,
+      "kbps": 66,
       "lead_ms": 10.0,
       "lufs": -16.0,
       "sr": 44100,
       "tail_ms": 110.0,
-      "tp": -2.5
+      "tp": -1.9
     },
-    "mali/ko_je_misaja": {
+    "mali/zna_sam_asa_3": {
       "channels": 1,
-      "duration": 1.746,
-      "kbps": 132,
-      "lead_ms": 24.9,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 110.0,
-      "tp": -5.1
-    },
-    "mali/lipo_daj_ovamo": {
-      "channels": 1,
-      "duration": 3.482,
-      "kbps": 131,
-      "lead_ms": 15.0,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 110.0,
-      "tp": -1.3
-    },
-    "mali/napolitana": {
-      "channels": 1,
-      "duration": 2.315,
-      "kbps": 131,
-      "lead_ms": 24.9,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 110.0,
-      "tp": -2.3
-    },
-    "mali/ne_mogu_virovat": {
-      "channels": 1,
-      "duration": 1.796,
-      "kbps": 132,
-      "lead_ms": 24.9,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 110.0,
-      "tp": -3.2
-    },
-    "mali/oces_danas": {
-      "channels": 1,
-      "duration": 2.255,
-      "kbps": 132,
-      "lead_ms": 24.9,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 65.2,
-      "tp": -1.5
-    },
-    "mali/opet_akuza": {
-      "channels": 1,
-      "duration": 2.754,
-      "kbps": 131,
-      "lead_ms": 24.9,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 110.0,
-      "tp": -1.5
-    },
-    "mali/plati_rakiju": {
-      "channels": 1,
-      "duration": 2.959,
-      "kbps": 131,
-      "lead_ms": 15.0,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 110.0,
-      "tp": -2.0
-    },
-    "mali/same_lisine": {
-      "channels": 1,
-      "duration": 3.532,
-      "kbps": 131,
-      "lead_ms": 20.0,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 85.1,
-      "tp": -1.3
-    },
-    "mali/sidi_misaj": {
-      "channels": 1,
-      "duration": 2.539,
-      "kbps": 132,
-      "lead_ms": 0.0,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 105.0,
-      "tp": -1.3
-    },
-    "mali/srice_nima": {
-      "channels": 1,
-      "duration": 3.028,
-      "kbps": 130,
-      "lead_ms": 24.9,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 85.1,
-      "tp": -1.1
-    },
-    "mali/sta_si_mislija": {
-      "channels": 1,
-      "duration": 1.886,
-      "kbps": 133,
-      "lead_ms": 24.9,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 110.0,
-      "tp": -1.5
-    },
-    "mali/tucem": {
-      "channels": 1,
-      "duration": 0.798,
-      "kbps": 138,
-      "lead_ms": 24.9,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 110.0,
-      "tp": -2.7
-    },
-    "mali/ukra_si_mi": {
-      "channels": 1,
-      "duration": 2.235,
-      "kbps": 132,
-      "lead_ms": 24.9,
-      "lufs": -16.0,
-      "sr": 44100,
-      "tail_ms": 110.0,
-      "tp": -2.9
-    },
-    "mali/ultima_moja": {
-      "channels": 1,
-      "duration": 2.295,
-      "kbps": 131,
-      "lead_ms": 15.0,
+      "duration": 2.44,
+      "kbps": 66,
+      "lead_ms": 5.0,
       "lufs": -16.0,
       "sr": 44100,
       "tail_ms": 110.0,
       "tp": -1.8
     },
-    "mali/vrag_ti_sricu": {
+    "mali/zna_sam_tricu": {
       "channels": 1,
-      "duration": 2.21,
-      "kbps": 132,
+      "duration": 3.086,
+      "kbps": 66,
       "lead_ms": 24.9,
       "lufs": -16.0,
       "sr": 44100,
-      "tail_ms": 110.0,
-      "tp": -1.5
+      "tail_ms": 108.0,
+      "tp": -1.8
     }
   },
   "voice_takes": {
@@ -1382,6 +2095,106 @@
           "similarity": 0.975609756097561,
           "stt": "A kužan tri? Piši, piši!",
           "take": "akuzan_tri_t2.mp3"
+        }
+      ]
+    },
+    "barba/argh": {
+      "score": 0.69,
+      "status": "made",
+      "take": "argh_t2.mp3",
+      "takes": [
+        {
+          "score": 0.53,
+          "similarity": 0.13333333333333333,
+          "stt": "*grrrr* *grrrr*",
+          "take": "argh_t1.mp3"
+        },
+        {
+          "score": 0.69,
+          "similarity": 0.3076923076923077,
+          "stt": "*Uggh* *Uggh*",
+          "take": "argh_t2.mp3"
+        },
+        {
+          "score": 0.61,
+          "similarity": 0.1111111111111111,
+          "stt": "*grrr* *grrr* *grrr*",
+          "take": "argh_t3.mp3"
+        },
+        {
+          "score": 0.59,
+          "similarity": 0.0,
+          "stt": "*zvuk*",
+          "take": "argh_t4.mp3"
+        }
+      ]
+    },
+    "barba/asti_sto": {
+      "score": 0.925,
+      "status": "made",
+      "take": "asti_sto_t2.mp3",
+      "takes": [
+        {
+          "score": 0.748,
+          "similarity": 0.7058823529411765,
+          "stt": "Aš ti što?",
+          "take": "asti_sto_t1.mp3"
+        },
+        {
+          "score": 0.925,
+          "similarity": 0.875,
+          "stt": "Ašti sto.",
+          "take": "asti_sto_t2.mp3"
+        }
+      ]
+    },
+    "barba/dava_odnija": {
+      "score": 0.945,
+      "status": "made",
+      "take": "dava_odnija_t2.mp3",
+      "takes": [
+        {
+          "score": 0.791,
+          "similarity": 0.8108108108108109,
+          "stt": "A da te javao nije?",
+          "take": "dava_odnija_t1.mp3"
+        },
+        {
+          "score": 0.945,
+          "similarity": 0.8947368421052632,
+          "stt": "A da teđava on nija.",
+          "take": "dava_odnija_t2.mp3"
+        }
+      ]
+    },
+    "barba/ehe": {
+      "score": 0.555,
+      "status": "made",
+      "take": "ehe_t1.mp3",
+      "takes": [
+        {
+          "score": 0.555,
+          "similarity": 0.5454545454545454,
+          "stt": "Ha-ha-ha! E-he-he!",
+          "take": "ehe_t1.mp3"
+        },
+        {
+          "score": 0.555,
+          "similarity": 0.5454545454545454,
+          "stt": "Ha-ha-ha! E-he-he!",
+          "take": "ehe_t2.mp3"
+        },
+        {
+          "score": 0.445,
+          "similarity": 0.43478260869565216,
+          "stt": "Ha-ha-ha! He-he-he!",
+          "take": "ehe_t3.mp3"
+        },
+        {
+          "score": 0.01,
+          "similarity": 0.0,
+          "stt": "*Svup*",
+          "take": "ehe_t4.mp3"
         }
       ]
     },
@@ -1496,16 +2309,28 @@
           "similarity": 0.9333333333333333,
           "stt": "JARCATI!",
           "take": "jarca_ti_t2.mp3"
+        },
+        {
+          "score": 0.678,
+          "similarity": 0.7142857142857143,
+          "stt": "Jačati!",
+          "take": "jarca_ti_t3.mp3"
+        },
+        {
+          "score": 0.933,
+          "similarity": 0.9333333333333333,
+          "stt": "JARCATI!",
+          "take": "jarca_ti_t4.mp3"
         }
       ]
     },
     "barba/jebate_led": {
-      "score": 0.95,
+      "score": 0.97,
       "status": "made",
-      "take": "jebate_led_t2.mp3",
+      "take": "jebate_led_t4.mp3",
       "takes": [
         {
-          "score": 0.909,
+          "score": 0.91,
           "similarity": 0.9,
           "stt": "Jebate lid!",
           "take": "jebate_led_t1.mp3"
@@ -1515,6 +2340,18 @@
           "similarity": 0.9,
           "stt": "Jebate lid!",
           "take": "jebate_led_t2.mp3"
+        },
+        {
+          "score": 0.946,
+          "similarity": 0.9,
+          "stt": "Jebate lid!",
+          "take": "jebate_led_t3.mp3"
+        },
+        {
+          "score": 0.97,
+          "similarity": 0.9523809523809523,
+          "stt": "Jeba te led!",
+          "take": "jebate_led_t4.mp3"
         }
       ]
     },
@@ -1556,6 +2393,63 @@
         }
       ]
     },
+    "barba/jebemti_dan": {
+      "score": 1.002,
+      "status": "made",
+      "take": "jebemti_dan_t2.mp3",
+      "takes": [
+        {
+          "score": 0.993,
+          "similarity": 0.9565217391304348,
+          "stt": "Jebem ti dan.",
+          "take": "jebemti_dan_t1.mp3"
+        },
+        {
+          "score": 1.002,
+          "similarity": 0.9565217391304348,
+          "stt": "Jebem ti dan.",
+          "take": "jebemti_dan_t2.mp3"
+        }
+      ]
+    },
+    "barba/jebenti_iruda": {
+      "score": 0.979,
+      "status": "made",
+      "take": "jebenti_iruda_t1.mp3",
+      "takes": [
+        {
+          "score": 0.979,
+          "similarity": 0.9285714285714286,
+          "stt": "Jeben ti i Ruda!",
+          "take": "jebenti_iruda_t1.mp3"
+        },
+        {
+          "score": 0.979,
+          "similarity": 0.9285714285714286,
+          "stt": "Jeben ti i Ruda!",
+          "take": "jebenti_iruda_t2.mp3"
+        }
+      ]
+    },
+    "barba/joj": {
+      "score": 1.05,
+      "status": "made",
+      "take": "joj_t2.mp3",
+      "takes": [
+        {
+          "score": 1.045,
+          "similarity": 1.0,
+          "stt": "Joj, joj, joj.",
+          "take": "joj_t1.mp3"
+        },
+        {
+          "score": 1.05,
+          "similarity": 1.0,
+          "stt": "Joj, joj, joj.",
+          "take": "joj_t2.mp3"
+        }
+      ]
+    },
     "barba/ka_riba": {
       "score": 0.965,
       "status": "made",
@@ -1576,21 +2470,97 @@
       ]
     },
     "barba/ko_je_misaja": {
-      "score": 0.898,
+      "score": 0.878,
       "status": "made",
       "take": "ko_je_misaja_t1.mp3",
       "takes": [
         {
-          "score": 0.898,
-          "similarity": 0.8484848484848485,
-          "stt": "Kojovo misaja, a?",
+          "score": 0.878,
+          "similarity": 0.8275862068965517,
+          "stt": "Kojovo misa, a?",
           "take": "ko_je_misaja_t1.mp3"
         },
         {
-          "score": 0.838,
-          "similarity": 0.7878787878787878,
-          "stt": "Hojovo misaja, a?",
+          "score": 0.878,
+          "similarity": 0.8275862068965517,
+          "stt": "Kojovo misa, a?",
           "take": "ko_je_misaja_t2.mp3"
+        }
+      ]
+    },
+    "barba/ko_je_misaja_2": {
+      "score": 0.925,
+      "status": "made",
+      "take": "ko_je_misaja_2_t2.mp3",
+      "takes": [
+        {
+          "score": 0.838,
+          "similarity": 0.8275862068965517,
+          "stt": "Hojovo Misha, da mu jedem sve!",
+          "take": "ko_je_misaja_2_t1.mp3"
+        },
+        {
+          "score": 0.925,
+          "similarity": 0.9152542372881356,
+          "stt": "Koje ovo misa da mu jemem sve?!",
+          "take": "ko_je_misaja_2_t2.mp3"
+        }
+      ]
+    },
+    "barba/ko_je_misaja_3": {
+      "score": 0.973,
+      "status": "made",
+      "take": "ko_je_misaja_3_t2.mp3",
+      "takes": [
+        {
+          "score": 0.947,
+          "similarity": 0.8974358974358975,
+          "stt": "Jebem ti sve jono koje misla ove karte!",
+          "take": "ko_je_misaja_3_t1.mp3"
+        },
+        {
+          "score": 0.973,
+          "similarity": 0.9230769230769231,
+          "stt": "Jebem ti sve i ono koje misao ve karte.",
+          "take": "ko_je_misaja_3_t2.mp3"
+        }
+      ]
+    },
+    "barba/kruv_i_mast": {
+      "score": 0.978,
+      "status": "made",
+      "take": "kruv_i_mast_t1.mp3",
+      "takes": [
+        {
+          "score": 0.978,
+          "similarity": 0.927536231884058,
+          "stt": "Jebem ti kruvi masti kojih sastavi.",
+          "take": "kruv_i_mast_t1.mp3"
+        },
+        {
+          "score": 0.949,
+          "similarity": 0.8985507246376812,
+          "stt": "Jedem ti kruvi masti kojih sastavi.",
+          "take": "kruv_i_mast_t2.mp3"
+        }
+      ]
+    },
+    "barba/kurac_lisine": {
+      "score": 1.05,
+      "status": "made",
+      "take": "kurac_lisine_t2.mp3",
+      "takes": [
+        {
+          "score": 1.027,
+          "similarity": 0.9767441860465116,
+          "stt": "Kurac moj, opet zlišine!",
+          "take": "kurac_lisine_t1.mp3"
+        },
+        {
+          "score": 1.05,
+          "similarity": 1.0,
+          "stt": "Kurac moj, opet lišine!",
+          "take": "kurac_lisine_t2.mp3"
         }
       ]
     },
@@ -1610,6 +2580,44 @@
           "similarity": 1.0,
           "stt": "Lipo lipo, daj to ovamo.",
           "take": "lipo_daj_ovamo_t2.mp3"
+        }
+      ]
+    },
+    "barba/ma_daj": {
+      "score": 0.843,
+      "status": "made",
+      "take": "ma_daj_t1.mp3",
+      "takes": [
+        {
+          "score": 0.843,
+          "similarity": 0.8333333333333334,
+          "stt": "Madzaj!",
+          "take": "ma_daj_t1.mp3"
+        },
+        {
+          "score": 0.843,
+          "similarity": 0.8333333333333334,
+          "stt": "Maddaj!",
+          "take": "ma_daj_t2.mp3"
+        }
+      ]
+    },
+    "barba/muci": {
+      "score": 0.8,
+      "status": "made",
+      "take": "muci_t1.mp3",
+      "takes": [
+        {
+          "score": 0.8,
+          "similarity": 0.75,
+          "stt": "Muci!",
+          "take": "muci_t1.mp3"
+        },
+        {
+          "score": 0.717,
+          "similarity": 0.6666666666666666,
+          "stt": "Mulci!",
+          "take": "muci_t2.mp3"
         }
       ]
     },
@@ -1651,6 +2659,25 @@
         }
       ]
     },
+    "barba/oho": {
+      "score": 0.907,
+      "status": "made",
+      "take": "oho_t1.mp3",
+      "takes": [
+        {
+          "score": 0.907,
+          "similarity": 0.8571428571428571,
+          "stt": "Hoho!",
+          "take": "oho_t1.mp3"
+        },
+        {
+          "score": 0.55,
+          "similarity": 0.5,
+          "stt": "Hoho! Hoho!",
+          "take": "oho_t2.mp3"
+        }
+      ]
+    },
     "barba/opet_akuza": {
       "score": 0.995,
       "status": "made",
@@ -1670,6 +2697,56 @@
         }
       ]
     },
+    "barba/pff": {
+      "score": 0.85,
+      "status": "made",
+      "take": "pff_t3.mp3",
+      "takes": [
+        {
+          "score": 0.79,
+          "similarity": 0.0,
+          "stt": "*Skrije*",
+          "take": "pff_t1.mp3"
+        },
+        {
+          "score": 0.65,
+          "similarity": 0.0,
+          "stt": "*Savljeno*",
+          "take": "pff_t2.mp3"
+        },
+        {
+          "score": 0.85,
+          "similarity": 0.0,
+          "stt": "*Skrije*",
+          "take": "pff_t3.mp3"
+        },
+        {
+          "score": 0.3,
+          "similarity": 0.0,
+          "stt": "*Savir*",
+          "take": "pff_t4.mp3"
+        }
+      ]
+    },
+    "barba/pizda_ti_materina": {
+      "score": 0.919,
+      "status": "made",
+      "take": "pizda_ti_materina_t1.mp3",
+      "takes": [
+        {
+          "score": 0.919,
+          "similarity": 0.9090909090909091,
+          "stt": "Pizzati materina!",
+          "take": "pizda_ti_materina_t1.mp3"
+        },
+        {
+          "score": 0.919,
+          "similarity": 0.9090909090909091,
+          "stt": "PISDATI MATERINA!",
+          "take": "pizda_ti_materina_t2.mp3"
+        }
+      ]
+    },
     "barba/plati_rakiju": {
       "score": 1.01,
       "status": "made",
@@ -1686,6 +2763,25 @@
           "similarity": 1.0,
           "stt": "Plati rakiju i ne plači.",
           "take": "plati_rakiju_t2.mp3"
+        }
+      ]
+    },
+    "barba/pusi_mrtav": {
+      "score": 0.935,
+      "status": "made",
+      "take": "pusi_mrtav_t2.mp3",
+      "takes": [
+        {
+          "score": 0.906,
+          "similarity": 0.8955223880597015,
+          "stt": "PUSI KURAT SPEDERU! MRTAVSI ZAMENE!",
+          "take": "pusi_mrtav_t1.mp3"
+        },
+        {
+          "score": 0.935,
+          "similarity": 0.9253731343283582,
+          "stt": "PUSI KURAT PEDERU! MRTAV SI ZAMENE!",
+          "take": "pusi_mrtav_t2.mp3"
         }
       ]
     },
@@ -1724,6 +2820,25 @@
           "similarity": 1.0,
           "stt": "Ajde, Sidi, mišaj karte.",
           "take": "sidi_misaj_t2.mp3"
+        }
+      ]
+    },
+    "barba/smrdis_bakalar": {
+      "score": 0.919,
+      "status": "made",
+      "take": "smrdis_bakalar_t1.mp3",
+      "takes": [
+        {
+          "score": 0.919,
+          "similarity": 0.9090909090909091,
+          "stt": "Smerdiška bakala!",
+          "take": "smrdis_bakalar_t1.mp3"
+        },
+        {
+          "score": 0.919,
+          "similarity": 0.9090909090909091,
+          "stt": "Smerdiška bakala!",
+          "take": "smrdis_bakalar_t2.mp3"
         }
       ]
     },
@@ -1806,6 +2921,12 @@
           "similarity": 0.9090909090909091,
           "stt": "Tu čem?",
           "take": "tucem_t3.mp3"
+        },
+        {
+          "score": 0.774,
+          "similarity": 0.7272727272727273,
+          "stt": "TURKEM!",
+          "take": "tucem_t4.mp3"
         }
       ]
     },
@@ -1859,10 +2980,98 @@
           "take": "vrag_ti_sricu_t1.mp3"
         },
         {
-          "score": 0.75,
+          "score": 0.751,
           "similarity": 0.7567567567567568,
           "stt": "Vrakti srećodnije!",
           "take": "vrag_ti_sricu_t2.mp3"
+        },
+        {
+          "score": 0.827,
+          "similarity": 0.85,
+          "stt": "Vrakti sryću od nija!",
+          "take": "vrag_ti_sricu_t3.mp3"
+        },
+        {
+          "score": 0.81,
+          "similarity": 0.8,
+          "stt": "Vrakti sliču od nija!",
+          "take": "vrag_ti_sricu_t4.mp3"
+        }
+      ]
+    },
+    "barba/zna_sam_asa": {
+      "score": 1.029,
+      "status": "made",
+      "take": "zna_sam_asa_t2.mp3",
+      "takes": [
+        {
+          "score": 0.986,
+          "similarity": 0.9361702127659575,
+          "stt": "A zna sam da ima asa, jebem ti asa i koga stvori?",
+          "take": "zna_sam_asa_t1.mp3"
+        },
+        {
+          "score": 1.029,
+          "similarity": 0.9787234042553191,
+          "stt": "A zna sam da ima aša. Jebem ti aša i koga stvori.",
+          "take": "zna_sam_asa_t2.mp3"
+        }
+      ]
+    },
+    "barba/zna_sam_asa_2": {
+      "score": 0.935,
+      "status": "made",
+      "take": "zna_sam_asa_2_t1.mp3",
+      "takes": [
+        {
+          "score": 0.935,
+          "similarity": 0.8846153846153846,
+          "stt": "Jedem ti asa i koga stvori?",
+          "take": "zna_sam_asa_2_t1.mp3"
+        },
+        {
+          "score": 0.918,
+          "similarity": 0.8679245283018868,
+          "stt": "Jedem ti asha i koga stvori.",
+          "take": "zna_sam_asa_2_t2.mp3"
+        }
+      ]
+    },
+    "barba/zna_sam_asa_3": {
+      "score": 1.001,
+      "status": "made",
+      "take": "zna_sam_asa_3_t2.mp3",
+      "takes": [
+        {
+          "score": 0.985,
+          "similarity": 0.9354838709677419,
+          "stt": "Jebem ti asha, zna sam da ga imaš.",
+          "take": "zna_sam_asa_3_t1.mp3"
+        },
+        {
+          "score": 1.001,
+          "similarity": 0.9508196721311475,
+          "stt": "Jebem ti asa, zna sam da ga imaš.",
+          "take": "zna_sam_asa_3_t2.mp3"
+        }
+      ]
+    },
+    "barba/zna_sam_tricu": {
+      "score": 0.982,
+      "status": "made",
+      "take": "zna_sam_tricu_t1.mp3",
+      "takes": [
+        {
+          "score": 0.982,
+          "similarity": 0.9315068493150684,
+          "stt": "A zna sam da ima triču! Jeben ti triču!",
+          "take": "zna_sam_tricu_t1.mp3"
+        },
+        {
+          "score": 0.939,
+          "similarity": 0.8888888888888888,
+          "stt": "A znašam da ima triču. Jeben ti triču!",
+          "take": "zna_sam_tricu_t2.mp3"
         }
       ]
     },
@@ -1970,6 +3179,94 @@
           "similarity": 0.975609756097561,
           "stt": "A kužan tri? Piši, piši!",
           "take": "akuzan_tri_t2.mp3"
+        }
+      ]
+    },
+    "gazda/argh": {
+      "score": 0.73,
+      "status": "made",
+      "take": "argh_t1.mp3",
+      "takes": [
+        {
+          "score": 0.73,
+          "similarity": 0.15384615384615385,
+          "stt": "*Groj* *Groj*",
+          "take": "argh_t1.mp3"
+        },
+        {
+          "score": 0.65,
+          "similarity": 0.13333333333333333,
+          "stt": "*grrrr* *grrrr*",
+          "take": "argh_t2.mp3"
+        },
+        {
+          "score": 0.71,
+          "similarity": 0.15384615384615385,
+          "stt": "*Groj* *Groj*",
+          "take": "argh_t3.mp3"
+        },
+        {
+          "score": 0.69,
+          "similarity": 0.3076923076923077,
+          "stt": "*Uggh* *Uggh*",
+          "take": "argh_t4.mp3"
+        }
+      ]
+    },
+    "gazda/asti_sto": {
+      "score": 0.922,
+      "status": "made",
+      "take": "asti_sto_t2.mp3",
+      "takes": [
+        {
+          "score": 0.85,
+          "similarity": 0.8,
+          "stt": "Astišto!",
+          "take": "asti_sto_t1.mp3"
+        },
+        {
+          "score": 0.922,
+          "similarity": 0.875,
+          "stt": "Ašti sto!",
+          "take": "asti_sto_t2.mp3"
+        }
+      ]
+    },
+    "gazda/dava_odnija": {
+      "score": 0.986,
+      "status": "made",
+      "take": "dava_odnija_t1.mp3",
+      "takes": [
+        {
+          "score": 0.986,
+          "similarity": 0.9473684210526315,
+          "stt": "A da teđava od nija!",
+          "take": "dava_odnija_t1.mp3"
+        },
+        {
+          "score": 0.931,
+          "similarity": 0.9,
+          "stt": "A da te džava od nija!",
+          "take": "dava_odnija_t2.mp3"
+        }
+      ]
+    },
+    "gazda/ehe": {
+      "score": 0.724,
+      "status": "made",
+      "take": "ehe_t1.mp3",
+      "takes": [
+        {
+          "score": 0.724,
+          "similarity": 0.7142857142857143,
+          "stt": "He, he, he!",
+          "take": "ehe_t1.mp3"
+        },
+        {
+          "score": 0.724,
+          "similarity": 0.7142857142857143,
+          "stt": "He, he, he!",
+          "take": "ehe_t2.mp3"
         }
       ]
     },
@@ -2156,22 +3453,174 @@
         }
       ]
     },
+    "gazda/jebemti_dan": {
+      "score": 1.006,
+      "status": "made",
+      "take": "jebemti_dan_t1.mp3",
+      "takes": [
+        {
+          "score": 1.006,
+          "similarity": 0.9565217391304348,
+          "stt": "Jebem ti dan.",
+          "take": "jebemti_dan_t1.mp3"
+        },
+        {
+          "score": 0.995,
+          "similarity": 0.9565217391304348,
+          "stt": "Jebem ti dan.",
+          "take": "jebemti_dan_t2.mp3"
+        }
+      ]
+    },
+    "gazda/jebenti_iruda": {
+      "score": 1.013,
+      "status": "made",
+      "take": "jebenti_iruda_t1.mp3",
+      "takes": [
+        {
+          "score": 1.013,
+          "similarity": 0.9629629629629629,
+          "stt": "Jeben ti iruda!",
+          "take": "jebenti_iruda_t1.mp3"
+        },
+        {
+          "score": 1.013,
+          "similarity": 0.9629629629629629,
+          "stt": "Jeben ti iruda!",
+          "take": "jebenti_iruda_t2.mp3"
+        }
+      ]
+    },
+    "gazda/joj": {
+      "score": 1.05,
+      "status": "made",
+      "take": "joj_t2.mp3",
+      "takes": [
+        {
+          "score": 0.621,
+          "similarity": 0.5714285714285714,
+          "stt": "*jajjajjajj*",
+          "take": "joj_t1.mp3"
+        },
+        {
+          "score": 1.05,
+          "similarity": 1.0,
+          "stt": "Joj, joj, joj.",
+          "take": "joj_t2.mp3"
+        }
+      ]
+    },
+    "gazda/kartu_izmisli": {
+      "score": 0.999,
+      "status": "made",
+      "take": "kartu_izmisli_t1.mp3",
+      "takes": [
+        {
+          "score": 0.999,
+          "similarity": 0.9491525423728814,
+          "stt": "Jebem ti kartu i koja izmisli?",
+          "take": "kartu_izmisli_t1.mp3"
+        },
+        {
+          "score": 0.999,
+          "similarity": 0.9491525423728814,
+          "stt": "Jebem ti kartu i koja izmisli?",
+          "take": "kartu_izmisli_t2.mp3"
+        }
+      ]
+    },
     "gazda/ko_je_misaja": {
-      "score": 0.907,
+      "score": 0.959,
       "status": "made",
       "take": "ko_je_misaja_t1.mp3",
       "takes": [
         {
-          "score": 0.907,
-          "similarity": 0.8571428571428571,
-          "stt": "Ko jovo misaja, ha?",
+          "score": 0.959,
+          "similarity": 0.9090909090909091,
+          "stt": "Kvo je ovo misa, a?",
           "take": "ko_je_misaja_t1.mp3"
         },
         {
-          "score": 0.874,
-          "similarity": 0.8235294117647058,
-          "stt": "Koja o Mišaja, ha?",
+          "score": 0.764,
+          "similarity": 0.7142857142857143,
+          "stt": "Kojovo Misha?",
           "take": "ko_je_misaja_t2.mp3"
+        }
+      ]
+    },
+    "gazda/ko_je_misaja_2": {
+      "score": 0.945,
+      "status": "made",
+      "take": "ko_je_misaja_2_t1.mp3",
+      "takes": [
+        {
+          "score": 0.945,
+          "similarity": 0.9354838709677419,
+          "stt": "Ko je ovom Misha da mu jebem sve?",
+          "take": "ko_je_misaja_2_t1.mp3"
+        },
+        {
+          "score": 0.895,
+          "similarity": 0.8852459016393442,
+          "stt": "Hoje ovom Misha da mu jebem sve!",
+          "take": "ko_je_misaja_2_t2.mp3"
+        }
+      ]
+    },
+    "gazda/ko_je_misaja_3": {
+      "score": 1.011,
+      "status": "made",
+      "take": "ko_je_misaja_3_t1.mp3",
+      "takes": [
+        {
+          "score": 1.011,
+          "similarity": 0.9620253164556962,
+          "stt": "Jebem ti sve i onog koja miša ove karte!",
+          "take": "ko_je_misaja_3_t1.mp3"
+        },
+        {
+          "score": 0.986,
+          "similarity": 0.9367088607594937,
+          "stt": "Jebem ti sve i onog koje mišao je karte!",
+          "take": "ko_je_misaja_3_t2.mp3"
+        }
+      ]
+    },
+    "gazda/kruv_i_mast": {
+      "score": 0.993,
+      "status": "made",
+      "take": "kruv_i_mast_t1.mp3",
+      "takes": [
+        {
+          "score": 0.993,
+          "similarity": 0.9428571428571428,
+          "stt": "Jebem ti kruvi, mast i kojih sastavi!",
+          "take": "kruv_i_mast_t1.mp3"
+        },
+        {
+          "score": 0.993,
+          "similarity": 0.9428571428571428,
+          "stt": "Jebem ti kruvi mast i kojih sastavi?",
+          "take": "kruv_i_mast_t2.mp3"
+        }
+      ]
+    },
+    "gazda/kurac_lisine": {
+      "score": 1.05,
+      "status": "made",
+      "take": "kurac_lisine_t1.mp3",
+      "takes": [
+        {
+          "score": 1.05,
+          "similarity": 1.0,
+          "stt": "Kurac moj, opet lišine!",
+          "take": "kurac_lisine_t1.mp3"
+        },
+        {
+          "score": 1.05,
+          "similarity": 1.0,
+          "stt": "Kurac moj, opet lišine!",
+          "take": "kurac_lisine_t2.mp3"
         }
       ]
     },
@@ -2191,6 +3640,44 @@
           "similarity": 1.0,
           "stt": "Lipo, lipo, daj to ovamo.",
           "take": "lipo_daj_ovamo_t2.mp3"
+        }
+      ]
+    },
+    "gazda/ma_daj": {
+      "score": 0.919,
+      "status": "made",
+      "take": "ma_daj_t1.mp3",
+      "takes": [
+        {
+          "score": 0.919,
+          "similarity": 0.9090909090909091,
+          "stt": "Madaj!",
+          "take": "ma_daj_t1.mp3"
+        },
+        {
+          "score": 0.843,
+          "similarity": 0.8333333333333334,
+          "stt": "Maddaj!",
+          "take": "ma_daj_t2.mp3"
+        }
+      ]
+    },
+    "gazda/muci": {
+      "score": 0.8,
+      "status": "made",
+      "take": "muci_t1.mp3",
+      "takes": [
+        {
+          "score": 0.8,
+          "similarity": 0.75,
+          "stt": "Muci!",
+          "take": "muci_t1.mp3"
+        },
+        {
+          "score": 0.8,
+          "similarity": 0.75,
+          "stt": "Muci!",
+          "take": "muci_t2.mp3"
         }
       ]
     },
@@ -2232,6 +3719,25 @@
         }
       ]
     },
+    "gazda/oho": {
+      "score": 0.907,
+      "status": "made",
+      "take": "oho_t2.mp3",
+      "takes": [
+        {
+          "score": 0.55,
+          "similarity": 0.5,
+          "stt": "Ho ho!",
+          "take": "oho_t1.mp3"
+        },
+        {
+          "score": 0.907,
+          "similarity": 0.8571428571428571,
+          "stt": "Hoho!",
+          "take": "oho_t2.mp3"
+        }
+      ]
+    },
     "gazda/opet_akuza": {
       "score": 1.014,
       "status": "made",
@@ -2251,6 +3757,56 @@
         }
       ]
     },
+    "gazda/pff": {
+      "score": 0.85,
+      "status": "made",
+      "take": "pff_t3.mp3",
+      "takes": [
+        {
+          "score": 0.79,
+          "similarity": 0.5,
+          "stt": "*Pfff* *Pfff*",
+          "take": "pff_t1.mp3"
+        },
+        {
+          "score": 0.75,
+          "similarity": 0.0,
+          "stt": "*Skrije*",
+          "take": "pff_t2.mp3"
+        },
+        {
+          "score": 0.85,
+          "similarity": 0.5,
+          "stt": "*pfff* *pfff*",
+          "take": "pff_t3.mp3"
+        },
+        {
+          "score": 0.85,
+          "similarity": 0.0,
+          "stt": "*Skrije*",
+          "take": "pff_t4.mp3"
+        }
+      ]
+    },
+    "gazda/pizda_ti_materina": {
+      "score": 1.01,
+      "status": "made",
+      "take": "pizda_ti_materina_t2.mp3",
+      "takes": [
+        {
+          "score": 0.951,
+          "similarity": 0.9411764705882353,
+          "stt": "Pizda ti materila!",
+          "take": "pizda_ti_materina_t1.mp3"
+        },
+        {
+          "score": 1.01,
+          "similarity": 1.0,
+          "stt": "Pizda ti materina!",
+          "take": "pizda_ti_materina_t2.mp3"
+        }
+      ]
+    },
     "gazda/plati_rakiju": {
       "score": 1.01,
       "status": "made",
@@ -2267,6 +3823,25 @@
           "similarity": 0.92,
           "stt": "Hah, plati rakiju i ne plači.",
           "take": "plati_rakiju_t2.mp3"
+        }
+      ]
+    },
+    "gazda/pusi_mrtav": {
+      "score": 0.906,
+      "status": "made",
+      "take": "pusi_mrtav_t2.mp3",
+      "takes": [
+        {
+          "score": 0.851,
+          "similarity": 0.8405797101449275,
+          "stt": "PUSHI KURAT, SPEDERU! MRTOR SI ZAMENE!",
+          "take": "pusi_mrtav_t1.mp3"
+        },
+        {
+          "score": 0.906,
+          "similarity": 0.8955223880597015,
+          "stt": "PUSI KURATS PEDERU MRTAVSI ZAMENE!",
+          "take": "pusi_mrtav_t2.mp3"
         }
       ]
     },
@@ -2409,9 +3984,9 @@
       ]
     },
     "gazda/u_mojoj_konobi": {
-      "score": 0.896,
+      "score": 0.955,
       "status": "made",
-      "take": "u_mojoj_konobi_t1.mp3",
+      "take": "u_mojoj_konobi_t3.mp3",
       "takes": [
         {
           "score": 0.896,
@@ -2424,6 +3999,18 @@
           "similarity": 0.84,
           "stt": "U moru ikono bija dobivan!",
           "take": "u_mojoj_konobi_t2.mp3"
+        },
+        {
+          "score": 0.955,
+          "similarity": 0.9056603773584906,
+          "stt": "U mojoj ekonomiji ja dobivan!",
+          "take": "u_mojoj_konobi_t3.mp3"
+        },
+        {
+          "score": 0.88,
+          "similarity": 0.8301886792452831,
+          "stt": "U mojoj ekologiji jado bivan!",
+          "take": "u_mojoj_konobi_t4.mp3"
         }
       ]
     },
@@ -2493,6 +4080,82 @@
           "similarity": 0.85,
           "stt": "Vrakti sreću od nija!",
           "take": "vrag_ti_sricu_t4.mp3"
+        }
+      ]
+    },
+    "gazda/zna_sam_asa": {
+      "score": 1.029,
+      "status": "made",
+      "take": "zna_sam_asa_t1.mp3",
+      "takes": [
+        {
+          "score": 1.029,
+          "similarity": 0.9787234042553191,
+          "stt": "A zna sam da ima aša. Jebem ti aša i koga stvori?",
+          "take": "zna_sam_asa_t1.mp3"
+        },
+        {
+          "score": 1.029,
+          "similarity": 0.9787234042553191,
+          "stt": "A zna sam da ima aša. Jebem ti aša i koga stvori.",
+          "take": "zna_sam_asa_t2.mp3"
+        }
+      ]
+    },
+    "gazda/zna_sam_asa_2": {
+      "score": 1.012,
+      "status": "made",
+      "take": "zna_sam_asa_2_t1.mp3",
+      "takes": [
+        {
+          "score": 1.012,
+          "similarity": 0.9615384615384616,
+          "stt": "Jebem ti aša i koga stvori!",
+          "take": "zna_sam_asa_2_t1.mp3"
+        },
+        {
+          "score": 0.973,
+          "similarity": 0.9230769230769231,
+          "stt": "Jebem ti asa i koga stvori?",
+          "take": "zna_sam_asa_2_t2.mp3"
+        }
+      ]
+    },
+    "gazda/zna_sam_asa_3": {
+      "score": 0.983,
+      "status": "made",
+      "take": "zna_sam_asa_3_t1.mp3",
+      "takes": [
+        {
+          "score": 0.983,
+          "similarity": 0.9333333333333333,
+          "stt": "Jebem ti asa, znasam da ga imaš!",
+          "take": "zna_sam_asa_3_t1.mp3"
+        },
+        {
+          "score": 0.844,
+          "similarity": 0.7936507936507936,
+          "stt": "Jebem ti jaša, s nas sam tako imaš!",
+          "take": "zna_sam_asa_3_t2.mp3"
+        }
+      ]
+    },
+    "gazda/zna_sam_tricu": {
+      "score": 0.992,
+      "status": "made",
+      "take": "zna_sam_tricu_t2.mp3",
+      "takes": [
+        {
+          "score": 0.982,
+          "similarity": 0.9315068493150684,
+          "stt": "A zna sam da ima triču. Jeben ti triču!",
+          "take": "zna_sam_tricu_t1.mp3"
+        },
+        {
+          "score": 0.992,
+          "similarity": 0.9428571428571428,
+          "stt": "Znasam da ima tricu. Jeben ti tricu!",
+          "take": "zna_sam_tricu_t2.mp3"
         }
       ]
     },
@@ -2591,6 +4254,94 @@
         }
       ]
     },
+    "mali/argh": {
+      "score": 0.67,
+      "status": "made",
+      "take": "argh_t2.mp3",
+      "takes": [
+        {
+          "score": 0.61,
+          "similarity": 0.2222222222222222,
+          "stt": "*Groje*",
+          "take": "argh_t1.mp3"
+        },
+        {
+          "score": 0.67,
+          "similarity": 0.2222222222222222,
+          "stt": "*Groje*",
+          "take": "argh_t2.mp3"
+        },
+        {
+          "score": 0.59,
+          "similarity": 0.36363636363636365,
+          "stt": "*Ahh* *Ahh*",
+          "take": "argh_t3.mp3"
+        },
+        {
+          "score": 0.61,
+          "similarity": 0.13333333333333333,
+          "stt": "*Groje* *Groje*",
+          "take": "argh_t4.mp3"
+        }
+      ]
+    },
+    "mali/asti_sto": {
+      "score": 1.05,
+      "status": "made",
+      "take": "asti_sto_t1.mp3",
+      "takes": [
+        {
+          "score": 1.05,
+          "similarity": 1.0,
+          "stt": "Asti sto!",
+          "take": "asti_sto_t1.mp3"
+        },
+        {
+          "score": 0.925,
+          "similarity": 0.875,
+          "stt": "Azti sto!",
+          "take": "asti_sto_t2.mp3"
+        }
+      ]
+    },
+    "mali/dava_odnija": {
+      "score": 0.967,
+      "status": "made",
+      "take": "dava_odnija_t2.mp3",
+      "takes": [
+        {
+          "score": 0.961,
+          "similarity": 0.9473684210526315,
+          "stt": "A da teđava od nija!",
+          "take": "dava_odnija_t1.mp3"
+        },
+        {
+          "score": 0.967,
+          "similarity": 0.9473684210526315,
+          "stt": "A da teđava od nija!",
+          "take": "dava_odnija_t2.mp3"
+        }
+      ]
+    },
+    "mali/ehe": {
+      "score": 0.677,
+      "status": "made",
+      "take": "ehe_t1.mp3",
+      "takes": [
+        {
+          "score": 0.677,
+          "similarity": 0.6666666666666666,
+          "stt": "Ehe!",
+          "take": "ehe_t1.mp3"
+        },
+        {
+          "score": 0.177,
+          "similarity": 0.16666666666666666,
+          "stt": "*Svijek*",
+          "take": "ehe_t2.mp3"
+        }
+      ]
+    },
     "mali/ej_ko_te_napravi": {
       "score": 1.05,
       "status": "made",
@@ -2664,6 +4415,25 @@
           "similarity": 0.9655172413793104,
           "stt": "GROMTE ŠPANIJA!",
           "take": "grom_te_spanija_t2.mp3"
+        }
+      ]
+    },
+    "mali/idi_u_kurac": {
+      "score": 0.955,
+      "status": "made",
+      "take": "idi_u_kurac_t1.mp3",
+      "takes": [
+        {
+          "score": 0.955,
+          "similarity": 0.9090909090909091,
+          "stt": "Idi u kurac!",
+          "take": "idi_u_kurac_t1.mp3"
+        },
+        {
+          "score": 0.846,
+          "similarity": 0.8,
+          "stt": "Iđu kulac!",
+          "take": "idi_u_kurac_t2.mp3"
         }
       ]
     },
@@ -2762,6 +4532,82 @@
         }
       ]
     },
+    "mali/jebemti_dan": {
+      "score": 0.903,
+      "status": "made",
+      "take": "jebemti_dan_t2.mp3",
+      "takes": [
+        {
+          "score": 0.902,
+          "similarity": 0.8695652173913043,
+          "stt": "Jeben ti dan.",
+          "take": "jebemti_dan_t1.mp3"
+        },
+        {
+          "score": 0.903,
+          "similarity": 0.8695652173913043,
+          "stt": "Jeben ti dan.",
+          "take": "jebemti_dan_t2.mp3"
+        }
+      ]
+    },
+    "mali/jebenti_iruda": {
+      "score": 1.044,
+      "status": "made",
+      "take": "jebenti_iruda_t1.mp3",
+      "takes": [
+        {
+          "score": 1.044,
+          "similarity": 1.0,
+          "stt": "Jebenti Iruda!",
+          "take": "jebenti_iruda_t1.mp3"
+        },
+        {
+          "score": 1.033,
+          "similarity": 1.0,
+          "stt": "Jebenti Iruda!",
+          "take": "jebenti_iruda_t2.mp3"
+        }
+      ]
+    },
+    "mali/jebi_se_karte": {
+      "score": 1.01,
+      "status": "made",
+      "take": "jebi_se_karte_t2.mp3",
+      "takes": [
+        {
+          "score": 0.991,
+          "similarity": 0.9811320754716981,
+          "stt": "Ma jebise ti i tvoje karte!",
+          "take": "jebi_se_karte_t1.mp3"
+        },
+        {
+          "score": 1.01,
+          "similarity": 1.0,
+          "stt": "Ma jebi se ti i tvoje karte!",
+          "take": "jebi_se_karte_t2.mp3"
+        }
+      ]
+    },
+    "mali/joj": {
+      "score": 1.05,
+      "status": "made",
+      "take": "joj_t2.mp3",
+      "takes": [
+        {
+          "score": 0.962,
+          "similarity": 0.9166666666666666,
+          "stt": "A, joj, joj, joj...",
+          "take": "joj_t1.mp3"
+        },
+        {
+          "score": 1.05,
+          "similarity": 1.0,
+          "stt": "Joj, joj, joj.",
+          "take": "joj_t2.mp3"
+        }
+      ]
+    },
     "mali/ka_bombone": {
       "score": 0.973,
       "status": "made",
@@ -2782,21 +4628,97 @@
       ]
     },
     "mali/ko_je_misaja": {
-      "score": 0.932,
+      "score": 0.917,
       "status": "made",
       "take": "ko_je_misaja_t1.mp3",
       "takes": [
         {
-          "score": 0.932,
-          "similarity": 0.8823529411764706,
-          "stt": "Ko jovo misaja, a?",
+          "score": 0.917,
+          "similarity": 0.8666666666666667,
+          "stt": "Ko jovo misa, a?",
           "take": "ko_je_misaja_t1.mp3"
         },
         {
-          "score": 0.907,
-          "similarity": 0.8571428571428571,
-          "stt": "Koja ovo misaja, a?",
+          "score": 0.917,
+          "similarity": 0.8666666666666667,
+          "stt": "Ko jovo misa, a?",
           "take": "ko_je_misaja_t2.mp3"
+        }
+      ]
+    },
+    "mali/ko_je_misaja_2": {
+      "score": 0.959,
+      "status": "made",
+      "take": "ko_je_misaja_2_t2.mp3",
+      "takes": [
+        {
+          "score": 0.927,
+          "similarity": 0.9180327868852459,
+          "stt": "Ko je ovo Misha da mu jeben sve?!",
+          "take": "ko_je_misaja_2_t1.mp3"
+        },
+        {
+          "score": 0.959,
+          "similarity": 0.9491525423728814,
+          "stt": "Koje ovo misa da mu jebem sve?!",
+          "take": "ko_je_misaja_2_t2.mp3"
+        }
+      ]
+    },
+    "mali/ko_je_misaja_3": {
+      "score": 1.011,
+      "status": "made",
+      "take": "ko_je_misaja_3_t2.mp3",
+      "takes": [
+        {
+          "score": 1.01,
+          "similarity": 0.9620253164556962,
+          "stt": "Jebem ti sve i onog koja miša ove karte!",
+          "take": "ko_je_misaja_3_t1.mp3"
+        },
+        {
+          "score": 1.011,
+          "similarity": 0.9620253164556962,
+          "stt": "Jebem ti sve i onog koja miša ove karte!",
+          "take": "ko_je_misaja_3_t2.mp3"
+        }
+      ]
+    },
+    "mali/kruv_i_mast": {
+      "score": 1.008,
+      "status": "made",
+      "take": "kruv_i_mast_t2.mp3",
+      "takes": [
+        {
+          "score": 0.993,
+          "similarity": 0.9428571428571428,
+          "stt": "Jebem ti kruvi, mast i kojih sastavi!",
+          "take": "kruv_i_mast_t1.mp3"
+        },
+        {
+          "score": 1.008,
+          "similarity": 0.9577464788732394,
+          "stt": "Jebem ti kruv i mast i kojih sastavi?",
+          "take": "kruv_i_mast_t2.mp3"
+        }
+      ]
+    },
+    "mali/kurac_lisine": {
+      "score": 1.047,
+      "status": "made",
+      "take": "kurac_lisine_t1.mp3",
+      "takes": [
+        {
+          "score": 1.047,
+          "similarity": 1.0,
+          "stt": "Kurac moj, opet lišine!",
+          "take": "kurac_lisine_t1.mp3"
+        },
+        {
+          "score": 1.024,
+          "similarity": 0.9767441860465116,
+          "stt": "Kurac moji, opet lišine!",
+          "take": "kurac_lisine_t2.mp3"
         }
       ]
     },
@@ -2816,6 +4738,44 @@
           "similarity": 1.0,
           "stt": "Lipo, lipo, daj to ovamo!",
           "take": "lipo_daj_ovamo_t2.mp3"
+        }
+      ]
+    },
+    "mali/ma_daj": {
+      "score": 0.919,
+      "status": "made",
+      "take": "ma_daj_t1.mp3",
+      "takes": [
+        {
+          "score": 0.919,
+          "similarity": 0.9090909090909091,
+          "stt": "Madaj!",
+          "take": "ma_daj_t1.mp3"
+        },
+        {
+          "score": 0.677,
+          "similarity": 0.6666666666666666,
+          "stt": "NADDAJ!!!",
+          "take": "ma_daj_t2.mp3"
+        }
+      ]
+    },
+    "mali/muci": {
+      "score": 1.05,
+      "status": "made",
+      "take": "muci_t1.mp3",
+      "takes": [
+        {
+          "score": 1.05,
+          "similarity": 1.0,
+          "stt": "MUČI!!!",
+          "take": "muci_t1.mp3"
+        },
+        {
+          "score": 1.05,
+          "similarity": 1.0,
+          "stt": "MUČI!!!",
+          "take": "muci_t2.mp3"
         }
       ]
     },
@@ -2876,6 +4836,44 @@
         }
       ]
     },
+    "mali/odjebi_tricon": {
+      "score": 0.957,
+      "status": "made",
+      "take": "odjebi_tricon_t1.mp3",
+      "takes": [
+        {
+          "score": 0.957,
+          "similarity": 0.9473684210526315,
+          "stt": "Odjebi s tom trikon!",
+          "take": "odjebi_tricon_t1.mp3"
+        },
+        {
+          "score": 0.875,
+          "similarity": 0.8648648648648649,
+          "stt": "Od jebistom trikon!",
+          "take": "odjebi_tricon_t2.mp3"
+        }
+      ]
+    },
+    "mali/oho": {
+      "score": 1.049,
+      "status": "made",
+      "take": "oho_t2.mp3",
+      "takes": [
+        {
+          "score": 1.039,
+          "similarity": 1.0,
+          "stt": "Oho!",
+          "take": "oho_t1.mp3"
+        },
+        {
+          "score": 1.049,
+          "similarity": 1.0,
+          "stt": "Oho!",
+          "take": "oho_t2.mp3"
+        }
+      ]
+    },
     "mali/opet_akuza": {
       "score": 0.995,
       "status": "made",
@@ -2895,6 +4893,56 @@
         }
       ]
     },
+    "mali/pff": {
+      "score": 0.89,
+      "status": "made",
+      "take": "pff_t1.mp3",
+      "takes": [
+        {
+          "score": 0.89,
+          "similarity": 0.0,
+          "stt": "*Skrije*",
+          "take": "pff_t1.mp3"
+        },
+        {
+          "score": 0.89,
+          "similarity": 0.0,
+          "stt": "*Skrije*",
+          "take": "pff_t2.mp3"
+        },
+        {
+          "score": 0.69,
+          "similarity": 0.2857142857142857,
+          "stt": "*Svup*",
+          "take": "pff_t3.mp3"
+        },
+        {
+          "score": 0.87,
+          "similarity": 0.0,
+          "stt": "*Savljeno*",
+          "take": "pff_t4.mp3"
+        }
+      ]
+    },
+    "mali/pizda_ti_materina": {
+      "score": 1.01,
+      "status": "made",
+      "take": "pizda_ti_materina_t2.mp3",
+      "takes": [
+        {
+          "score": 0.98,
+          "similarity": 0.9696969696969697,
+          "stt": "PIZDATI MATERINA!",
+          "take": "pizda_ti_materina_t1.mp3"
+        },
+        {
+          "score": 1.01,
+          "similarity": 1.0,
+          "stt": "Pizda ti materina!",
+          "take": "pizda_ti_materina_t2.mp3"
+        }
+      ]
+    },
     "mali/plati_rakiju": {
       "score": 1.007,
       "status": "made",
@@ -2911,6 +4959,25 @@
           "similarity": 1.0,
           "stt": "Plati rakiju i ne plači.",
           "take": "plati_rakiju_t2.mp3"
+        }
+      ]
+    },
+    "mali/pusi_mrtav": {
+      "score": 0.965,
+      "status": "made",
+      "take": "pusi_mrtav_t1.mp3",
+      "takes": [
+        {
+          "score": 0.965,
+          "similarity": 0.9552238805970149,
+          "stt": "PUSI KURAC PEDERU MRTAVSI ZA MENE!",
+          "take": "pusi_mrtav_t1.mp3"
+        },
+        {
+          "score": 0.949,
+          "similarity": 0.9393939393939394,
+          "stt": "PUSI KURAC PEDERU MRTAVSI ZAMENE!",
+          "take": "pusi_mrtav_t2.mp3"
         }
       ]
     },
@@ -3075,6 +5142,94 @@
           "similarity": 0.926829268292683,
           "stt": "Vrag ti sreću od nija!",
           "take": "vrag_ti_sricu_t2.mp3"
+        },
+        {
+          "score": 0.876,
+          "similarity": 0.85,
+          "stt": "Vrakti sriču od nija!",
+          "take": "vrag_ti_sricu_t3.mp3"
+        },
+        {
+          "score": 0.873,
+          "similarity": 0.85,
+          "stt": "Vrakti, sreću od nija!",
+          "take": "vrag_ti_sricu_t4.mp3"
+        }
+      ]
+    },
+    "mali/zna_sam_asa": {
+      "score": 1.029,
+      "status": "made",
+      "take": "zna_sam_asa_t1.mp3",
+      "takes": [
+        {
+          "score": 1.029,
+          "similarity": 0.9787234042553191,
+          "stt": "A zna sam da ima aša. Jebem ti aša i koga stvori.",
+          "take": "zna_sam_asa_t1.mp3"
+        },
+        {
+          "score": 0.955,
+          "similarity": 0.9052631578947369,
+          "stt": "A znasam da ima Asha, jebem ti Asha i koga stvori.",
+          "take": "zna_sam_asa_t2.mp3"
+        }
+      ]
+    },
+    "mali/zna_sam_asa_2": {
+      "score": 1.012,
+      "status": "made",
+      "take": "zna_sam_asa_2_t1.mp3",
+      "takes": [
+        {
+          "score": 1.012,
+          "similarity": 0.9615384615384616,
+          "stt": "Jebem ti aša i koga stvori?!",
+          "take": "zna_sam_asa_2_t1.mp3"
+        },
+        {
+          "score": 1.012,
+          "similarity": 0.9615384615384616,
+          "stt": "Jebem ti aša i koga stvori?!",
+          "take": "zna_sam_asa_2_t2.mp3"
+        }
+      ]
+    },
+    "mali/zna_sam_asa_3": {
+      "score": 0.956,
+      "status": "made",
+      "take": "zna_sam_asa_3_t1.mp3",
+      "takes": [
+        {
+          "score": 0.956,
+          "similarity": 0.9152542372881356,
+          "stt": "Jebem tjaša! Znasam da ga imaš!",
+          "take": "zna_sam_asa_3_t1.mp3"
+        },
+        {
+          "score": 0.91,
+          "similarity": 0.8666666666666667,
+          "stt": "Jebem tjaša, zna sam tagaj imaš!",
+          "take": "zna_sam_asa_3_t2.mp3"
+        }
+      ]
+    },
+    "mali/zna_sam_tricu": {
+      "score": 1.036,
+      "status": "made",
+      "take": "zna_sam_tricu_t2.mp3",
+      "takes": [
+        {
+          "score": 1.022,
+          "similarity": 0.9722222222222222,
+          "stt": "A znasam da ima tricu! Jeben ti tricu!",
+          "take": "zna_sam_tricu_t1.mp3"
+        },
+        {
+          "score": 1.036,
+          "similarity": 0.9863013698630136,
+          "stt": "A zna sam da ima tricu. Jeben ti tricu!",
+          "take": "zna_sam_tricu_t2.mp3"
         }
       ]
     }

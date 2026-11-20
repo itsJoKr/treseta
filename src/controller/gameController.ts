@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import gsap from 'gsap';
 import type { AudioManager } from '../audio/audio';
 import { VoiceDirector } from '../audio/voiceDirector';
-import { akuzaBotLines, badDraw, botPlayEvent, handEndEvent, trickEndEvent } from '../audio/voiceTriggers';
+import { akuzaBotLines, badDraw, botPlayEvent, handEndEvent, playReactions, trickEndEvent } from '../audio/voiceTriggers';
 import { getLang, t } from '../data/strings';
 import type { VoiceEventType } from '../data/voiceEvents';
 import type { VoiceLine } from '../data/voiceLines';
@@ -202,6 +202,7 @@ export class GameController {
   get hand(): HandState { return this.match.hand!; }
 
   private async act(a: Action): Promise<void> {
+    if (a.type === 'play') this.pendingReact = this.reactionsFor(a.side, a.uid);
     const r = matchAct(this.match, a);
     this.match = r.match;
     this.memory = observe(this.memory, r.events, this.opp.knobs.memory, this.botRng);
@@ -247,6 +248,24 @@ export class GameController {
   }
 
   private pendingBotVoice: VoiceEventType | null = null;
+  /** §22.3 reactions to the card being played, worked out before the engine applies it */
+  private pendingReact: VoiceEventType[] = [];
+
+  private reactionsFor(side: Side, uid: string): VoiceEventType[] {
+    const s = this.hand;
+    const legal = legalPlays(s, side).map((u) => this.card(u));
+    const lead = s.phase === 'follow' ? s.table.find((c) => c.uid === s.trick.lead?.uid) : undefined;
+    return playReactions({ side, card: this.card(uid), legal, lead });
+  }
+
+  /** After a card lands: the reactions first (most specific), then the bot's own play line. At most one is said. */
+  private speakReactions(side: Side): void {
+    const evs = this.pendingReact;
+    this.pendingReact = [];
+    if (side === 'bot' && this.pendingBotVoice) evs.push(this.pendingBotVoice);
+    this.pendingBotVoice = null;
+    for (const ev of evs) if (this.director.onEvent(ev)) break;
+  }
 
   // ------------------------------------------------------------------ player
 
@@ -596,8 +615,8 @@ export class GameController {
         } else {
           this.removeSeen(e.uid);
           await anim.botToTrick(o, e.role === 'lead', strong);
-          if (this.pendingBotVoice) { this.director.onEvent(this.pendingBotVoice); this.pendingBotVoice = null; }
         }
+        this.speakReactions(e.side);
         this.forgeryTip([c]);
         break;
       }

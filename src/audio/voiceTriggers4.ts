@@ -8,6 +8,7 @@ import { Eval4, val4 } from '../game/bot4';
 import { buildView4 } from '../game/botMemory4';
 import { knobsFor } from '../game/characters';
 import type { Rng } from '../game/rng';
+import { BASE_STRENGTH } from '../game/cards';
 import type { AkuzaCombo, PersonaId, SideBreakdown, Suit } from '../game/types';
 import type { Card4, GameEvent4, Hand4State, Seat, Team } from '../game/types4';
 import { TEAM_OF } from '../game/types4';
@@ -149,6 +150,61 @@ export function playEvent4(e: Eval4, uid: string): Voice4EventType | null {
   // forced to feed points to the other team: they are winning, this card can't beat it, and every legal card has points
   if (oppWinning && !beats && val4(c) >= 1 && e.legalCards().every((x) => val4(x) >= 1)) return 'bot_forced_bad';
   return null;
+}
+
+// ---------------- §22.3 mid-trick reactions (Partneri) ----------------
+
+export interface Play4ReactCtx {
+  seat: Seat;
+  card: Card4;
+  /** the mover's legal cards right before the play */
+  legal: Card4[];
+  /** the trick's plays before this one, in order */
+  before: { seat: Seat; card: Card4 }[];
+  rng: () => number;
+}
+
+const FIGURE4 = ['K', 'C', 'F'];
+const str4 = (c: Card4) => BASE_STRENGTH[c.rank];
+
+/**
+ * Who says what the moment a card lands, most specific first (VoiceTable4.first says at most one).
+ * Every bot can react, not only the one that played: the victim of a 3 ("A zna sam da ima
+ * tricu..."), the player's partner cheering, an opponent gloating over the player's lost ace.
+ */
+export function playReactions4(c: Play4ReactCtx): Candidate[] {
+  const out: Candidate[] = [];
+  const team = TEAM_OF[c.seat];
+  if (c.before.length === 0) {
+    // a led 3: someone on the other side grunts
+    if (c.card.rank === '3') out.push({ seat: team === 'mi' ? (c.rng() < 0.5 ? 'W' : 'E') : 'N', event: 'react_short' });
+    return out;
+  }
+  const led = c.before[0].card.suit;
+  let best = c.before[0];
+  for (const p of c.before) if (p.card.suit === led && str4(p.card) > str4(best.card)) best = p;
+  const takesOver = c.card.suit === led && str4(c.card) > str4(best.card);
+  const winner = takesOver ? { seat: c.seat, card: c.card } : best;
+  const fromOther = TEAM_OF[best.seat] !== team;
+  // (1) forced to give up an ace to the other side's 3 or 2
+  if (c.card.rank === 'A' && c.card.suit === led && c.legal.length > 0 && c.legal.every((x) => x.rank === 'A')
+    && TEAM_OF[winner.seat] !== team && (winner.card.rank === '3' || winner.card.rank === '2')) {
+    if (c.seat !== 'S') out.push({ seat: c.seat as VSeat, event: 'ace_snatched' });
+    else if (winner.seat === 'W' || winner.seat === 'E') out.push({ seat: winner.seat, event: 'gloat' });
+  }
+  if (takesOver && fromOther) {
+    // (2) "I knew they had it": the bot whose card was winning
+    if (best.seat !== 'S') {
+      const victim = best.seat as VSeat;
+      if (c.card.rank === '3' && (best.card.rank === 'A' || best.card.rank === '2')) out.push({ seat: victim, event: 'knew_trica' });
+      else if (c.card.rank === 'A' && FIGURE4.includes(best.card.rank)) out.push({ seat: victim, event: 'knew_ace' });
+    }
+    // (3) the partner cheers the player's strong take-over
+    if (c.seat === 'S' && (c.card.rank === '3' || best.card.rank === 'A' || best.card.rank === '2')) out.push({ seat: 'N', event: 'partner_react' });
+    // (4) a grunt from the side that just lost the lead to a 3
+    if (c.card.rank === '3') out.push({ seat: best.seat === 'S' ? 'N' : (best.seat as VSeat), event: 'react_short' });
+  }
+  return out;
 }
 
 // ---------------- the table: 3 directors on one arbiter ----------------
